@@ -1,6 +1,6 @@
 import { ClientGlobalProductType } from "@/app/lib/types/global_product_types";
 import React, { FC } from "react";
-import ProductCard from "../../components/ProductCard";
+import ProductCard from "../../../components/ProductCard";
 
 type ProductsSectionProps = {
   products: ClientGlobalProductType[];
