@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Poppins, Quicksand } from "next/font/google";
 import "./globals.css";
+import { APIContextProvider } from "./lib/context/ApiContext";
+import QueryProvider from "./lib/context/QueryContext";
+import { CartContextProvider } from "./lib/context/CartContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  variable: "--font-primary",
   subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const quicksand = Quicksand({
+  variable: "--font-secondary",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -19,16 +24,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+      <QueryProvider>
+        <APIContextProvider>
+          <CartContextProvider>
+            <body className={`font-primary`}>{children}</body>
+          </CartContextProvider>
+        </APIContextProvider>
+      </QueryProvider>
     </html>
   );
 }

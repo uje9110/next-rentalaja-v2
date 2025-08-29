@@ -1,0 +1,12 @@
+export type StoreOrderBillingType = {
+  firstName: string;
+  lastName: string;
+  telephone: string;
+  email: string;
+  address: {
+    city: string;
+    district: string;
+    province: string;
+    street: string;
+  };
+};
