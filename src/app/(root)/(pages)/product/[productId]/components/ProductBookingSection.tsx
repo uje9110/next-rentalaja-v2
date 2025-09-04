@@ -76,10 +76,10 @@ const ProductBookingSection: FC<BookingSectionProp> = ({ storeProduct }) => {
   });
 
   // CART CONTEXT
-  const { setCart } = useCartContext();
+  const { cart, setCart } = useCartContext();
 
   // ADD ITEM TO CART
-  const { handleAddItemToCart } = useAddItemToCartButton({ setCart });
+  const { handleAddItemToCart } = useAddItemToCartButton({ cart, setCart });
 
   console.log("order item data =>", orderItemData);
 

@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 export type StoreOrderDiscountType = {
   _id: string;
   discountTotal: number;
@@ -5,8 +7,10 @@ export type StoreOrderDiscountType = {
   discountStatus: string;
   fromCouponId: string;
   fromOrderId: string;
-  dateCreatedLocale: string;
-  timeCreatedLocale: string;
-  createdAt: Date;
-  updateAt: Date;
+  createdAt?: Date;
+  updateAt?: Date;
 };
+export type StoreOrderDiscountStaticsType = {};
+
+export type StoreOrderDiscountModelType = Model<StoreOrderDiscountType> &
+  StoreOrderDiscountStaticsType;

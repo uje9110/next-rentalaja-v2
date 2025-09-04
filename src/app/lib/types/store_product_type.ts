@@ -20,11 +20,7 @@ export type StoreProductType = {
   variationsIds: string[];
   salesIds: string[];
   stockIds: string[];
-  storeDetail: {
-    storeName: string;
-    storeId: string;
-    storeStrings: string;
-  };
+  storeDetail: GlobalStoreType;
   createdAt?: Date;
   updatedAt?: Date;
 };

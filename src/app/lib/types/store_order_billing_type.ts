@@ -3,10 +3,10 @@ export type StoreOrderBillingType = {
   lastName: string;
   telephone: string;
   email: string;
-  address: {
-    city: string;
-    district: string;
-    province: string;
-    street: string;
+  address?: {
+    city?: string;
+    district?: string;
+    province?: string;
+    street?: string;
   };
 };

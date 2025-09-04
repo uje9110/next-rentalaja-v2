@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { Model, Types } from "mongoose";
 import { StoreProductBookingType } from "./store_product_booking_type";
 import { ClientStoreOrderType } from "./store_order_type";
 
@@ -33,3 +33,8 @@ export type ClientStoreProductStockType = StoreProductStockType & {
   stockBookingDetails: StoreProductBookingType[];
   rentedByOrderDetail: ClientStoreOrderType[];
 };
+
+export type StoreProductStockStaticsType = {};
+
+export type StoreProductStockModelType = Model<StoreProductStockType> &
+  StoreProductStockStaticsType;

@@ -1,5 +1,9 @@
-import { Schema } from "mongoose";
-import { StoreProductStockType } from "../types/store_product_stock_type";
+import { Connection, Schema } from "mongoose";
+import {
+  StoreProductStockModelType,
+  StoreProductStockStaticsType,
+  StoreProductStockType,
+} from "../types/store_product_stock_type";
 
 const StoreProductStockSchema = new Schema<StoreProductStockType>({
   _id: {
@@ -60,3 +64,15 @@ const StoreProductStockSchema = new Schema<StoreProductStockType>({
     },
   ],
 });
+
+export const createStoreProductStockModel = (
+  connection: Connection,
+): StoreProductStockModelType => {
+  return (
+    (connection.models.stocks as StoreProductStockModelType) ||
+    connection.model<StoreProductStockType, StoreProductStockStaticsType>(
+      "stocks",
+      StoreProductStockSchema,
+    )
+  );
+};

@@ -1,3 +1,4 @@
+import { Model } from "mongoose";
 import { ClientStoreOrderType } from "./store_order_type";
 
 export type StoreOrderPaymentType = {
@@ -26,3 +27,8 @@ export type ClientStoreOrderPaymentType = StoreOrderPaymentType & {
   };
   orderDetail: ClientStoreOrderType;
 };
+
+export type StoreOrderPaymentStaticsType = {};
+
+export type StoreOrderPaymentModelType = Model<StoreOrderPaymentType> &
+  StoreOrderPaymentType;

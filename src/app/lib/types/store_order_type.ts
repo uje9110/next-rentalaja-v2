@@ -1,20 +1,20 @@
-import { ObjectId } from "mongoose";
+import mongoose, { Model, ObjectId } from "mongoose";
 import { GlobalStoreType } from "./global_store_types";
 import { StoreOrderItemType } from "./store_order_item_type";
 import { StoreOrderBillingType } from "./store_order_billing_type";
 import { StoreOrderUpdateLogType } from "./store_order_updateLogs_type";
 import { StoreOrderDiscountType } from "./store_order_dicount_type";
 import { ClientStoreOrderPaymentType } from "./store_order_payment_type";
+import { GlobalUserType } from "./global_user_type";
+import { CheckoutBillingType } from "./client_checkout_type";
 
 export type StoreOrderType = {
   _id?: string;
   storeDetail?: GlobalStoreType;
-  dateCreatedLocale?: string;
-  timeCreatedLocale?: string;
   byAdmin?: boolean;
   customerID?: ObjectId;
   subtotal: number;
-  total?: number;
+  total: number;
   status?:
     | "canceled"
     | "pending"
@@ -40,3 +40,17 @@ export type ClientStoreOrderType = StoreOrderType & {
   discountDetails: StoreOrderDiscountType[];
   paymentDetails: ClientStoreOrderPaymentType[];
 };
+
+export type StoreOrderStaticsType = {
+  createOneStoreOrder: (
+    billing: StoreOrderBillingType,
+    customerID: ObjectId,
+    storeDetail: GlobalStoreType,
+    items: StoreOrderItemType[],
+    coupouns: GlobalCouponType[],
+    orderCount: number,
+    options: { session?: mongoose.ClientSession },
+  ) => Promise<StoreOrderType>;
+};
+
+export type StoreOrderModelType = Model<StoreOrderType> & StoreOrderStaticsType;

@@ -32,7 +32,21 @@ export function useOrder({ storeProduct }: UseOrderProps) {
       rentalStartInLocaleMs: 0,
       rentalEndInLocaleMs: 0,
     },
-    storeId: "",
+    storeDetail: {
+      storeId: "",
+      storeName: "",
+      storeStrings: "",
+      storeImage: {
+        name: "",
+        link: "",
+      },
+      storeAddress: {
+        province: "",
+        city: "",
+        district: "",
+        address: "",
+      },
+    },
     pickupAndReturnDetails: {
       returnDateTimeInMs: 0,
       pickupDateTimeInMs: 0,
@@ -46,7 +60,7 @@ export function useOrder({ storeProduct }: UseOrderProps) {
         itemID: storeProduct._id,
         itemName: storeProduct.title,
         itemImage: storeProduct.primaryImage.link,
-        storeId: storeProduct.storeDetail.storeId,
+        storeDetail: storeProduct.storeDetail,
       };
     });
   }, []);

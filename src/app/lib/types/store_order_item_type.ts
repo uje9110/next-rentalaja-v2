@@ -1,3 +1,5 @@
+import { GlobalStoreType } from "./global_store_types";
+
 export type OrderItemRentalDetailsType = {
   rentalStartDate: string;
   rentalStartTime: string;
@@ -27,7 +29,7 @@ export type StoreOrderItemType = {
   itemVariation: OrderItemVariationType;
   rentalDetails: OrderItemRentalDetailsType;
   itemSubtotal: number;
-  storeId: string;
+  storeDetail: GlobalStoreType;
   pickupAndReturnDetails: {
     pickupDateTimeInMs: number;
     returnDateTimeInMs: number;

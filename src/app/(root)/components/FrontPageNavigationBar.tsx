@@ -1,6 +1,7 @@
-// import { useCartContext } from "@/app/lib/context/CartContext";
+"use client";
 import React from "react";
 import { Home, List, ShoppingCart, Phone, User } from "lucide-react";
+import { useCartContext } from "@/app/lib/context/CartContext";
 
 const navMenu = [
   {
@@ -31,7 +32,7 @@ const navMenu = [
 ];
 
 const FrontPageNavigationBar = () => {
-  //   const { cart, totalItem } = useCartContext();
+  const { itemAmountInCart } = useCartContext();
 
   return (
     <section className="nav-menu phone:w-full phone:left-0 phone:-translate-x-0 fixed bottom-0 left-1/2 z-30 flex h-[64px] w-full -translate-x-1/2 flex-row items-center justify-center gap-2 rounded-lg bg-white p-2 shadow-sm lg:mb-3 lg:w-[20%] lg:rounded-xl lg:py-4">
@@ -52,9 +53,9 @@ const FrontPageNavigationBar = () => {
               </span>
               {title === "Cart" ? (
                 <div className="absolute -top-2 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs">
-                  {/* <span key={"itemAmount"} className="text-white">
-                    {cart ? totalItem : null}
-                  </span> */}
+                  <span key={"itemAmount"} className="text-white">
+                    {itemAmountInCart ? itemAmountInCart : 0}
+                  </span>
                 </div>
               ) : null}
             </div>

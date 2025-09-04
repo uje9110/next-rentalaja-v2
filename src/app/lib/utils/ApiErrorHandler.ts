@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { StatusCodes } from "http-status-codes";
+import { UserNotFoundError } from "./CustomErrorClasses";
 
 // Mongo duplicate key error shape
 interface MongoServerError extends Error {
@@ -51,6 +52,16 @@ export function handleApiError(error: unknown) {
         keyValue: error.keyValue,
       },
       { status: StatusCodes.CONFLICT },
+    );
+  }
+
+  if (error instanceof UserNotFoundError) {
+    return NextResponse.json(
+      {
+        type: error.name,
+        message: error.message,
+      },
+      { status: StatusCodes.NOT_FOUND },
     );
   }
 
