@@ -1,4 +1,7 @@
-type GlobalCouponType = {
+import { Model } from "mongoose";
+
+export type GlobalCouponType = {
+  _id?: string;
   storeId: string;
   couponDesc: string;
   couponExpire: Date;
@@ -6,5 +9,13 @@ type GlobalCouponType = {
   couponType: string;
   couponValue: number;
   isAvailableWithOther: boolean;
-  _id?: string;
+  forMembership: {
+    isForMembership: boolean;
+    membershipId: string | null;
+  };
 };
+
+export type GlobalCouponStaticsType = {};
+
+export type GlobalCouponModelType = Model<GlobalCouponType> &
+  GlobalCouponStaticsType;

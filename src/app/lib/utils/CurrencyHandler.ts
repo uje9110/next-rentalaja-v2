@@ -1,4 +1,9 @@
+import { GlobalCouponType } from "../types/global_coupon_type";
 import { StoreOrderItemType } from "../types/store_order_item_type";
+import {
+  ClientStoreOrderPaymentType,
+  StoreOrderPaymentType,
+} from "../types/store_order_payment_type";
 
 export class CurrencyHandlers {
   static changeToLocaleCurrency(amount: number | null | undefined) {
@@ -27,5 +32,27 @@ export class CurrencyHandlers {
       return total + item.itemVariation.variationPrice * item.itemAmount;
     }, 0);
     return subtotal;
+  };
+
+  static calculateOrderPaymentTotal = (
+    payments: StoreOrderPaymentType[] | ClientStoreOrderPaymentType[],
+  ) => {
+    const totalPayment = payments.reduce((total, payment) => {
+      return total + payment.paymentAmount;
+    }, 0);
+    return totalPayment;
+  };
+
+  static getOrderPaymentStatus = (
+    total: number,
+    paidAmount: number,
+  ): "unpaid" | "partially-paid" | "fully-paid" => {
+    const totalUnpaid = total - paidAmount;
+    if (totalUnpaid > 0) {
+      return "partially-paid";
+    } else if (totalUnpaid === 0) {
+      return "fully-paid";
+    }
+    return "unpaid";
   };
 }

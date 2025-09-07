@@ -48,7 +48,7 @@ export interface GlobalUserStaticsType {
       socialMedia?: string;
     },
     options?: { session?: mongoose.ClientSession },
-  ): Promise<GlobalUserType>;
+  ): Promise<{ user: GlobalUserType; isNew: boolean }>;
 }
 
 // Merge custom statics into Mongoose Model

@@ -1,4 +1,6 @@
 import { ClientCartType } from "./client_cart_types";
+import { GlobalCouponType } from "./global_coupon_type";
+import { ClientStorePaymentRequest } from "./store_order_payment_type";
 
 export type CheckoutBillingType = {
   isAccountAlreadyMade: "yes" | "no";
@@ -10,14 +12,14 @@ export type CheckoutBillingType = {
 };
 
 export type ClientCheckoutType = {
+  byAdmin: {
+    isByAdmin: boolean;
+    adminId: string;
+  };
   billing: CheckoutBillingType;
   checkoutCartItems: ClientCartType[];
   discounts: GlobalCouponType[];
-  paymentRequest: {
-    paymentMethod: string;
-    paymentType: string;
-    paymentAmount: number;
-  };
+  paymentRequest: ClientStorePaymentRequest;
   subtotal: number;
   total: number;
 };

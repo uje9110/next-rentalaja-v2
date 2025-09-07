@@ -28,6 +28,10 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const [checkout, setCheckout] = useLocalStorageState<ClientCheckoutType>(
     "checkout",
     {
+      byAdmin: {
+        isByAdmin: false,
+        adminId: "",
+      },
       billing: {
         isAccountAlreadyMade: "yes",
         email: "",
@@ -36,7 +40,6 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
       paymentRequest: {
         paymentMethod: "",
         paymentType: "",
-        paymentAmount: 0,
       },
       discounts: [],
       subtotal: 0,

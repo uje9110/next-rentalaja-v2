@@ -80,9 +80,16 @@ GlobalUserSchema.statics.findOrCreateCheckoutUser = async function (
   if (billing.isAccountAlreadyMade === "yes") {
     const user = await this.findOneGlobalUser(billing.email);
     if (!user) throw new UserNotFoundError(billing.email);
-    return user;
+    return { user, isNew: false };
   }
-  return this.createOneGlobalUser(
+
+  // check if already exists to avoid duplicates
+  const existing = await this.findOneGlobalUser(billing.email);
+  if (existing) { 
+    return { user: existing, isNew: false };
+  }
+
+  const newUser = await this.createOneGlobalUser(
     {
       firstName: billing.firstName,
       lastName: billing.lastName,
@@ -92,6 +99,8 @@ GlobalUserSchema.statics.findOrCreateCheckoutUser = async function (
     },
     options ? { session: options.session } : {},
   );
+
+  return { user: newUser, isNew: true };
 };
 
 /* Model factory */

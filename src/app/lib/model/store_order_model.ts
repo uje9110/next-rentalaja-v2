@@ -1,5 +1,6 @@
 import mongoose, { ObjectId, Schema } from "mongoose";
 import {
+  StoreOrderDoc,
   StoreOrderModelType,
   StoreOrderStaticsType,
   StoreOrderType,
@@ -18,6 +19,9 @@ import { StoreProductStockType } from "../types/store_product_stock_type";
 import { StoreOrderDiscountType } from "../types/store_order_dicount_type";
 import { createStoreOrderDiscountModel } from "./store_discount_model";
 import { createStoreUserModel } from "./store_user_model";
+import { createStorePaymentModel } from "./store_payment_model";
+import { GlobalCouponType } from "../types/global_coupon_type";
+import { ClientStorePaymentRequest } from "../types/store_order_payment_type";
 
 const StoreOrderSchema = new Schema<StoreOrderType>(
   {
@@ -28,8 +32,14 @@ const StoreOrderSchema = new Schema<StoreOrderType>(
       type: Object,
     },
     byAdmin: {
-      type: Boolean,
-      default: false,
+      isByAdmin: {
+        type: Boolean,
+        default: false,
+      },
+      adminId: {
+        type: String,
+        default: "",
+      },
     },
     customerID: {
       type: Schema.Types.ObjectId,
@@ -276,37 +286,68 @@ const StoreOrderSchema = new Schema<StoreOrderType>(
 
 /** MIDDLEWARE */
 StoreOrderSchema.statics.createOneStoreOrder = async function (
-  billing: StoreOrderBillingType,
-  customerID: ObjectId,
-  storeDetail: GlobalStoreType,
-  items: StoreOrderItemType[],
-  coupons: GlobalCouponType[],
-  orderCount: number,
+  orderData: {
+    billing: StoreOrderBillingType;
+    customerID: ObjectId;
+    storeDetail: GlobalStoreType;
+    items: StoreOrderItemType[];
+    coupons: GlobalCouponType[];
+    orderCount: number;
+  },
+  byAdmin: {
+    isByAdmin: boolean;
+    adminId?: string;
+  },
+  paymentRequest: ClientStorePaymentRequest,
   options: { session?: mongoose.ClientSession } = {},
 ) {
-  const _id = `ORDER-${orderCount}`;
+  const { orderCount, billing, customerID, storeDetail, items, coupons } =
+    orderData;
+  const { isByAdmin, adminId } = byAdmin;
+
+  const newId = `ORDER-${orderCount}`;
   const subtotal = CurrencyHandlers.calculateOrderItemSubtotal(items);
   const discount = CurrencyHandlers.calculateDiscount(coupons, subtotal);
   const total = subtotal - discount;
 
-  const orderData: StoreOrderType = {
-    _id,
+  const newOrderData: StoreOrderType = {
+    _id: newId,
     billing,
     customerID,
     storeDetail,
     items,
     subtotal,
     total,
+    discounts: coupons,
+    byAdmin: { isByAdmin, adminId },
   };
 
-  // Pass session if provided
-  const order = await this.create([orderData], {
-    session: options.session,
-  });
+  // Create a doc instance instead of using .create()
+  const orderDoc = new this(newOrderData);
 
-  // .create() with array returns an array
-  return order[0];
+  // Attach locals so it's available in post("save")
+  orderDoc.$locals.paymentRequest = paymentRequest;
+
+  // Save with session
+  await orderDoc.save({ session: options.session });
+
+  return orderDoc;
 };
+
+/** PRE PROCESSING */
+/**** DISCOUNT CALCULATION */
+StoreOrderSchema.pre("save", async function (next) {
+  if (!this.discounts || this.discounts.length === 0) {
+    return next();
+  }
+  const subtotal = this.subtotal;
+  const discountTotal = CurrencyHandlers.calculateDiscount(
+    this.discounts,
+    subtotal,
+  );
+  this.total = subtotal - discountTotal;
+  next();
+});
 
 /** POST PROCESSING */
 /**** BOOKING CREATION */
@@ -367,7 +408,6 @@ StoreOrderSchema.post("save", async function () {
   const storeConnection = await dbConnect(this.storeDetail?.storeId);
   const StoreOrderDiscountModel =
     createStoreOrderDiscountModel(storeConnection);
-  const StoreOrderModel = createStoreOrderModel(storeConnection);
 
   const discountDocs: Partial<StoreOrderDiscountType>[] = this.discounts.map(
     (coupon) => {
@@ -385,17 +425,12 @@ StoreOrderSchema.post("save", async function () {
     },
   );
 
-  // 1. Insert all discounts
   const createdDiscounts =
     await StoreOrderDiscountModel.insertMany(discountDocs);
 
-  // 2. Collect IDs
-  const discountIds = createdDiscounts.map((d) => d._id);
+  const newDiscountIds = createdDiscounts.map((d) => d._id);
 
-  // 3. Attach them back to the order
-  await StoreOrderModel.findByIdAndUpdate(this._id, {
-    $push: { discountIds: { $each: discountIds } },
-  });
+  this.discountIds = newDiscountIds;
 });
 
 /**** STORE USER PURCHASE HISTORY UPDATE */
@@ -407,6 +442,42 @@ StoreOrderSchema.post("save", async function () {
   });
 });
 
+/** PAYMENT CREATION */
+StoreOrderSchema.post("save", async function (this: StoreOrderDoc) {
+  if (this.total === 0) return;
+  const storeConnection = await dbConnect(this.storeDetail.storeId);
+  const StorePaymentModel = createStorePaymentModel(storeConnection);
+  const paymentIds: string[] = [];
+  const payment = await StorePaymentModel.createOneStorePayment({
+    byAdmin: this.byAdmin,
+    cart: {
+      store: this.storeDetail,
+      items: this.items,
+      subtotal: this.subtotal,
+      total: this.total,
+    },
+    paymentRequest: this.$locals.paymentRequest,
+    orderID: this._id as string,
+    billing: this.billing,
+  });
+  paymentIds.push(payment._id as string);
+
+  // PAYMENT STATUS
+  let newPaymentStatus: "unpaid" | "partially-paid" | "fully-paid" = "unpaid";
+
+  if (payment.paymentMethod === "CASH") {
+    // Make sure paymentAmount exists and is a number
+    const amount = payment.paymentAmount ?? 0;
+
+    newPaymentStatus = CurrencyHandlers.getOrderPaymentStatus(
+      this.total,
+      amount,
+    );
+  }
+
+  this.paymentStatus = newPaymentStatus;
+  this.paymentIds = paymentIds;
+});
 
 export const createStoreOrderModel = (
   connection: Connection,
