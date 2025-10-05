@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useAPIContext } from "./ApiContext";
 import { BookingOverdueNotificationType } from "../types/store_booking_overdue_type";
+import { useParams } from "next/navigation";
 
 export type DashboardContextType = {
   notificationLength: number;
@@ -27,6 +28,7 @@ const DashboardContextProvider = ({
 }) => {
   const { data: session } = useSession();
   const { APIEndpoint } = useAPIContext();
+  const { storeId } = useParams();
 
   const [notificationLength, setNotificationLength] = useState(0);
 
@@ -39,7 +41,7 @@ const DashboardContextProvider = ({
           {
             headers: {
               Authorization: `Bearer ${session?.user.token}`,
-              "x-store-id": localStorage.getItem("STORE_ID"),
+              "x-store-id": storeId,
             },
           },
         );

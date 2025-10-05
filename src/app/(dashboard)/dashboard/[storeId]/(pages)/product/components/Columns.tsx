@@ -53,122 +53,125 @@ function ImageWithFallback({
   );
 }
 
-export const columns: ColumnDef<ClientStoreProductType>[] = [
-  {
-    accessorKey: "no",
-    header: () => {
-      return <p className="text-xs">No.</p>;
+export const getColumns = (
+  storeId: string,
+): ColumnDef<ClientStoreProductType>[] => {
+  return [
+    {
+      accessorKey: "no",
+      header: () => {
+        return <p className="text-xs">No.</p>;
+      },
+      cell: ({ row }) => {
+        const value = row.index + 1;
+        return <p className="pl-2 text-xs">{value}</p>;
+      },
     },
-    cell: ({ row }) => {
-      const value = row.index + 1;
-      return <p className="pl-2 text-xs">{value}</p>;
-    },
-  },
-  {
-    accessorKey: "title",
-    header: () => {
-      return <p className="text-xs">Nama</p>;
-    },
-    cell: ({ row }) => {
-      const productId = row.original._id;
-      const storeId = row.original.storeDetail.storeId;
-      const title = row.getValue("title") as string;
-      const categories: GlobalCategoryType[] =
-        row.original.categoriesDetails.sort();
-      const primaryImage = row.original.primaryImage;
-      return (
-        <div
-          className="phone:w-fit flex cursor-pointer flex-row gap-3"
-          onClick={() =>
-            (window.location.href = `/dashboard/${storeId}/product/${productId}`)
-          }
-        >
-          <ImageWithFallback
-            width={100}
-            height={100}
-            src={primaryImage.link || imagePlaceholder.src}
-            alt={title}
-            className="aspect-square h-10 w-10 rounded-md object-cover"
-            fallbackSrc={imagePlaceholder.src}
-          />
-          <div className="flex flex-col gap-1">
-            <p className="text-xs">{title}</p>
-            <div className="flex flex-row gap-1">
-              {categories.map((category) => (
-                <p
-                  key={category._id}
-                  className="rounded-md bg-slate-200 px-2 text-[10px] text-slate-500"
-                >
-                  {category.title}
-                </p>
-              ))}
+    {
+      accessorKey: "title",
+      header: () => {
+        return <p className="text-xs">Nama</p>;
+      },
+      cell: ({ row }) => {
+        const productId = row.original._id;
+        const title = row.getValue("title") as string;
+        const categories: GlobalCategoryType[] =
+          row.original.categoriesDetails.sort();
+        const primaryImage = row.original.primaryImage;
+        return (
+          <div
+            className="phone:w-fit flex cursor-pointer flex-row gap-3"
+            onClick={() =>
+              (window.location.href = `/dashboard/${storeId}/product/${productId}`)
+            }
+          >
+            <ImageWithFallback
+              width={100}
+              height={100}
+              src={primaryImage.link || imagePlaceholder.src}
+              alt={title}
+              className="aspect-square h-10 w-10 rounded-md object-cover"
+              fallbackSrc={imagePlaceholder.src}
+            />
+            <div className="flex flex-col gap-1">
+              <p className="text-xs">{title}</p>
+              <div className="flex flex-row gap-1">
+                {categories.map((category) => (
+                  <p
+                    key={category._id}
+                    className="rounded-md bg-slate-200 px-2 text-[10px] text-slate-500"
+                  >
+                    {category.title}
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      );
+        );
+      },
     },
-  },
-  {
-    accessorKey: "createdAt",
-    header: () => {
-      return <p className="text-xs">Tgl Dibuat</p>;
+    {
+      accessorKey: "createdAt",
+      header: () => {
+        return <p className="text-xs">Tgl Dibuat</p>;
+      },
+      cell: ({ row }) => {
+        const value = moment(row.getValue("createdAt")).format("DD MMM YYYY");
+        return <p className="text-xs">{value}</p>;
+      },
     },
-    cell: ({ row }) => {
-      const value = moment(row.getValue("createdAt")).format("DD MMM YYYY");
-      return <p className="text-xs">{value}</p>;
+    {
+      accessorKey: "stocksDetail",
+      header: () => {
+        return <p className="text-center text-xs">Semua Unit</p>;
+      },
+      cell: ({ row }) => {
+        const value: StoreProductStockType[] = row.getValue("stocksDetail");
+        const stocksLength = value.length;
+        return <p className="text-center text-xs">{stocksLength}</p>;
+      },
     },
-  },
-  {
-    accessorKey: "stocksDetail",
-    header: () => {
-      return <p className="text-center text-xs">Semua Unit</p>;
+    {
+      accessorKey: "stocksAvailable",
+      header: () => {
+        return <p className="text-center text-xs">Unit Tersedia</p>;
+      },
+      cell: ({ row }) => {
+        const value: StoreProductStockType[] = row.getValue("stocksDetail");
+        const stocksLength = value.filter(
+          (stock) => stock.status === "available",
+        ).length;
+        return <p className="text-center text-xs">{stocksLength}</p>;
+      },
     },
-    cell: ({ row }) => {
-      const value: StoreProductStockType[] = row.getValue("stocksDetail");
-      const stocksLength = value.length;
-      return <p className="text-center text-xs">{stocksLength}</p>;
+    {
+      accessorKey: "totalSales",
+      header: () => {
+        return <p className="text-center text-xs">Unit Tersewa</p>;
+      },
+      cell: ({ row }) => {
+        const value = row.getValue("totalSales") as string;
+        return <p className="text-center text-xs">{value}</p>;
+      },
     },
-  },
-  {
-    accessorKey: "stocksAvailable",
-    header: () => {
-      return <p className="text-center text-xs">Unit Tersedia</p>;
+    {
+      accessorKey: "status",
+      header: () => {
+        return <p className="text-center text-xs">Status</p>;
+      },
+      cell: ({ row }) => {
+        const value = row.getValue("status") as string;
+        return (
+          <p
+            className={clsx(
+              "w-full rounded-md py-2 text-center text-xs font-semibold text-white capitalize",
+              getStatusColor(value),
+            )}
+          >
+            {value}
+          </p>
+        );
+      },
     },
-    cell: ({ row }) => {
-      const value: StoreProductStockType[] = row.getValue("stocksDetail");
-      const stocksLength = value.filter(
-        (stock) => stock.status === "available",
-      ).length;
-      return <p className="text-center text-xs">{stocksLength}</p>;
-    },
-  },
-  {
-    accessorKey: "totalSales",
-    header: () => {
-      return <p className="text-center text-xs">Unit Tersewa</p>;
-    },
-    cell: ({ row }) => {
-      const value = row.getValue("totalSales") as string;
-      return <p className="text-center text-xs">{value}</p>;
-    },
-  },
-  {
-    accessorKey: "status",
-    header: () => {
-      return <p className="text-center text-xs">Status</p>;
-    },
-    cell: ({ row }) => {
-      const value = row.getValue("status") as string;
-      return (
-        <p
-          className={clsx(
-            "w-full rounded-md py-2 text-center text-xs font-semibold text-white capitalize",
-            getStatusColor(value),
-          )}
-        >
-          {value}
-        </p>
-      );
-    },
-  },
-];
+  ];
+};

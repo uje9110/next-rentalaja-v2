@@ -31,6 +31,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useDashboardContext } from "@/app/lib/context/DashboardContext";
 import { MenuItem } from "../hook/useDashboardSidemenu";
+import Link from "next/link";
 
 const getRoleName = (roleId: string | undefined) => {
   switch (roleId) {
@@ -106,19 +107,18 @@ const DashboardSidebar: FC<DashboardSidebarProps> = ({
                 return (
                   <SidebarMenuItem key={menu.title} className="ml-0 list-none">
                     <SidebarMenuButton
-                      onClick={() => (window.location.href = menu.link)}
                       tooltip={menu.title}
                       className={clsx(
                         "hover:text-colorSecondary flex justify-between pr-1 hover:bg-teal-100",
                         isActive && "text-colorSecondary bg-teal-100",
                       )}
                     >
-                      <div className="flex flex-row gap-2">
+                      <Link href={menu.link} className="flex flex-row gap-2">
                         {<menu.icon strokeWidth="1px" size={20} />}
                         <span className="text-sm font-normal capitalize">
                           {menu.title}
                         </span>
-                      </div>
+                      </Link>
                       {menu.title === "dashboard" && (
                         <div className="flex h-6 w-6 -translate-y-[1px] items-center justify-center self-center rounded-md bg-red-400 p-3 text-xs font-semibold text-white">
                           {notificationLength}
@@ -136,12 +136,12 @@ const DashboardSidebar: FC<DashboardSidebarProps> = ({
                                 asChild
                                 isActive={item.isActive}
                               >
-                                <a
+                                <Link
                                   href={item.link}
                                   className="bg-white capitalize"
                                 >
                                   {item.title}
-                                </a>
+                                </Link>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                           );

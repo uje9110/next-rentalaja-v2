@@ -1,17 +1,23 @@
+"use client";
 import { DateTimePicker } from "@/app/lib/components/DateTimePicker";
-import { DialogContent, DialogTitle } from "@/components/ui/dialog";
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { GlobalCategoryHandler } from "@/app/lib/utils/GlobalCategoryHandler";
 import { CalendarIcon, LibraryBig, Store, Tag } from "lucide-react";
-import ProductFilterSelect from "../../(pages)/product/components/ProductFilter";
+import ProductFilterSelect from "../../(root)/(pages)/product/components/ProductFilter";
 import { GlobalCategoryType } from "@/app/lib/types/global_category_types";
 import { useRouter } from "next/navigation";
 import { GlobalStoreHandler } from "@/app/lib/utils/GlobalStoreHandler";
 import { ByCityGlobalStoreType } from "@/app/lib/types/global_store_types";
 import moment from "moment";
 
-const SearchAndCheckDialog = () => {
+const SearchAndCheckDialog = ({
+  isUsingDashboard = false,
+  storeId,
+}: {
+  storeId?: string;
+  isUsingDashboard?: boolean;
+}) => {
   const router = useRouter();
 
   // ✅ Use string instead of Date
@@ -53,12 +59,15 @@ const SearchAndCheckDialog = () => {
     if (selectedCategory) params.set("category", selectedCategory);
     if (selectedStore) params.set("storeId", selectedStore);
 
-    router.push(`/product/search?${params.toString()}`);
+    const endpoint = isUsingDashboard
+      ? `/dashboard/${storeId}/product/check?${params.toString()}`
+      : `/product/search?${params.toString()}`;
+
+    router.push(endpoint);
   };
 
   return (
-    <DialogContent>
-      <DialogTitle>Cari & Cek Jadwal Alat</DialogTitle>
+    <>
       <div className="flex flex-col gap-4">
         <DateTimePicker date={dateStart} setDate={setDateStart} />
         <DateTimePicker date={dateEnd} setDate={setDateEnd} />
@@ -136,7 +145,7 @@ const SearchAndCheckDialog = () => {
       >
         Cari alat
       </button>
-    </DialogContent>
+    </>
   );
 };
 

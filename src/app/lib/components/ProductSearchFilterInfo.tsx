@@ -57,13 +57,15 @@ const SearchFilterInfo: React.FC<SearchFilterInfoProps> = ({ filters }) => {
 
   if (parts.length === 0) {
     return (
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-gray-500 lg:text-center">
         Menampilkan semua produk yang tersedia.
       </p>
     );
   }
 
-  return <p className="text-sm text-gray-500">{parts.join(", ")}.</p>;
+  return (
+    <p className="text-sm text-gray-500 lg:text-center">{parts.join(", ")}.</p>
+  );
 };
 
 export default SearchFilterInfo;

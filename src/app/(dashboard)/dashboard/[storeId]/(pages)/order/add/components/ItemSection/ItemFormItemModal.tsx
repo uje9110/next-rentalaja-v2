@@ -139,7 +139,7 @@ const ItemFormItemModal: FC<ItemFormItemModalTypes> = ({
   return (
     <div
       id="add-item-dialog"
-      className="phone:h-auto phone:w-full w-2/3 rounded-lg"
+      className="phone:h-120 phone:overflow-auto phone:w-full w-2/3 rounded-lg"
     >
       <div
         className={`modalContainer phone:h-auto flex h-5/6 w-full flex-col justify-start gap-4 overflow-auto rounded-lg bg-white`}

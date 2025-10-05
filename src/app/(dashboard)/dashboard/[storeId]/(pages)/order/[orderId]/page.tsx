@@ -5,6 +5,7 @@ import { OrdeStatusInfo } from "./components/MainComponents/OrdeStatusInfo";
 import OrderLineItems from "./components/MainComponents/OrderLineItems";
 import SingleOrderSidebar from "./components/SidebarComponents/SingleOrderSidebar";
 import { StoreUserHandler } from "@/app/lib/utils/StoreUserHandler";
+import ResponsiveSidebar from "./components/SidebarComponents/ResponsiveSidebar";
 
 const Page = async ({
   params,
@@ -20,11 +21,9 @@ const Page = async ({
   );
 
   return (
-    <main className="flex flex-row gap-2 lg:h-full">
+    <main className="phone:flex-col phone:gap-0 flex flex-row gap-2 lg:flex lg:h-full lg:flex-row lg:gap-2">
       {/* Sidebar */}
-      <aside className="hidden lg:flex lg:w-72">
-        <SingleOrderSidebar orderData={order} />
-      </aside>
+      <ResponsiveSidebar orderData={order} />
       {/* Main Section */}
       <div
         id="single-order-div"

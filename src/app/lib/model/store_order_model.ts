@@ -303,8 +303,9 @@ StoreOrderSchema.statics.createOneStoreOrder = async function (
     isByAdmin: boolean;
     adminId?: string;
   },
-  paymentRequest: ClientStorePaymentRequest,
-  options: { session?: mongoose.ClientSession } = {},
+  isSkippingPayment: boolean,
+  paymentRequest?: ClientStorePaymentRequest,
+  options?: { session?: mongoose.ClientSession },
 ) {
   const { orderCount, billing, customerID, storeDetail, items, coupons } =
     orderData;
@@ -338,10 +339,11 @@ StoreOrderSchema.statics.createOneStoreOrder = async function (
   const orderDoc = new this(newOrderData);
 
   // Attach locals so it's available in post("save")
+  orderDoc.$locals.isSkippingPayment = isSkippingPayment;
   orderDoc.$locals.paymentRequest = paymentRequest;
 
   // Save with session
-  await orderDoc.save({ session: options.session });
+  await orderDoc.save({ session: options?.session });
 
   return orderDoc;
 };
@@ -545,6 +547,7 @@ StoreOrderSchema.pre("save", async function (next) {
 /**** PAYMENT CREATION */
 StoreOrderSchema.pre("save", async function (this: StoreOrderDoc) {
   if (this.total === 0) return;
+  if (this.$locals.isSkippingPayment) return;
 
   const storeConnection = await dbConnect(this.storeDetail.storeId);
 

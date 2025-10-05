@@ -1,6 +1,8 @@
 import { ClientSearchProductResultType } from "@/app/lib/types/store_product_type";
 import Link from "next/link";
 import React from "react";
+import { ImageWithFallback } from "./ImageWithFallback";
+import imagePlaceholder from "@/app/assets/img/icon/image-placeholder.jpg";
 
 type ProductSearchResultProps = {
   products: ClientSearchProductResultType[];
@@ -17,7 +19,7 @@ const ProductSearchResult: React.FC<ProductSearchResultProps> = ({
   searchFilter,
 }) => {
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className="flex w-full flex-col gap-4 lg:flex lg:flex-row">
       {products.map((product) => {
         const { productDetail, availableStockCount } = product;
 
@@ -28,17 +30,14 @@ const ProductSearchResult: React.FC<ProductSearchResultProps> = ({
           >
             {/* Image */}
             <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-              {productDetail.primaryImage?.link ? (
-                <img
-                  src={productDetail.primaryImage.link}
-                  alt={productDetail.primaryImage.title}
-                  className="h-full w-full rounded-md object-cover"
-                />
-              ) : (
-                <div className="flex h-full w-full items-center justify-center rounded-md text-gray-400">
-                  No Image
-                </div>
-              )}
+              <ImageWithFallback
+                src={productDetail.primaryImage.link}
+                alt=""
+                fallbackSrc={imagePlaceholder.src}
+                width={100}
+                height={100}
+                className="w-full h-full object-cover"
+              />
             </div>
 
             {/* Details */}

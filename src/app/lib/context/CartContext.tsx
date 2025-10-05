@@ -40,6 +40,7 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
         email: "",
       },
       checkoutCartItems: [],
+      isSkippingPayment: false,
       paymentRequest: {
         paymentMethod: "",
         paymentType: "",

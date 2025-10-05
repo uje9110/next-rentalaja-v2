@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
   const coupons = body.discounts;
   const admin = body.byAdmin;
   const paymentRequest = body.paymentRequest;
+  const isSkippingPayment = body.isSkippingPayment;
 
   const globalConnection = await dbConnect(null);
   const GlobalUserModel = createGlobalUserModel(globalConnection);
@@ -79,6 +80,7 @@ export async function POST(req: NextRequest) {
               orderCount,
             },
             admin,
+            isSkippingPayment,
             paymentRequest,
             { session: storeSession },
           );

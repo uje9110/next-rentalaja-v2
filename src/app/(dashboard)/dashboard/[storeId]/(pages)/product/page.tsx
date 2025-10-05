@@ -2,7 +2,6 @@ import React from "react";
 import axios from "axios";
 import { QueryHandler } from "@/app/lib/utils/QueryHandler";
 import { ClientStoreProductType } from "@/app/lib/types/store_product_type";
-import { columns } from "./components/Columns";
 import ProductTable from "./components/ProductTable";
 
 const Page = async ({
@@ -38,7 +37,7 @@ const Page = async ({
 
   return (
     <ProductTable
-      columns={columns}
+      storeId={storeId}
       data={products as ClientStoreProductType[]}
     />
   );

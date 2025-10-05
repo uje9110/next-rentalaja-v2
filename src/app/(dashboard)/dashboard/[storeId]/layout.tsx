@@ -9,6 +9,8 @@ import { Loader } from "lucide-react";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import { DashboardContextProvider } from "@/app/lib/context/DashboardContext";
 import { useDashboardSidebar } from "@/app/(dashboard)/hook/useDashboardSidemenu";
+import DashboardHeader from "../../components/DashboardHeader";
+import { usePageLoading } from "@/app/lib/hooks/usePageLoading";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { data: session, status } = useSession();
@@ -17,6 +19,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const param = useParams();
 
   const { storeId } = param;
+
+  const { isPageLoading } = usePageLoading();
 
   useEffect(() => {
     if (session?.user.roleId === "999") {
@@ -55,8 +59,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             SidebarMenuCashier={SidebarMenuCashier}
             SidebarMenuCustomerService={SidebarMenuCustomerService}
           />
-          <section className="flex flex-grow flex-col p-2 pl-1">
-            {children}
+          <section className="flex flex-grow flex-col gap-2 p-2 pl-1">
+            <DashboardHeader />
+            {isPageLoading ? (
+              <div className="flex flex-grow items-center justify-center">
+                <Loader size={32} className="animate-spin text-sky-600" />
+              </div>
+            ) : (
+              children
+            )}
           </section>
         </SidebarProvider>
       </DashboardContextProvider>

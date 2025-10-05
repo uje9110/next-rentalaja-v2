@@ -1,22 +1,63 @@
 "use client";
-import React, { ChangeEvent, FC } from "react";
-import { paymentMethods, paymentTypes } from "../../(root)/(pages)/checkout/const/PaymentTypesAndMethods";
+import React, {
+  ChangeEvent,
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
+import {
+  paymentMethods,
+  paymentTypes,
+} from "../../(root)/(pages)/checkout/const/PaymentTypesAndMethods";
 import { useCartContext } from "@/app/lib/context/CartContext";
+import { Switch } from "@/components/ui/switch";
+import { ClientCheckoutType } from "../types/client_checkout_type";
 
 type CheckoutPaymentProps = {
+  isUsingDashboard?: boolean;
   handleCheckoutPaymentInput: (e: ChangeEvent<HTMLInputElement>) => void;
+  setCheckout?: Dispatch<SetStateAction<ClientCheckoutType>>;
 };
 
 const CheckoutPayment: FC<CheckoutPaymentProps> = ({
+  isUsingDashboard,
   handleCheckoutPaymentInput,
+  setCheckout,
 }) => {
+  const [isSkippingPayment, setIsSkippingPayment] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isUsingDashboard) {
+      setCheckout &&
+        setCheckout((prev) => {
+          return {
+            ...prev,
+            isSkippingPayment: isSkippingPayment,
+          };
+        });
+    }
+  }, [isSkippingPayment]);
+
   const { checkout } = useCartContext();
   return (
-    <div className="border-accent-custom flex w-full flex-col rounded-md bg-white shadow-sm overflow-hidden ">
+    <div className="border-accent-custom relative flex w-full flex-col overflow-hidden rounded-md bg-white shadow-sm">
       <div>
-        <h3 className="bg-sky-100 px-4 py-2 text-sm font-semibold">
-          Metode Pembayaran
-        </h3>
+        <div className="flex items-center justify-between bg-sky-100 px-4 py-2 text-sm font-semibold">
+          <h3>Metode Pembayaran</h3>
+          {isUsingDashboard && (
+            <div className="z-20 flex items-center justify-center gap-2">
+              <p className="text-xs font-medium text-gray-600">
+                Lewati pembayaran
+              </p>
+              <Switch
+                checked={isSkippingPayment}
+                onCheckedChange={(checked) => setIsSkippingPayment(checked)}
+              />
+            </div>
+          )}
+        </div>
         <div className="flex flex-col gap-2 px-4 py-2 pb-4">
           {paymentMethods.map((item, index) => {
             const { title, desc, value } = item;
@@ -41,7 +82,7 @@ const CheckoutPayment: FC<CheckoutPaymentProps> = ({
                 <div
                   style={{
                     display:
-                      checkout.paymentRequest.paymentMethod === value
+                      checkout.paymentRequest?.paymentMethod === value
                         ? "block"
                         : "none",
                   }}
@@ -85,7 +126,7 @@ const CheckoutPayment: FC<CheckoutPaymentProps> = ({
                 <div
                   style={{
                     display:
-                      checkout.paymentRequest.paymentType === value
+                      checkout.paymentRequest?.paymentType === value
                         ? "block"
                         : "none",
                   }}
@@ -98,6 +139,9 @@ const CheckoutPayment: FC<CheckoutPaymentProps> = ({
           })}
         </div>
       </div>
+      {isSkippingPayment ? (
+        <div className="overlay absolute top-0 left-0 z-10 h-full w-full bg-gray-400/50" />
+      ) : null}
     </div>
   );
 };

@@ -69,8 +69,9 @@ export type StoreOrderStaticsType = {
       isByAdmin: boolean;
       adminId?: string;
     },
-    paymentRequest: ClientStorePaymentRequest,
-    options: { session?: mongoose.ClientSession },
+    isSkippinPayment: boolean,
+    paymentRequest?: ClientStorePaymentRequest,
+    options?: { session?: mongoose.ClientSession },
   ) => Promise<StoreOrderType>;
   getOneStoreOrder: (orderId: string) => Promise<ClientStoreOrderType>;
   getAllStoreOrder: (
@@ -97,6 +98,7 @@ export type StoreOrderStaticsType = {
 export type StoreOrderModelType = Model<StoreOrderType> & StoreOrderStaticsType;
 
 type StoreOrderSchemaLocals = {
+  isSkippingPayment: boolean;
   paymentRequest: ClientStorePaymentRequest;
 };
 

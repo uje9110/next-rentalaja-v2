@@ -9,8 +9,9 @@ import {
 } from "../../hooks/useScroll_FrontPageHeader";
 import { LogOut, SearchCheck, User, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import SearchAndCheckDialog from "./SearchAndCheckDialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import SearchAndCheckDialog from "../../../lib/components/ProductSearchAndCheckDialog";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 const AppHeader = () => {
   const { data: session } = useSession();
@@ -53,7 +54,7 @@ const AppHeader = () => {
             <Dialog>
               <DialogTrigger className="w-full">
                 <div
-                  className={`overflow-hidden relative flex h-10 flex-1 items-center justify-between rounded-full border-2 border-gray-200 bg-white`}
+                  className={`relative flex h-10 flex-1 items-center justify-between overflow-hidden rounded-full border-2 border-gray-200 bg-white`}
                 >
                   <span
                     className={`ml-4 text-gray-500 ${overScrollY ? "phone:truncate w-36" : ""}`}
@@ -65,7 +66,10 @@ const AppHeader = () => {
                   </p>
                 </div>
               </DialogTrigger>
-              <SearchAndCheckDialog />
+              <DialogContent className="phone:w-5/6 lg:w-2/5">
+                <DialogTitle>Cari & Cek Jadwal Alat</DialogTitle>
+                <SearchAndCheckDialog />
+              </DialogContent>
             </Dialog>
           </div>
 

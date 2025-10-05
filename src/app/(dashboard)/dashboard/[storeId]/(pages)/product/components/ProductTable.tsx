@@ -7,25 +7,23 @@ import {
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 import { GlobalCategoryType } from "@/app/lib/types/global_category_types";
 import { useQuery } from "@tanstack/react-query";
-import {
-  ColumnDef,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import axios from "axios";
 import { FileDigit, ListCheck, Search, SquareStack } from "lucide-react";
 import React from "react";
+import { getColumns } from "./Columns";
+import { ClientStoreProductType } from "@/app/lib/types/store_product_type";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
-
-const ProductTable = <TData, TValue>({
-  columns,
+const ProductTable = ({
+  storeId,
   data,
-}: DataTableProps<TData, TValue>) => {
+}: {
+  storeId: string;
+  data: ClientStoreProductType[];
+}) => {
   const { APIEndpoint } = useAPIContext();
+
+  const columns = getColumns(storeId);
   const table = useReactTable({
     data,
     columns,

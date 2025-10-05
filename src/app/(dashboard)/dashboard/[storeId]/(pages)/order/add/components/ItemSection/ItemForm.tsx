@@ -18,6 +18,8 @@ import { Search, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { ImageWithFallback } from "@/app/lib/components/ImageWithFallback";
+import imagePlaceholder from "@/app/assets/img/icon/image-placeholder.jpg";
 
 interface ItemFormType {
   itemData: StoreOrderItemType;
@@ -45,7 +47,7 @@ const ItemForm: FC<ItemFormType> = ({ setOrderData, itemData }) => {
 
   const handleSearchSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const productEndpoint = `${APIEndpoint}/product/store?search=${searchTerm}`;
+    const productEndpoint = `${APIEndpoint}/product?search=${searchTerm}`;
     const getProducts = async () => {
       const response = await axios.get(productEndpoint, {
         headers: {
@@ -53,8 +55,8 @@ const ItemForm: FC<ItemFormType> = ({ setOrderData, itemData }) => {
           Authorization: `Bearer ${session.user.token}`,
         },
       });
-      const data = response.data;
-      setProducts(data.products);
+      const data = response.data.json;
+      setProducts(data);
     };
     getProducts();
   };
@@ -126,13 +128,21 @@ const ItemForm: FC<ItemFormType> = ({ setOrderData, itemData }) => {
               <div
                 key={_id}
                 style={{
-                  backgroundImage: `url("${primaryImage.link}")`,
-                  backgroundSize: "cover",
+                  // backgroundImage: `url("${primaryImage.link}")`,
+                  // backgroundSize: "cover",
                   height: "16rem",
                 }}
                 className="phone:h-32 relative flex h-64 grow flex-col items-start justify-end overflow-hidden rounded-lg object-cover p-4 shadow-lg after:absolute after:top-0 after:left-0 after:z-10 after:h-full after:w-full after:bg-gradient-to-b after:from-blue-200/10 after:via-slate-500/10 after:to-slate-900"
                 onClick={() => handleItemModal(_id, title)}
               >
+                <ImageWithFallback
+                  alt=""
+                  src={primaryImage.link}
+                  fallbackSrc={imagePlaceholder.src}
+                  width={100}
+                  height={100}
+                  className="absolute top-0 left-0 w-full h-full object-cover"
+                />
                 <h3 className="relative z-20 font-semibold text-white">
                   {title}
                 </h3>
@@ -141,7 +151,7 @@ const ItemForm: FC<ItemFormType> = ({ setOrderData, itemData }) => {
           })}
         </div>
         <Dialog open={isItemDialogOpen} onOpenChange={setIsItemDialogOpen}>
-          <DialogContent className="w-4/6">
+          <DialogContent className="phone:w-[96%] lg:w-4/6">
             <DialogTitle>{currentItem.itemName}</DialogTitle>
             <ItemFormItemModal
               currentItem={currentItem}

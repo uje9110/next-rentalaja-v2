@@ -5,6 +5,7 @@ import { Bell, RefreshCcw } from "lucide-react";
 import Link from "next/link";
 import React, { FC } from "react";
 import OverdueBookingsNotification from "./components/OverdueBookingsNotification";
+import SearchAndCheckDialog from "@/app/lib/components/ProductSearchAndCheckDialog";
 
 const Page = async ({ params }: ServerPageProps) => {
   const { storeId } = await params;

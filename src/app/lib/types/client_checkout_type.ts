@@ -20,7 +20,8 @@ export type ClientCheckoutType = {
   billing: CheckoutBillingType;
   checkoutCartItems: ClientCartType[];
   discounts: GlobalCouponType[];
-  paymentRequest: ClientStorePaymentRequest;
+  paymentRequest?: ClientStorePaymentRequest;
+  isSkippingPayment: boolean;
   subtotal: number;
   total: number;
 };
@@ -32,8 +33,7 @@ export type CheckoutResponse = {
     lastName: string;
     email: string;
     telephone: string;
-    // ...etc
   };
   orders: StoreOrderType[];
-  status: string; // "OK"
+  status: string;
 };
