@@ -1,8 +1,9 @@
-import { Connection, Schema } from "mongoose";
+import { Connection, PipelineStage, Schema } from "mongoose";
 import {
   GlobalCouponModelType,
   GlobalCouponType,
 } from "../types/global_coupon_type";
+import { QueryHandler, QueryValue } from "../utils/QueryHandler";
 
 const GlobalCouponSchema = new Schema<GlobalCouponType>({
   _id: {
@@ -47,6 +48,28 @@ const GlobalCouponSchema = new Schema<GlobalCouponType>({
     },
   },
 });
+
+GlobalCouponSchema.statics.getAllGlobalCoupon = async function (
+  searchParams: URLSearchParams,
+) {
+  const Query = new QueryHandler(searchParams.toString());
+  let filters: Record<string, QueryValue> = Query.getFilterParams([]);
+
+  const { limit, page, sortBy, sortOrder } = Query.getPaginationParams();
+
+  const pipeline: PipelineStage[] = [
+    {
+      $match: filters,
+    },
+    { $sort: { [sortBy]: sortOrder } },
+    { $skip: (page - 1) * limit },
+    { $limit: limit },
+  ];
+
+  const coupons = await this.aggregate(pipeline);
+
+  return coupons;
+};
 
 export const createGlobalCouponModel = (
   connection: Connection,

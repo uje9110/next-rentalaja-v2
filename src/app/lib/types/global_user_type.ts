@@ -2,13 +2,13 @@ import mongoose, { Model, ObjectId } from "mongoose";
 import { GlobalStoreType } from "./global_store_types";
 
 export type GlobalUserType = {
-  _id: ObjectId;
+  _id?: ObjectId | string;
   firstName: string;
   lastName: string;
   telephone: string;
   email: string;
   password: string;
-  birthDate?: string; // make optional for flexibility
+  birthDate?: string;
   address?: {
     city?: string;
     district?: string;
@@ -26,7 +26,7 @@ export type GlobalUserType = {
   updatedAt?: Date;
   verificationToken?: string | null;
   isVerified?: boolean;
-  socialMedia?: string;
+  socialMedia: string;
   authorizedStore?: GlobalStoreType[];
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;

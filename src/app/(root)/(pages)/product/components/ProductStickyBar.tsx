@@ -24,8 +24,8 @@ export default function ProductPageStickyBar({
   stores,
 }: ProductPageStickyBarProps) {
   const isMobile = useIsMobile();
-  const updateSearchParam = useUpdateSearchParam();
-  const { ref: stickyBarRef, isSticky } = useSticky<HTMLDivElement>(); // adjust offset for top nav
+  const { updateSearchParam } = useUpdateSearchParam();
+  const { ref: stickyBarRef } = useSticky<HTMLDivElement>(); // adjust offset for top nav
 
   const resolvedURLSearchParam = new URLSearchParams(searchParams);
 
@@ -39,7 +39,11 @@ export default function ProductPageStickyBar({
           value={resolvedURLSearchParam.get("categoriesIds") || ""}
           placeholder="Pilih Kategori"
           icon={<LibraryBig size={15} className="text-colorSecondary" />}
-          options={categories.map((c) => ({ label: c.title, value: c._id }))}
+          options={
+            categories
+              ?.sort((a, b) => a.title.localeCompare(b.title))
+              .map((c) => ({ label: c.title, value: c._id })) ?? []
+          }
           onChange={(val) => updateSearchParam("categoriesIds", val)}
         />
         <ProductFilterSelect

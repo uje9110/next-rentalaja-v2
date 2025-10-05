@@ -1,5 +1,7 @@
-import mongoose, { ObjectId, Schema } from "mongoose";
+import { ObjectId } from "mongodb";
+import mongoose, { PipelineStage, Schema } from "mongoose";
 import {
+  IsOrderByAdminType,
   StoreOrderDoc,
   StoreOrderModelType,
   StoreOrderStaticsType,
@@ -16,12 +18,15 @@ import { createStoreProductBookingModel } from "./store_booking_model";
 import { StoreProductBookingType } from "../types/store_product_booking_type";
 import { AnyBulkWriteOperation } from "mongoose";
 import { StoreProductStockType } from "../types/store_product_stock_type";
-import { StoreOrderDiscountType } from "../types/store_order_dicount_type";
 import { createStoreOrderDiscountModel } from "./store_discount_model";
 import { createStoreUserModel } from "./store_user_model";
 import { createStorePaymentModel } from "./store_payment_model";
 import { GlobalCouponType } from "../types/global_coupon_type";
 import { ClientStorePaymentRequest } from "../types/store_order_payment_type";
+import { QueryHandler } from "../utils/QueryHandler";
+import { StoreOrderUpdateLogType } from "../types/store_order_updateLogs_type";
+import { createStoreOrderNoteModel } from "./store_order_note_model";
+import { StoreOrderNoteType } from "../types/store_order_note_type";
 
 const StoreOrderSchema = new Schema<StoreOrderType>(
   {
@@ -288,7 +293,7 @@ const StoreOrderSchema = new Schema<StoreOrderType>(
 StoreOrderSchema.statics.createOneStoreOrder = async function (
   orderData: {
     billing: StoreOrderBillingType;
-    customerID: ObjectId;
+    customerID: ObjectId | string;
     storeDetail: GlobalStoreType;
     items: StoreOrderItemType[];
     coupons: GlobalCouponType[];
@@ -303,9 +308,15 @@ StoreOrderSchema.statics.createOneStoreOrder = async function (
 ) {
   const { orderCount, billing, customerID, storeDetail, items, coupons } =
     orderData;
+
   const { isByAdmin, adminId } = byAdmin;
 
   const newId = `ORDER-${orderCount}`;
+  const updateLog: StoreOrderUpdateLogType = {
+    updatedBy: isByAdmin ? "Admin" : `${billing.firstName} ${billing.lastName}`,
+    updateInfo: "Order dibuat",
+    updateTime: new Date(),
+  };
   const subtotal = CurrencyHandlers.calculateOrderItemSubtotal(items);
   const discount = CurrencyHandlers.calculateDiscount(coupons, subtotal);
   const total = subtotal - discount;
@@ -313,11 +324,12 @@ StoreOrderSchema.statics.createOneStoreOrder = async function (
   const newOrderData: StoreOrderType = {
     _id: newId,
     billing,
-    customerID,
+    customerID: customerID as string,
     storeDetail,
     items,
     subtotal,
     total,
+    updateLogs: [updateLog],
     discounts: coupons,
     byAdmin: { isByAdmin, adminId },
   };
@@ -334,6 +346,187 @@ StoreOrderSchema.statics.createOneStoreOrder = async function (
   return orderDoc;
 };
 
+StoreOrderSchema.statics.getOneStoreOrder = async function (orderId: string) {
+  const pipeline: PipelineStage[] = [
+    { $match: { _id: orderId } },
+    {
+      $lookup: {
+        from: "payments",
+        localField: "paymentIds",
+        foreignField: "_id",
+        as: "paymentDetails",
+      },
+    },
+    {
+      $lookup: {
+        from: "discounts",
+        localField: "discountIds",
+        foreignField: "_id",
+        as: "discountsDetails",
+      },
+    },
+  ];
+
+  const order = await this.aggregate(pipeline);
+  return order[0];
+};
+
+StoreOrderSchema.statics.getAllStoreOrder = async function (
+  searchParams: URLSearchParams,
+) {
+  const Query = new QueryHandler(searchParams.toString());
+
+  let filters: any = Query.getFilterParams([
+    "productId",
+    "status",
+    "search",
+    "customerID",
+  ]);
+
+  const { limit, page, sortBy, sortOrder } = Query.getPaginationParams();
+  const { dateBy, dateStart, dateEnd, dateStartInMs, dateEndInMs } =
+    Query.getDateParams();
+
+  if (filters.customerID) {
+    filters.customerID = new ObjectId(filters.customerID);
+  }
+
+  if (dateBy) {
+    switch (dateBy) {
+      case "byRentalStartIs":
+        filters = {
+          ...filters,
+          "items.rentalDetails.rentalStartInLocaleMs": {
+            $gte: dateStartInMs,
+            $lte: dateEndInMs,
+          },
+        };
+        break;
+      case "byRentalEndIs":
+        filters = {
+          ...filters,
+          "items.rentalDetails.rentalEndInLocaleMs": {
+            $gte: dateStartInMs,
+            $lte: dateEndInMs,
+          },
+        };
+        break;
+      case "createdAt":
+        filters = {
+          ...filters,
+          createdAt: {
+            $gte: dateStart,
+            $lte: dateEnd,
+          },
+        };
+        break;
+      default:
+        filters = {
+          ...filters,
+        };
+        break;
+    }
+  }
+
+  const matchPipeline = (filters.search && {
+    "billing.firstName": {
+      $regex: filters.search,
+      $options: "i",
+    },
+  }) || {
+    ...(filters && filters),
+  };
+
+  const pipeline: PipelineStage[] = [
+    {
+      $match: matchPipeline,
+    },
+    { $sort: { [sortBy]: sortOrder } },
+    { $skip: (page - 1) * limit },
+    { $limit: limit },
+  ];
+
+  const orders = await this.aggregate(pipeline);
+
+  return orders;
+};
+
+StoreOrderSchema.statics.addPaymentToStoreOrder = async function (
+  byAdmin: IsOrderByAdminType,
+  storeId: string,
+  orderId: string,
+  paymentData: ClientStorePaymentRequest,
+  orderTotal: number,
+  billing: StoreOrderBillingType,
+) {
+  const storeConnection = await dbConnect(storeId);
+
+  const StorePaymentModel = createStorePaymentModel(storeConnection);
+
+  const payment = await StorePaymentModel.createOneStorePayment({
+    byAdmin,
+    orderId: orderId,
+    storeId: storeId,
+    paymentRequest: paymentData,
+    billing: billing,
+  });
+
+  let newPaymentStatus;
+  console.log(payment.paymentMethod);
+  if (payment.paymentMethod === "Cash") {
+    const amount = payment.paymentAmount ?? 0;
+    console.log(amount);
+
+    newPaymentStatus = CurrencyHandlers.getOrderPaymentStatus(
+      orderTotal,
+      amount,
+    );
+  }
+
+  await this.findByIdAndUpdate(
+    { _id: orderId },
+    {
+      paymentStatus: newPaymentStatus,
+      $push: {
+        paymentIds: payment._id,
+      },
+    },
+    { new: true },
+  );
+
+  return payment;
+};
+
+StoreOrderSchema.statics.getStoreOrderPayments = async function (
+  orderId: string,
+  storeId: string,
+) {
+  const storeConnection = await dbConnect(storeId);
+
+  const StorePaymentModel = createStorePaymentModel(storeConnection);
+  const orderPayments = await StorePaymentModel.aggregate([
+    { $match: { orderID: orderId } },
+  ]);
+
+  return orderPayments;
+};
+
+StoreOrderSchema.statics.addStoreOrderNote = async function (
+  storeId: string,
+  orderNoteData: Partial<StoreOrderNoteType>,
+) {
+  const storeConnection = await dbConnect(storeId);
+  const OrderNoteModel = createStoreOrderNoteModel(storeConnection);
+  const orderNote = await OrderNoteModel.create(orderNoteData);
+
+  await this.findByIdAndUpdate(
+    { _id: orderNoteData.fromOrderId },
+    { $push: { orderNoteIds: orderNote._id } },
+  );
+
+  return orderNote;
+};
+
 /** PRE PROCESSING */
 /**** DISCOUNT CALCULATION */
 StoreOrderSchema.pre("save", async function (next) {
@@ -347,6 +540,66 @@ StoreOrderSchema.pre("save", async function (next) {
   );
   this.total = subtotal - discountTotal;
   next();
+});
+
+/**** PAYMENT CREATION */
+StoreOrderSchema.pre("save", async function (this: StoreOrderDoc) {
+  if (this.total === 0) return;
+
+  const storeConnection = await dbConnect(this.storeDetail.storeId);
+
+  const StorePaymentModel = createStorePaymentModel(storeConnection);
+
+  const payment = await StorePaymentModel.createOneStorePayment({
+    byAdmin: this.byAdmin,
+    orderId: this._id as string,
+    storeId: this.storeDetail.storeId,
+    subtotal: this.subtotal,
+    paymentRequest: this.$locals.paymentRequest,
+    billing: this.billing,
+  });
+
+  let newPaymentStatus: "unpaid" | "partially-paid" | "fully-paid" = "unpaid";
+
+  if (payment.paymentMethod === "CASH") {
+    const amount = payment.paymentAmount ?? 0;
+    newPaymentStatus = CurrencyHandlers.getOrderPaymentStatus(
+      this.total,
+      amount,
+    );
+  }
+
+  this.paymentStatus = newPaymentStatus;
+  this.paymentIds = payment ? [payment._id as string] : [];
+});
+
+/**** DISCOUNT CREATION */
+StoreOrderSchema.pre("save", async function () {
+  if (!this.discounts || this.discounts.length === 0) return;
+
+  const storeConnection = await dbConnect(this.storeDetail?.storeId);
+  const StoreOrderDiscountModel =
+    createStoreOrderDiscountModel(storeConnection);
+
+  const discountDocs = this.discounts.map((coupon) => {
+    const { couponValue, couponType } = coupon;
+    const discountTotal =
+      coupon.couponType === "percentage"
+        ? (this.subtotal * couponValue) / 100
+        : couponValue;
+    return {
+      fromOrderId: this._id,
+      fromCouponId: coupon._id,
+      discountTotal,
+      discountType: couponType,
+    };
+  });
+
+  const createdDiscounts =
+    await StoreOrderDiscountModel.insertMany(discountDocs);
+  const newDiscountIds = createdDiscounts.map((d) => d._id);
+
+  this.discountIds = newDiscountIds;
 });
 
 /** POST PROCESSING */
@@ -401,38 +654,6 @@ StoreOrderSchema.post("save", async function () {
   }
 });
 
-/**** DISCOUNT CREATION */
-StoreOrderSchema.post("save", async function () {
-  if (!this.discounts || this.discounts.length === 0) return;
-
-  const storeConnection = await dbConnect(this.storeDetail?.storeId);
-  const StoreOrderDiscountModel =
-    createStoreOrderDiscountModel(storeConnection);
-
-  const discountDocs: Partial<StoreOrderDiscountType>[] = this.discounts.map(
-    (coupon) => {
-      const { couponValue, couponType } = coupon;
-      const discountTotal =
-        coupon.couponType === "percentage"
-          ? (this.subtotal * couponValue) / 100
-          : couponValue;
-      return {
-        fromOrderId: this._id,
-        fromCouponId: coupon._id,
-        discountTotal: discountTotal,
-        discountType: couponType,
-      };
-    },
-  );
-
-  const createdDiscounts =
-    await StoreOrderDiscountModel.insertMany(discountDocs);
-
-  const newDiscountIds = createdDiscounts.map((d) => d._id);
-
-  this.discountIds = newDiscountIds;
-});
-
 /**** STORE USER PURCHASE HISTORY UPDATE */
 StoreOrderSchema.post("save", async function () {
   const storeConnection = await dbConnect(this.storeDetail?.storeId);
@@ -440,43 +661,6 @@ StoreOrderSchema.post("save", async function () {
   await StoreUserModel.findByIdAndUpdate(this.customerID, {
     $push: { purchaseHistory: this._id },
   });
-});
-
-/** PAYMENT CREATION */
-StoreOrderSchema.post("save", async function (this: StoreOrderDoc) {
-  if (this.total === 0) return;
-  const storeConnection = await dbConnect(this.storeDetail.storeId);
-  const StorePaymentModel = createStorePaymentModel(storeConnection);
-  const paymentIds: string[] = [];
-  const payment = await StorePaymentModel.createOneStorePayment({
-    byAdmin: this.byAdmin,
-    cart: {
-      store: this.storeDetail,
-      items: this.items,
-      subtotal: this.subtotal,
-      total: this.total,
-    },
-    paymentRequest: this.$locals.paymentRequest,
-    orderID: this._id as string,
-    billing: this.billing,
-  });
-  paymentIds.push(payment._id as string);
-
-  // PAYMENT STATUS
-  let newPaymentStatus: "unpaid" | "partially-paid" | "fully-paid" = "unpaid";
-
-  if (payment.paymentMethod === "CASH") {
-    // Make sure paymentAmount exists and is a number
-    const amount = payment.paymentAmount ?? 0;
-
-    newPaymentStatus = CurrencyHandlers.getOrderPaymentStatus(
-      this.total,
-      amount,
-    );
-  }
-
-  this.paymentStatus = newPaymentStatus;
-  this.paymentIds = paymentIds;
 });
 
 export const createStoreOrderModel = (

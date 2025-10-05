@@ -3,6 +3,8 @@ export type StoreOrderBillingType = {
   lastName: string;
   telephone: string;
   email: string;
+  socialMedia: string;
+  membershipId?: string;
   address?: {
     city?: string;
     district?: string;

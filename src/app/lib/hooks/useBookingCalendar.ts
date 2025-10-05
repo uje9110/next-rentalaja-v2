@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { StoreOrderItemType } from "../types/store_order_item_type";
 import { ClientStoreProductStockType } from "../types/store_product_stock_type";
 
@@ -7,6 +7,7 @@ type UseBookingCalendarProps = {
   setOrderItemData?: Dispatch<SetStateAction<StoreOrderItemType>>;
   currDateInMs?: number;
   setCurrDateInMs?: Dispatch<SetStateAction<number>>;
+  defaultStartDate?: string;
 };
 
 export function useBookingCalendar({
@@ -14,12 +15,28 @@ export function useBookingCalendar({
   setOrderItemData,
   currDateInMs,
   setCurrDateInMs,
+  defaultStartDate,
 }: UseBookingCalendarProps) {
+  const [selectedDate, setSelectedDate] = useState(defaultStartDate ?? "");
 
-  
+  useEffect(() => {
+    if (defaultStartDate) {
+      setOrderItemData?.((prevState) => {
+        return {
+          ...prevState,
+          rentalDetails: {
+            ...prevState.rentalDetails,
+            rentalStartDate: defaultStartDate,
+          },
+        };
+      });
+    }
+  }, []);
+
   const handleBookingCalendarDateChange = (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
+    setSelectedDate(e.target.value);
     setOrderItemData?.((prevState) => {
       return {
         ...prevState,
@@ -119,6 +136,8 @@ export function useBookingCalendar({
   };
 
   return {
+    selectedDate,
+    setSelectedDate,
     handleBookingCalendarDateChange,
     openBookingCalendarHours,
     closeBookingCalendarHours,

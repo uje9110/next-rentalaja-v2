@@ -8,13 +8,18 @@ import { bannerImages } from "../const/bannerImages";
 export default function FrontPageBannerSlider() {
   const pathname = usePathname();
 
-  if (pathname.startsWith("/product/")) return null;
+  // ❌ hide on all /product/* EXCEPT /product/search
+  if (pathname.startsWith("/product/") && pathname !== "/product/search") {
+    return null;
+  }
 
   return (
-    <FrontPagePictureSlider
-      images={bannerImages}
-      height="lg:h-[200px] phone:h-[150px]"
-      maxWidth="lg:max-w-[60%] phone:max-w-full"
-    />
+    <div className="phone:pt-6">
+      <FrontPagePictureSlider
+        images={bannerImages}
+        height="lg:h-[200px] phone:h-[150px]"
+        maxWidth="lg:max-w-[60%] phone:max-w-full"
+      />
+    </div>
   );
 }

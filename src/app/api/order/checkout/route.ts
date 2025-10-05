@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
               lastName: user.lastName,
               email: user.email,
               membershipId: user.membershipId,
-              globalUserId: user._id,
+              globalUserId: user._id as string,
             },
             { session: storeSession },
           );

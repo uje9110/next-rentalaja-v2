@@ -1,12 +1,69 @@
 import { useState, useEffect } from "react";
 import { StoreOrderItemType } from "../types/store_order_item_type";
 import { ClientStoreProductType } from "../types/store_product_type";
+import { StoreOrderType } from "../types/store_order_type";
+import { StoreOrderBillingType } from "../types/store_order_billing_type";
 
 type UseOrderProps = {
-  storeProduct: ClientStoreProductType;
+  storeProduct?: ClientStoreProductType;
 };
 
 export function useOrder({ storeProduct }: UseOrderProps) {
+  const [orderData, setOrderData] = useState<StoreOrderType>({
+    storeDetail: {
+      storeId: "",
+      storeName: "",
+      storeStrings: "",
+      storeImage: {
+        name: "",
+        link: "",
+      },
+      storeAddress: {
+        province: "",
+        city: "",
+        district: "",
+        address: "",
+      },
+    },
+    byAdmin: {
+      isByAdmin: true,
+    },
+    subtotal: 0,
+    total: 0,
+    items: [],
+    billing: {
+      firstName: "",
+      lastName: "",
+      telephone: "",
+      email: "",
+      socialMedia: "",
+      address: {
+        city: "",
+        district: "",
+        province: "",
+        street: "",
+      },
+    },
+    discounts: [],
+    updateLogs: [],
+  });
+
+  const [orderBillingData, setOrderBillingData] =
+    useState<StoreOrderBillingType>({
+      firstName: "",
+      lastName: "",
+      telephone: "",
+      email: "",
+      socialMedia: "",
+      membershipId: "",
+      address: {
+        city: "",
+        district: "",
+        province: "",
+        street: "",
+      },
+    });
+
   const [orderItemData, setOrderItemData] = useState<StoreOrderItemType>({
     itemID: "",
     itemName: "",
@@ -54,6 +111,7 @@ export function useOrder({ storeProduct }: UseOrderProps) {
   });
 
   useEffect(() => {
+    if (!storeProduct) return;
     setOrderItemData((prevState) => {
       return {
         ...prevState,
@@ -63,7 +121,7 @@ export function useOrder({ storeProduct }: UseOrderProps) {
         storeDetail: storeProduct.storeDetail,
       };
     });
-  }, []);
+  }, [storeProduct]);
 
   useEffect(() => {
     const { rentalStartDate, rentalStartTime } = orderItemData.rentalDetails;
@@ -86,5 +144,12 @@ export function useOrder({ storeProduct }: UseOrderProps) {
     orderItemData.rentalDetails.rentalStartTime,
   ]);
 
-  return { orderItemData, setOrderItemData };
+  return {
+    orderItemData,
+    setOrderItemData,
+    orderData,
+    setOrderData,
+    orderBillingData,
+    setOrderBillingData,
+  };
 }

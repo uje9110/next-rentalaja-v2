@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import mongoose, { Schema } from "mongoose";
+import { PipelineStage, Schema } from "mongoose";
 import {
   StoreOrderPaymentModelType,
   StoreOrderPaymentStaticsType,
@@ -7,8 +7,6 @@ import {
   ClientStorePaymentRequest,
 } from "../types/store_order_payment_type";
 import { Connection } from "mongoose";
-import { StoreOrderType } from "../types/store_order_type";
-import { CheckoutBillingType } from "../types/client_checkout_type";
 import { ClientCartType } from "../types/client_cart_types";
 import { dbConnect } from "../connection/dbConnect";
 import { createGlobalUserModel } from "./global_user_model";
@@ -18,8 +16,8 @@ import {
 } from "../types/xendit_type";
 import axios from "axios";
 import { QrCodeHandler } from "../utils/QrCodeHandler";
-import { GlobalUserType } from "../types/global_user_type";
 import { StoreOrderBillingType } from "../types/store_order_billing_type";
+import { QueryHandler, QueryValue } from "../utils/QueryHandler";
 
 const PaymentScema = new Schema<StoreOrderPaymentType>(
   {
@@ -70,25 +68,32 @@ PaymentScema.statics.createOneStorePayment = async function (paymentData: {
     isByAdmin: boolean;
     adminId?: string;
   };
-  cart: ClientCartType;
+  orderId: string;
+  storeId: string;
+  subtotal?: number;
   paymentRequest: ClientStorePaymentRequest;
-  orderID: string;
   billing: StoreOrderBillingType;
 }) {
-  const { cart, paymentRequest, orderID, byAdmin, billing } = paymentData;
+  const { paymentRequest, orderId, storeId, byAdmin, billing, subtotal } =
+    paymentData;
   // PAYMENT AMOUNT
-  const { paymentType, paymentMethod, paymentDesc } = paymentRequest;
-  let newPaymentAmount: number = 0;
-  if (paymentType === "full-payment") {
-    newPaymentAmount = cart.subtotal;
-  } else if (paymentType === "partial-payment") {
-    newPaymentAmount = cart.subtotal * 0.2;
+  const { paymentType, paymentMethod, paymentDesc, paymentAmount } =
+    paymentRequest;
+
+  let newPaymentAmount: number = paymentAmount ?? 0;
+
+  if (!newPaymentAmount && subtotal) {
+    if (paymentType === "full-payment") {
+      newPaymentAmount = subtotal;
+    } else if (paymentType === "partial-payment") {
+      newPaymentAmount = subtotal * 0.2;
+    }
   }
 
   // PAYMENT DESC
   let newPaymentDesc: string = paymentDesc
     ? paymentDesc
-    : `${paymentType} untuk order ${orderID} store ${cart.store.storeName}`;
+    : `${paymentType} untuk order ${orderId} store ${storeId}`;
 
   // PAID BY
   const newPaidBy = `${billing.firstName} ${billing.lastName}`;
@@ -96,7 +101,7 @@ PaymentScema.statics.createOneStorePayment = async function (paymentData: {
   // CREATED BY
   let newCreatedBy: string = `${billing.firstName} ${billing.lastName}`;
   if (byAdmin.isByAdmin) {
-    const storeConnection = await dbConnect(cart.store.storeId);
+    const storeConnection = await dbConnect(storeId);
     const GlobalUserModel = createGlobalUserModel(storeConnection);
     const admin = await GlobalUserModel.findById(new ObjectId(byAdmin.adminId));
     newCreatedBy = admin
@@ -111,10 +116,10 @@ PaymentScema.statics.createOneStorePayment = async function (paymentData: {
 
   if (paymentMethod === "QRIS") {
     const xenditPaymentRequestBody: DynamicXenditPaymentRequestBody = {
-      reference_id: orderID,
+      reference_id: orderId,
       channel_code: paymentMethod,
       request_amount: String(newPaymentAmount),
-      orderId: orderID,
+      orderId: orderId,
       description: paymentDesc as string,
     };
     const xenditPaymentRequest = await axios.post(
@@ -130,7 +135,7 @@ PaymentScema.statics.createOneStorePayment = async function (paymentData: {
   }
 
   const newPaymentData: StoreOrderPaymentType = {
-    orderID,
+    orderID: orderId,
     paymentAmount: newPaymentAmount,
     paymentType,
     paymentMethod,
@@ -143,6 +148,50 @@ PaymentScema.statics.createOneStorePayment = async function (paymentData: {
   };
   const payment = await this.create(newPaymentData);
   return payment;
+};
+
+PaymentScema.statics.getAllStorePayments = async function (
+  searchParams: URLSearchParams,
+) {
+  const Query = new QueryHandler(searchParams.toString());
+
+  let filters: Record<string, QueryValue> = Query.getFilterParams([
+    "paymentType",
+    "paymentMethod",
+  ]);
+
+  const { limit, page, sortBy, sortOrder } = Query.getPaginationParams();
+  const { dateStart, dateEnd, dateBy } = Query.getDateParams();
+
+  if (dateBy) {
+    switch (dateBy) {
+      case "createdAt":
+        filters = {
+          ...filters,
+          createdAt: {
+            $gte: dateStart,
+            $lte: dateEnd,
+          },
+        };
+        break;
+      default:
+        filters = {
+          ...filters,
+        };
+        break;
+    }
+  }
+
+  const pipeline: PipelineStage[] = [
+    {
+      $match: filters,
+    },
+    { $sort: { [sortBy]: sortOrder } },
+    { $skip: (page - 1) * limit },
+    { $limit: limit },
+  ];
+
+  return this.aggregate(pipeline);
 };
 
 export const createStorePaymentModel = (

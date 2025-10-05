@@ -1,4 +1,11 @@
-type QueryValue = string | number | boolean | Date | Record<string, unknown>;
+import moment from "moment";
+
+export type QueryValue =
+  | string
+  | number
+  | boolean
+  | Date
+  | Record<string, unknown>;
 type QueryParams = Record<string, QueryValue>;
 
 export class QueryHandler {
@@ -23,10 +30,11 @@ export class QueryHandler {
       else if (value === "true" || value === "false") {
         parsedValue = value === "true";
       }
+
       // Date
-      else if (!isNaN(Date.parse(value))) {
-        parsedValue = new Date(value);
-      }
+      // else if (!isNaN(Date.parse(value))) {
+      //   parsedValue = new Date(value);
+      // }
 
       // Nested key: e.g. createdAt[$gte]
       const match = rawKey.match(/^(.+)\[(.+)\]$/);
@@ -75,6 +83,29 @@ export class QueryHandler {
     }
 
     return { page, limit, sortBy, sortOrder };
+  }
+
+  getDateParams() {
+    const dateBy = this.params.dateBy ?? "";
+
+    const defaultDateStart = moment().startOf("day");
+    const defaultDateEnd = moment().endOf("day");
+
+    const dateStart =
+      new Date(this.params.dateStart as string) ?? defaultDateStart.toDate();
+    const dateEnd =
+      new Date(this.params.dateEnd as string) ?? defaultDateEnd.toDate();
+
+    const dateStartInMs = dateStart.getTime();
+    const dateEndInMs = dateEnd.getTime();
+
+    return {
+      dateBy,
+      dateStart,
+      dateEnd,
+      dateStartInMs,
+      dateEndInMs,
+    };
   }
 
   getFilterParams(whitelist: string[]): QueryParams {

@@ -1,19 +1,26 @@
 "use client";
 import React from "react";
-import CheckoutItemList from "./components/CheckoutItemList";
-import CheckoutDetail from "./components/CheckoutDetail";
-import CheckoutPayment from "./components/CheckoutPayment";
+import CheckoutItemList from "../../../lib/components/CheckoutItemList";
+import CheckoutDetail from "../../../lib/components/CheckoutDetail";
+import CheckoutPayment from "../../../lib/components/CheckoutPayment";
 import { useCartContext } from "@/app/lib/context/CartContext";
-import { useCheckoutPayment } from "./hooks/useCheckoutPayment";
-import { CheckoutBilling } from "./components/CheckoutBilling";
-import { useCheckoutBilling } from "./hooks/useCheckoutBilling";
-import CheckoutSubmit from "./components/CheckoutSubmit";
-import { useCheckoutSubmit } from "./hooks/useCheckoutSubmit";
+import { useCheckoutPayment } from "../../../lib/hooks/useCheckoutPayment";
+import { CheckoutBilling } from "../../../lib/components/CheckoutBilling";
+import { useCheckoutBilling } from "../../../lib/hooks/useCheckoutBilling";
+import CheckoutSubmit from "../../../lib/components/CheckoutSubmit";
+import { useCheckoutSubmit } from "../../../lib/hooks/useCheckoutSubmit";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 
 const page = () => {
   const { APIEndpoint } = useAPIContext();
-  const { checkout, setCheckout } = useCartContext();
+  const {
+    checkout,
+    setCheckout,
+    cart,
+    setCart,
+    isCheckoutLoading,
+    setIsCheckoutLoading,
+  } = useCartContext();
 
   // CHECKOUT PAYMENT
   const { handleCheckoutPaymentInput } = useCheckoutPayment({ setCheckout });
@@ -23,7 +30,14 @@ const page = () => {
     useCheckoutBilling({ setCheckout });
 
   // CHECKOUT SUBMIT
-  const { orderCheckout } = useCheckoutSubmit({ checkout, APIEndpoint });
+  const { orderCheckout } = useCheckoutSubmit({
+    cart,
+    setCart,
+    checkout,
+    APIEndpoint,
+    setCheckout,
+    setIsCheckoutLoading,
+  });
 
   return (
     <main className="checkout-page bg-defaultBackground relative flex h-full w-full flex-col items-center gap-4 p-4 pt-5 pb-40 lg:h-screen lg:flex-row lg:items-start lg:justify-center">
@@ -55,7 +69,10 @@ const page = () => {
           <CheckoutDetail />
 
           {/* CHECKOUT BUTTON */}
-          <CheckoutSubmit orderCheckout={orderCheckout} />
+          <CheckoutSubmit
+            orderCheckout={orderCheckout}
+            isCheckoutLoading={isCheckoutLoading}
+          />
         </div>
       </div>
     </main>

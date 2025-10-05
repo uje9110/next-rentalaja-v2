@@ -37,10 +37,27 @@ export class CurrencyHandlers {
   static calculateOrderPaymentTotal = (
     payments: StoreOrderPaymentType[] | ClientStoreOrderPaymentType[],
   ) => {
-    const totalPayment = payments.reduce((total, payment) => {
-      return total + payment.paymentAmount;
-    }, 0);
-    return totalPayment;
+    const totalPayments =
+      payments
+        .filter(
+          (payment) =>
+            payment.paymentType !== "Denda" && payment.paymentType !== "Refund",
+        )
+        .filter((payment) => {
+          if (payment.isUsingXendit) {
+            return payment.xenditPayment?.status === "SUCCEEDED";
+          }
+          return payment;
+        })
+        .reduce((totalPayment, currPayment) => {
+          return totalPayment + currPayment.paymentAmount;
+        }, 0) -
+      payments
+        .filter((payment) => payment.paymentType === "Refund")
+        .reduce((totalPayment, currPayment) => {
+          return totalPayment + currPayment.paymentAmount;
+        }, 0);
+    return totalPayments;
   };
 
   static getOrderPaymentStatus = (
@@ -54,5 +71,15 @@ export class CurrencyHandlers {
       return "fully-paid";
     }
     return "unpaid";
+  };
+
+  static changePaymentTypeName = (type: string) => {
+    if (type === "partial-payment") {
+      return "Uang Muka";
+    } else if (type === "full-payment") {
+      return "Pelunasan";
+    } else {
+      return type;
+    }
   };
 }

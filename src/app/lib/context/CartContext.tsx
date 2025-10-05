@@ -6,8 +6,8 @@ import {
   SetStateAction,
   useContext,
   useEffect,
+  useState,
 } from "react";
-import { StoreOrderItemType } from "../types/store_order_item_type";
 import { useLocalStorageState } from "../hooks/useLocalStorageState";
 import { ClientCartType } from "../types/client_cart_types";
 import { ClientCheckoutType } from "../types/client_checkout_type";
@@ -16,6 +16,8 @@ import { CurrencyHandlers } from "../utils/CurrencyHandler";
 type CartContextProps = {
   cart: ClientCartType[];
   setCart: Dispatch<SetStateAction<ClientCartType[]>>;
+  isCheckoutLoading: boolean;
+  setIsCheckoutLoading: Dispatch<SetStateAction<boolean>>;
   checkout: ClientCheckoutType;
   setCheckout: Dispatch<SetStateAction<ClientCheckoutType>>;
   itemAmountInCart: number;
@@ -25,6 +27,7 @@ const CartContext = createContext<CartContextProps | undefined>(undefined);
 
 export const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useLocalStorageState<ClientCartType[]>("cart", []);
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState<boolean>(false);
   const [checkout, setCheckout] = useLocalStorageState<ClientCheckoutType>(
     "checkout",
     {
@@ -115,7 +118,15 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <CartContext.Provider
-      value={{ cart, setCart, checkout, setCheckout, itemAmountInCart }}
+      value={{
+        cart,
+        setCart,
+        checkout,
+        setCheckout,
+        itemAmountInCart,
+        isCheckoutLoading,
+        setIsCheckoutLoading,
+      }}
     >
       {children}
     </CartContext.Provider>

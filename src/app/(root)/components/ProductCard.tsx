@@ -1,24 +1,16 @@
 import React from "react";
 import imagePlaceholder from "@/app/assets/img/icon/image-placeholder.jpg";
 import { ClientGlobalProductType } from "@/app/lib/types/global_product_types";
-import { ImageContainerWithFallback } from "./ImageContainerWithFallback";
 import { ChevronRight } from "lucide-react";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
+import { ImageWithFallback } from "@/app/lib/components/ImageWithFallback";
 
 type ProductCardProps = {
   productData: ClientGlobalProductType;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({ productData }) => {
-  const {
-    _id,
-    primaryImage,
-    title,
-    // variationsDetail,
-    // categoriesDetail,
-    totalSales,
-    prices,
-  } = productData;
+  const { _id, primaryImage, title, totalSales, prices } = productData;
 
   return (
     <div
@@ -26,12 +18,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ productData }) => {
       className="product-card border-colorPrimary/10 flex w-[48%] shrink-0 flex-col gap-1 rounded-xl border-2 bg-white shadow-md lg:w-1/6"
     >
       <a href={`/product/${_id}`}>
-        <ImageContainerWithFallback
+        <ImageWithFallback
           key={primaryImage.title}
           src={primaryImage.link}
           alt={title}
-          width={100}
-          height={100}
+          width={200}
+          height={200}
           fallbackSrc={imagePlaceholder.src}
           className="aspect-square h-full w-full rounded-t-xl object-cover"
         />

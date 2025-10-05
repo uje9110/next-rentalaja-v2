@@ -55,7 +55,10 @@ export function useBookingItemAmount({
       return !hasConflict;
     });
     setAvailableStocks(
-      availableStock?.map((item) => item._id as string).sort(),
+      availableStock
+        ?.filter((item) => item.status === "available" || item.status === "rented")
+        .map((item) => item._id as string)
+        .sort(),
     );
   };
 

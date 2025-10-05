@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import { GlobalStoreType } from "./global_store_types";
 
 export type OrderItemRentalDetailsType = {
@@ -21,6 +22,7 @@ export type OrderItemVariationType = {
 };
 
 export type StoreOrderItemType = {
+  _id?: string | ObjectId;
   itemID: string;
   itemName: string;
   itemAmount: number;

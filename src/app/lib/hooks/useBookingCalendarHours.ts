@@ -5,20 +5,24 @@ import { ClientStoreProductStockType } from "../types/store_product_stock_type";
 type UseBookingCalendarHoursProps = {
   orderItemData?: StoreOrderItemType;
   setOrderItemData?: Dispatch<SetStateAction<StoreOrderItemType>>;
+  defaultStartHour?: string;
 };
 
 export const useBookingCalendarHours = ({
   orderItemData,
   setOrderItemData,
+  defaultStartHour,
 }: UseBookingCalendarHoursProps) => {
+  const [defaultHour, defaultMinute] = defaultStartHour?.split(":") ?? ["", ""];
+
   const [isBookingCalendarHourOpen, setIsBookingCalendarHourOpen] =
     useState<boolean>(false);
 
   const [bookingHourAndMinute, setBookingHourAndMinute] = useState<
     Record<string, string>
   >({
-    hour: "00",
-    minute: "00",
+    hour: defaultHour ?? "00",
+    minute: defaultMinute ?? "00",
   });
 
   // CHECK HOUR FOR BOOKING AVAIBILITY
@@ -56,6 +60,20 @@ export const useBookingCalendarHours = ({
 
     return new Date(year, month - 1, day).getTime(); // local midnight
   };
+
+  useEffect(() => {
+    if (defaultStartHour) {
+      setOrderItemData?.((prevState) => {
+        return {
+          ...prevState,
+          rentalDetails: {
+            ...prevState.rentalDetails,
+            rentalStartTime: `${defaultStartHour}`,
+          },
+        };
+      });
+    }
+  }, []);
 
   useEffect(() => {
     setOrderItemData?.((prevState) => {

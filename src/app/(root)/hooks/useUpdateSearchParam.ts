@@ -1,25 +1,52 @@
 "use client";
 
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 export function useUpdateSearchParam() {
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const router = useRouter();
 
-  return useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
+  // 🔹 Single param updater
+  const updateSearchParam = useCallback(
+    (name: string, value: string | Date | null) => {
+      const params = new URLSearchParams(window.location.search); // always fresh
 
       if (value) {
-        params.set(name, value);
+        const stringValue =
+          value instanceof Date ? value.toISOString() : String(value);
+        params.set(name, stringValue);
       } else {
         params.delete(name);
       }
 
-      router.replace(`${pathname}?${params.toString()}`);
+      const newUrl = `${pathname}?${params.toString()}`;
+      router.replace(newUrl, { scroll: false });
     },
-    [router, pathname, searchParams],
+    [pathname, router],
   );
+
+  // 🔹 Multi param updater
+  const updateSearchParams = useCallback(
+    (updates: Record<string, string | Date | null | undefined>) => {
+      const params = new URLSearchParams(window.location.search); // always fresh
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value == null || value === "") {
+          params.delete(key);
+        } else {
+          const stringValue =
+            value instanceof Date ? value.toISOString() : String(value);
+          params.set(key, stringValue);
+        }
+      });
+
+      const newUrl = `${pathname}?${params.toString()}`;
+      router.replace(newUrl, { scroll: false });
+    },
+    [pathname, router],
+  );
+
+  return { updateSearchParam, updateSearchParams, searchParams };
 }

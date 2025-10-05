@@ -15,7 +15,11 @@ export type GlobalCouponType = {
   };
 };
 
-export type GlobalCouponStaticsType = {};
+export type GlobalCouponStaticsType = {
+  getAllGlobalCoupon: (
+    searchParam: URLSearchParams,
+  ) => Promise<GlobalCouponType[]>;
+};
 
 export type GlobalCouponModelType = Model<GlobalCouponType> &
   GlobalCouponStaticsType;

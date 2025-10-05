@@ -1,3 +1,5 @@
+import { Model } from "mongoose";
+
 export type StoreProductVariationType = {
   _id?: string;
   title: string;
@@ -15,3 +17,8 @@ export type StoreProductVariationType = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type StoreProductVariationStaticsType = {};
+
+export type StoreProductVariationModelType = Model<StoreProductVariationType> &
+  StoreProductVariationStaticsType;

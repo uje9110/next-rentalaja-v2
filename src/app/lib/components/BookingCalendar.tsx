@@ -4,9 +4,12 @@ import { daysArr, monthArr } from "../const/MonthAndDays";
 import { StoreOrderItemType } from "../types/store_order_item_type";
 import { ClientStoreProductStockType } from "../types/store_product_stock_type";
 import { ClientStoreProductType } from "../types/store_product_type";
+import moment from "moment";
 
 type BookingCalendarProps = {
-  storeProduct: ClientStoreProductType;
+  selectedDate: string;
+  defaultStartDate?: string;
+  storeProduct: ClientStoreProductType | undefined;
   currMonth: number;
   currYear: number;
   datesOfMonth: (number | null)[];
@@ -31,6 +34,8 @@ type BookingCalendarProps = {
 };
 
 const BookingCalendar: FC<BookingCalendarProps> = ({
+  selectedDate,
+  defaultStartDate,
   storeProduct,
   currMonth,
   currYear,
@@ -45,8 +50,10 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
   checkAnyDateAvailability,
   checkEveryDateAvailability,
 }) => {
+  if (!storeProduct) return;
+
   return (
-    <div className="flex flex-col gap-2 lg:h-full lg:w-1/3">
+    <div className="flex flex-col gap-2 lg:h-full lg:w-full">
       <div className="flex items-center gap-2">
         <Calendar1 size={18} />
         <h3 className="subheader-custom">Pilih Tanggal Booking</h3>
@@ -149,6 +156,7 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
                     name="rentalDate"
                     type="radio"
                     required
+                    checked={selectedDate === formattedValue}
                     value={formattedValue}
                     className="peer absolute top-1/2 left-1/2 z-0 h-8 w-8 -translate-x-1/2 -translate-y-1/2 opacity-0"
                     onChange={(e) => handleBookingCalendarDateChange(e)}
@@ -170,7 +178,7 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
                   />
                   <label
                     htmlFor={`input-${date}`}
-                    className="dateBookingLabel hover:text-colorPrimary absolute z-10 flex h-8 w-8 items-center justify-center rounded-full peer-checked:bg-blue-500 peer-checked:text-white peer-disabled:text-slate-400 hover:border-2 hover:border-blue-500 hover:bg-sky-100"
+                    className="dateBookingLabel hover:text-colorPrimary absolute z-10 flex h-8 w-8 items-center justify-center rounded-full peer-checked:bg-teal-400 peer-checked:text-white peer-disabled:text-slate-400 hover:border-2 hover:border-blue-500 hover:bg-sky-100"
                   >
                     {date}
                   </label>
@@ -205,6 +213,16 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
                 </div>
               );
             })}
+          </div>
+
+          <div className="flex w-full items-center justify-center p-2">
+            <p className="flex items-center justify-center gap-2 text-sm font-medium text-teal-400">
+              <span className="text-black">---</span>
+              <span>
+                Waktu Mulai: {moment(selectedDate).format("DD MMMM YYYY")}
+              </span>
+              <span className="text-black">---</span>
+            </p>
           </div>
         </div>
       </div>

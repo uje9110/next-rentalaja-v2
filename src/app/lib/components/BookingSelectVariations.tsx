@@ -4,11 +4,12 @@ import { CalendarClock } from "lucide-react";
 import { StoreOrderItemType } from "../types/store_order_item_type";
 import { ClientStoreProductStockType } from "../types/store_product_stock_type";
 import { ClientStoreProductType } from "../types/store_product_type";
+import moment from "moment";
 
 type BookingSelectVariationProps = {
-  storeProduct: ClientStoreProductType;
+  storeProduct: ClientStoreProductType | undefined;
   orderItemData: StoreOrderItemType;
-  variationsDetails: StoreProductVariationType[];
+  variationsDetails: StoreProductVariationType[] | undefined;
   handleBookingVariation: (
     e: ChangeEvent<HTMLInputElement>,
     variationTimeValueInMs: number,
@@ -27,19 +28,17 @@ const BookingSelectVariation: React.FC<BookingSelectVariationProps> = ({
   handleBookingVariation,
   checkBookingVariantAvailability,
 }) => {
+  if (!storeProduct || !variationsDetails) return;
+
   const rentalStartInMs = orderItemData?.rentalDetails.rentalStartInLocaleMs;
 
   return (
-    <div
-      id="variation-inputs-wrapper"
-      className="grid grid-cols-1 gap-4 sm:grid-cols-2"
-    >
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 w-full">
         <div className="flex items-center gap-2">
           <CalendarClock size={18} />
           <h3 className="subheader-custom">Pilih Paket Sewa</h3>
         </div>
-        <div className="flex flex-row flex-wrap justify-between gap-4">
+        <div className="flex flex-row flex-wrap justify-between gap-4 w-full">
           {variationsDetails
             .sort((a, b) => a.hoursValue - b.hoursValue)
             .map((item, index: number) => {
@@ -53,6 +52,8 @@ const BookingSelectVariation: React.FC<BookingSelectVariationProps> = ({
 
               const variationTimeValueInMs =
                 (hoursValue + variationBonus.hoursValue) * 3600000;
+
+              const bookingEndInMs = rentalStartInMs + variationTimeValueInMs;
 
               return (
                 <div
@@ -101,11 +102,9 @@ const BookingSelectVariation: React.FC<BookingSelectVariationProps> = ({
                     {/* Rental End Date */}
                     <p className="mt-2 text-xs">
                       <span className="block font-light">Waktu kembali:</span>
-                      {/* <span className="block font-medium">
-                    {thisStartBookingDateTimeInMs
-                      ? moment(bookingEndDate).format("DD MMM YYYY, HH:mm")
-                      : "---"}
-                  </span> */}
+                      <span className="block font-medium text-teal-400">
+                        {moment(bookingEndInMs).format("DD MMM YYYY, HH:mm")}
+                      </span>
                     </p>
 
                     {/* Price */}
@@ -122,7 +121,6 @@ const BookingSelectVariation: React.FC<BookingSelectVariationProps> = ({
             })}
         </div>
       </div>
-    </div>
   );
 };
 

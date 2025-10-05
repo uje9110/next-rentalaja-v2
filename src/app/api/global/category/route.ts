@@ -9,7 +9,9 @@ export async function GET(req: NextRequest) {
   try {
     const connection = await dbConnect(null);
     const GlobalCategoryModel = createGlobalCategoryModel(connection);
-    const globalCategory = await GlobalCategoryModel.getAll();
+    const globalCategory = await GlobalCategoryModel.aggregate([
+      { $sort: { title: 1 } },
+    ]);
 
     return NextResponse.json(
       { json: globalCategory },

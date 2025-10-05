@@ -11,9 +11,10 @@ import React, { Dispatch, FC, SetStateAction } from "react";
 import { ClientStoreProductStockType } from "../types/store_product_stock_type";
 import { ClientStoreProductType } from "../types/store_product_type";
 
-
 type BookingCalendarHoursProps = {
-  storeProduct: ClientStoreProductType;
+  bookingHourAndMinute: Record<string, string>;
+  defaultStartHour?: string;
+  storeProduct: ClientStoreProductType | undefined;
   hoursArr: number[];
   minutesArr: number[];
   currDateInMs: number;
@@ -28,6 +29,8 @@ type BookingCalendarHoursProps = {
 };
 
 const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
+  bookingHourAndMinute,
+  defaultStartHour,
   storeProduct,
   hoursArr,
   minutesArr,
@@ -37,6 +40,9 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
   checkHourAvaibilty,
   getSelectedDateValueInMs,
 }) => {
+  if (!storeProduct) return;
+  const [defaultHour, defaultMinute] = defaultStartHour?.split(":") ?? ["", ""];
+
   const handleClose = () => {
     setIsBookingCalendarHourOpen(false);
   };
@@ -69,16 +75,18 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
                   const selectedBookingDateInMs = getSelectedDateValueInMs();
                   const currHourInMs =
                     selectedBookingDateInMs + item * 3600 * 1000;
+                  const formattedValue = item < 10 ? `0${item}` : item;
                   return (
                     <div
                       key={`bookingHour-${item}`}
                       className="relative flex justify-center"
                     >
                       <input
+                        checked={bookingHourAndMinute.hour === formattedValue}
                         type="radio"
                         id={`bookingHour-${item}`}
                         name="bookingHour"
-                        value={item < 10 ? `0${item}` : item}
+                        value={formattedValue}
                         onChange={(e) =>
                           setBookingHourAndMinute((prevState) => {
                             return {
@@ -111,34 +119,38 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
                 MENIT
               </p>
               <div className="flex h-72 w-full flex-col gap-2 overflow-auto">
-                {minutesArr.map((item) => (
-                  <div
-                    key={`bookingMinute-${item}`}
-                    className="relative flex justify-center"
-                  >
-                    <input
-                      type="radio"
-                      id={`bookingMinute-${item}`}
-                      name="bookingMinute"
-                      value={item < 10 ? `0${item}` : item}
-                      onChange={(e) =>
-                        setBookingHourAndMinute((prevState) => {
-                          return {
-                            ...prevState,
-                            minute: e.target.value,
-                          };
-                        })
-                      }
-                      className="peer hidden"
-                    />
-                    <label
-                      htmlFor={`bookingMinute-${item}`}
-                      className="peer-checked:border-accent-custom border-accent-custom flex h-10 w-4/5 cursor-pointer items-center justify-center rounded-full bg-white text-sm shadow-sm transition-all peer-checked:border-2 peer-checked:bg-sky-100 peer-checked:text-sky-800 hover:bg-sky-50"
+                {minutesArr.map((item) => {
+                  const formattedValue = item < 10 ? `0${item}` : item;
+                  return (
+                    <div
+                      key={`bookingMinute-${item}`}
+                      className="relative flex justify-center"
                     >
-                      {item < 10 ? `0${item}` : item}
-                    </label>
-                  </div>
-                ))}
+                      <input
+                        checked={bookingHourAndMinute.minute === formattedValue}
+                        type="radio"
+                        id={`bookingMinute-${item}`}
+                        name="bookingMinute"
+                        value={formattedValue}
+                        onChange={(e) =>
+                          setBookingHourAndMinute((prevState) => {
+                            return {
+                              ...prevState,
+                              minute: e.target.value,
+                            };
+                          })
+                        }
+                        className="peer hidden"
+                      />
+                      <label
+                        htmlFor={`bookingMinute-${item}`}
+                        className="peer-checked:border-accent-custom border-accent-custom flex h-10 w-4/5 cursor-pointer items-center justify-center rounded-full bg-white text-sm shadow-sm transition-all peer-checked:border-2 peer-checked:bg-sky-100 peer-checked:text-sky-800 hover:bg-sky-50"
+                      >
+                        {formattedValue}
+                      </label>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
