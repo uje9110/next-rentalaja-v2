@@ -84,20 +84,22 @@ const SearchAndCheckDialog = ({
           onChange={(val) => setSelectedCategory(val)}
         />
 
-        <ProductFilterSelect
-          value={selectedStore}
-          placeholder="Pilih Toko"
-          icon={<Store size={15} className="text-colorSecondary" />}
-          options={
-            stores?.flatMap((s) =>
-              s.cityStores?.map((st) => ({
-                label: st.storeName,
-                value: st.storeId,
-              })),
-            ) ?? []
-          }
-          onChange={(val) => setSelectedStore(val)}
-        />
+        {!isUsingDashboard && (
+          <ProductFilterSelect
+            value={selectedStore}
+            placeholder="Pilih Toko"
+            icon={<Store size={15} className="text-colorSecondary" />}
+            options={
+              stores?.flatMap((s) =>
+                s.cityStores?.map((st) => ({
+                  label: st.storeName,
+                  value: st.storeId,
+                })),
+              ) ?? []
+            }
+            onChange={(val) => setSelectedStore(val)}
+          />
+        )}
       </div>
 
       <div className="bg-muted/30 text-muted-foreground mt-4 space-y-2 rounded-lg border p-3 text-sm">

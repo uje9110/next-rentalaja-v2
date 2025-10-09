@@ -47,9 +47,9 @@ Jumlah: ${item.itemAmount}\n`;
   }, [orderData]);
 
   return (
-    <>
+    <div className="phone:flex phone:flex-col phone:gap-4 lg:flex lg:w-1/2 lg:flex-col lg:gap-4">
       {orderData.status === "pending" && (
-        <div className="flex h-full w-full flex-col items-center gap-2 rounded-lg border-2 border-red-500 bg-white p-4 text-sm shadow-sm">
+        <div className="flex h-fit w-full flex-col items-center gap-2 rounded-lg border-2 border-red-500 bg-white p-4 text-sm shadow-sm">
           <span className="text-lg text-red-500">
             <AlertCircle size={32} />
           </span>
@@ -74,6 +74,6 @@ Jumlah: ${item.itemAmount}\n`;
           <span>Konfirmasi Order</span>
         </a>
       )}
-    </>
+    </div>
   );
 };

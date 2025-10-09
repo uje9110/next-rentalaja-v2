@@ -27,7 +27,8 @@ const DashboardHeader = () => {
 
   // PAGE TITLE
   useEffect(() => {
-    let title = pathname.split("/")[3];
+    const pathnames = pathname.split("/");
+    let title = pathnames.length > 3 ? pathnames[3] : pathnames[2];
     if (title.includes("_")) {
       title = title
         .toLocaleLowerCase()
@@ -103,7 +104,7 @@ const DashboardHeader = () => {
             </p>
             {/* DATABASE SELECT */}
             <div className="phone:w-fit phone:justify-start flex w-fit justify-end">
-              {session?.user.roleId !== "999" ? <SelectStore /> : null}
+              <SelectStore />
             </div>
           </div>
         </div>

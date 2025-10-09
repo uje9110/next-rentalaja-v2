@@ -26,7 +26,16 @@ const page = async ({ params }: PageProps) => {
       {orders.length > 0
         ? orders.map((orderData, index) => {
             return (
-              <CheckoutDetail key={index} orderData={orderData} index={index} />
+              <div className="flex flex-col gap-4" key={orderData._id}>
+                <p className="text-center">
+                  Pesanan di <b>{orderData.storeDetail.storeName}</b>
+                </p>
+                <CheckoutDetail
+                  key={index}
+                  orderData={orderData}
+                  index={index}
+                />
+              </div>
             );
           })
         : ""}

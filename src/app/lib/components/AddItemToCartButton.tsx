@@ -54,7 +54,7 @@ const AddItemToCartButton: FC<AddItemToCartButtonProps> = ({
 
       {needsReview && (
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent>
+          <DialogContent className="lg:w-1/3 phone:w-5/6">
             <DialogHeader>
               <DialogTitle>Review Item</DialogTitle>
             </DialogHeader>

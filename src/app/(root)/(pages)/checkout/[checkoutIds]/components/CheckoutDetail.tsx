@@ -17,9 +17,12 @@ export const CheckoutDetail: React.FC<{
   index: number;
 }> = ({ orderData, index }) => {
   return (
-    <>
+    <div className="lg:flex lg:w-[850px] lg:flex-row lg:gap-4 phone:flex phone:flex-col phone:gap-4">
       <ClientCheckoutDetailActions orderData={orderData} />
-      <div key={`${orderData._id}-${index}`} className="flex flex-col gap-4">
+      <div
+        key={`${orderData._id}-${index}`}
+        className="flex flex-col gap-4 lg:w-1/2"
+      >
         <div className="flex flex-col gap-0 rounded-md border border-slate-400/50 bg-white">
           <p className="border-b border-slate-400/50 px-4 py-4 text-sm font-medium">
             Riwayat Pembayaran
@@ -61,7 +64,7 @@ export const CheckoutDetail: React.FC<{
             ))}
           </Accordion>
         </div>
-        <div className="flex w-full flex-col gap-4 rounded-lg border border-slate-400/50 bg-white p-4 text-xs shadow-xl lg:flex lg:w-[90%] lg:flex-col lg:justify-center lg:gap-8">
+        <div className="flex w-full flex-col gap-4 rounded-lg border border-slate-400/50 bg-white p-4 text-xs shadow-xl lg:flex lg:w-full lg:flex-col lg:justify-center lg:gap-8">
           <div className="billing-body flex flex-col gap-2">
             <h5 className="pb-4 text-center font-semibold">
               Informasi Billing
@@ -276,6 +279,6 @@ export const CheckoutDetail: React.FC<{
           </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };

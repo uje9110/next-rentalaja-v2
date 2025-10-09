@@ -22,7 +22,7 @@ export type MenuItem = {
   }[];
 };
 
-export function useDashboardSidebar({ storeId }: { storeId: string }) {
+export function useDashboardSidebar({ storeId }: { storeId?: string }) {
   const SidebarMenuAdmin: MenuItem[] = [
     {
       title: `dashboard`,
@@ -103,13 +103,13 @@ export function useDashboardSidebar({ storeId }: { storeId: string }) {
   const SidebarMenuCashier: MenuItem[] = [
     {
       title: `dashboard`,
-      link: `/dashboard/${storeId}/${storeId}/.`,
+      link: `/dashboard/${storeId}/.`,
       isActive: true,
       icon: Bell,
     },
     {
       title: `order`,
-      link: `/dashboard/${storeId}/${storeId}/order`,
+      link: `/dashboard/${storeId}/order`,
       isActive: true,
       icon: ScrollText,
       subItems: [
@@ -122,7 +122,7 @@ export function useDashboardSidebar({ storeId }: { storeId: string }) {
     },
     {
       title: `products`,
-      link: `/dashboard/${storeId}/products`,
+      link: `/dashboard/${storeId}/product`,
       isActive: true,
       icon: Box,
       subItems: [
@@ -150,13 +150,13 @@ export function useDashboardSidebar({ storeId }: { storeId: string }) {
   const SidebarMenuCustomerService: MenuItem[] = [
     {
       title: `dashboard`,
-      link: `/dashboard/${storeId}/${storeId}/.`,
+      link: `/dashboard/${storeId}/.`,
       isActive: true,
       icon: Bell,
     },
     {
       title: `order`,
-      link: `/dashboard/${storeId}/${storeId}/order`,
+      link: `/dashboard/${storeId}/order`,
       isActive: true,
       icon: ScrollText,
       subItems: [
@@ -169,7 +169,7 @@ export function useDashboardSidebar({ storeId }: { storeId: string }) {
     },
     {
       title: `products`,
-      link: `/dashboard/${storeId}/products`,
+      link: `/dashboard/${storeId}/product`,
       isActive: true,
       icon: Box,
       subItems: [

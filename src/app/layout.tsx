@@ -3,7 +3,6 @@ import { Poppins, Quicksand } from "next/font/google";
 import "./globals.css";
 import { APIContextProvider } from "./lib/context/ApiContext";
 import QueryProvider from "./lib/context/QueryContext";
-import { CartContextProvider } from "./lib/context/CartContext";
 
 const poppins = Poppins({
   variable: "--font-primary",
@@ -31,9 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <QueryProvider>
         <APIContextProvider>
-          <CartContextProvider>
-            <body className={`font-primary`}>{children}</body>
-          </CartContextProvider>
+          <body className={`font-primary`}>{children}</body>
         </APIContextProvider>
       </QueryProvider>
     </html>

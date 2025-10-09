@@ -13,39 +13,9 @@ import DashboardHeader from "../../components/DashboardHeader";
 import { usePageLoading } from "@/app/lib/hooks/usePageLoading";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-  const pathname = usePathname();
-  const param = useParams();
-
-  const { storeId } = param;
-
+  const { data: session } = useSession();
+  const { storeId } = useParams();
   const { isPageLoading } = usePageLoading();
-
-  useEffect(() => {
-    if (session?.user.roleId === "999") {
-      router.push("/unauthorized");
-    }
-  }, [status, session, router]);
-
-  if (status === "unauthenticated") {
-    router.push(`/login?redirect=${pathname}`);
-  }
-
-  if (status === "loading") {
-    return (
-      <div className="flex h-screen w-full flex-row items-center justify-center">
-        <p className="animate-spin">
-          <Loader size={32} strokeWidth={2} />
-        </p>
-      </div>
-    );
-  }
-
-  if (session?.user.roleId === "999") {
-    return null;
-  }
-
   const { SidebarMenuAdmin, SidebarMenuCashier, SidebarMenuCustomerService } =
     useDashboardSidebar({ storeId: storeId as string });
 

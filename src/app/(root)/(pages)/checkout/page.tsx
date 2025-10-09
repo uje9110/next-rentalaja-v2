@@ -10,6 +10,7 @@ import { useCheckoutBilling } from "../../../lib/hooks/useCheckoutBilling";
 import CheckoutSubmit from "../../../lib/components/CheckoutSubmit";
 import { useCheckoutSubmit } from "../../../lib/hooks/useCheckoutSubmit";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
+import { useSession } from "next-auth/react";
 
 const page = () => {
   const { APIEndpoint } = useAPIContext();
@@ -21,6 +22,8 @@ const page = () => {
     isCheckoutLoading,
     setIsCheckoutLoading,
   } = useCartContext();
+
+  const { data: session } = useSession();
 
   // CHECKOUT PAYMENT
   const { handleCheckoutPaymentInput } = useCheckoutPayment({ setCheckout });
@@ -39,36 +42,35 @@ const page = () => {
     setIsCheckoutLoading,
   });
 
+  console.log(checkout);
+
   return (
     <main className="checkout-page bg-defaultBackground relative flex h-full w-full flex-col items-center gap-4 p-4 pt-5 pb-40 lg:h-screen lg:flex-row lg:items-start lg:justify-center">
       <div className="flex w-full flex-col gap-4 lg:flex lg:w-[60%] lg:flex-row lg:gap-4">
-        {/* ITEM LIST */}
-        <CheckoutItemList />
+        {/* --- Item List --- */}
+        <div className="lg:w-1/2">
+          <CheckoutItemList />
+        </div>
 
-        <CheckoutPayment
-          handleCheckoutPaymentInput={handleCheckoutPaymentInput}
-        />
+        <div className="phone:flex phone:flex-col phone:gap-4 lg:flex lg:w-1/2 lg:flex-col lg:gap-4">
+          {/* --- Payment --- */}
+          <CheckoutPayment
+            handleCheckoutPaymentInput={handleCheckoutPaymentInput}
+          />
 
-        <CheckoutBilling
-          hasAccount={hasAccount}
-          setHasAccount={setHasAccount}
-          handleCheckoutBillingChange={handleCheckoutBillingChange}
-        />
+          {/* --- Billing --- */}
+          {session ? null : (
+            <CheckoutBilling
+              hasAccount={hasAccount}
+              setHasAccount={setHasAccount}
+              handleCheckoutBillingChange={handleCheckoutBillingChange}
+            />
+          )}
 
-        {/* CHECKOUT SECTION */}
-        <div className="flex w-full flex-col gap-4 lg:flex lg:w-1/2 lg:flex-col lg:gap-4">
-          {/* COUPON FORM */}
-          {/* <CouponSection
-            session={session as Session}
-            setCheckoutData={setCheckoutData}
-            setIsCouponLoading={setIsCouponLoading}
-            discounts={discounts}
-            setDiscounts={setDiscounts}
-          /> */}
-          {/* CHECKOUT DETAIL */}
+          {/* --- Detail --- */}
           <CheckoutDetail />
 
-          {/* CHECKOUT BUTTON */}
+          {/* --- Submit --- */}
           <CheckoutSubmit
             orderCheckout={orderCheckout}
             isCheckoutLoading={isCheckoutLoading}

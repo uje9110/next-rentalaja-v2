@@ -12,6 +12,7 @@ import { useLocalStorageState } from "../hooks/useLocalStorageState";
 import { ClientCartType } from "../types/client_cart_types";
 import { ClientCheckoutType } from "../types/client_checkout_type";
 import { CurrencyHandlers } from "../utils/CurrencyHandler";
+import { useSession } from "next-auth/react";
 
 type CartContextProps = {
   cart: ClientCartType[];
@@ -26,6 +27,7 @@ type CartContextProps = {
 const CartContext = createContext<CartContextProps | undefined>(undefined);
 
 export const CartContextProvider = ({ children }: { children: ReactNode }) => {
+  const { data: session } = useSession();
   const [cart, setCart] = useLocalStorageState<ClientCartType[]>("cart", []);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState<boolean>(false);
   const [checkout, setCheckout] = useLocalStorageState<ClientCheckoutType>(
@@ -50,6 +52,19 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
       total: 0,
     },
   );
+
+  // Assign Billing If Session Exist
+  useEffect(() => {
+    setCheckout((prev) => {
+      return {
+        ...prev,
+        billing: {
+          isAccountAlreadyMade: "yes",
+          email: session?.user.email as string,
+        },
+      };
+    });
+  }, [session]);
 
   const itemAmountInCart = cart.reduce((totalItem, cartItem) => {
     return (

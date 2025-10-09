@@ -38,6 +38,15 @@ const getRoleName = (roleId: string | undefined) => {
     case "001":
       return "SuperAdmin";
 
+    case "002":
+      return "Admin";
+
+    case "003":
+      return "Cashier";
+
+    case "004":
+      return "Customer Service";
+
     default:
       return "";
   }

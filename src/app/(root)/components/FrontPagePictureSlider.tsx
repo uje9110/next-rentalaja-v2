@@ -45,7 +45,7 @@ export const FrontPagePictureSlider: FC<PictureSliderProps> = ({
   }, [images.length, autoPlayInterval]);
 
   return (
-    <div className="bg-defaultBackground flex h-auto items-center justify-center px-4 pt-4 lg:p-4">
+    <div className="bg-defaultBackground lg:w-fit-content flex h-auto items-center justify-center px-4 pt-4 lg:p-0">
       <div
         className={`slider relative flex w-full overflow-hidden rounded-xl border-2 shadow-md ${maxWidth}`}
       >

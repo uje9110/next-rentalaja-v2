@@ -102,7 +102,7 @@ const ProductBookingSection: FC<BookingSectionProp> = ({
   const { handleAddItemToCart } = useAddItemToCartButton({ cart, setCart });
 
   return (
-    <div className="mx-4 flex flex-col gap-6">
+    <div className="mx-4 flex flex-col gap-6 lg:mx-0">
       <BookingCalendar
         selectedDate={selectedDate}
         storeProduct={storeProduct}

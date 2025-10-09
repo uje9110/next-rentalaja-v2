@@ -6,6 +6,7 @@ import { JWT } from "next-auth/jwt";
 
 import { SignJWT } from "jose";
 import { createGlobalUserModel } from "@/app/lib/model/global_user_model";
+import { GlobalStoreType } from "@/app/lib/types/global_store_types";
 
 const secret = new TextEncoder().encode(process.env.NEXTAUTH_SECRET);
 
@@ -42,6 +43,7 @@ declare module "next-auth" {
       verificationToken: string | null;
       roleId: string;
       token: string;
+      authorizedStore: GlobalStoreType[];
     } & DefaultSession["user"];
     expires: string;
   }
@@ -70,6 +72,7 @@ declare module "next-auth/jwt" {
     verificationToken: string | null;
     roleId: string;
     token: string;
+    authorizedStore: GlobalStoreType[];
     exp: number;
   }
 }
@@ -120,6 +123,7 @@ const authOptions = {
             isVerified: User.isVerified,
             verificationToken: User.verificationToken,
             profilePic: User.profilePic,
+            authorizedStore: User.authorizedStore,
           };
         } catch (error) {
           console.log("Authorize Error:", error);
@@ -144,6 +148,7 @@ const authOptions = {
         token.membershipId = user.membershipId;
         token.isVerified = user.isVerified;
         token.verificationToken = user.verificationToken;
+        token.authorizedStore = user.authorizedStore;
         token.roleId = user.roleId;
       }
       return token;
@@ -162,6 +167,7 @@ const authOptions = {
         session.user.isVerified = token.isVerified;
         session.user.verificationToken = token.verificationToken;
         session.user.roleId = token.roleId;
+        session.user.authorizedStore = token.authorizedStore;
         session.user.token = await encodeToken(token);
         session.expires = new Date(token.exp * 1000).toISOString();
       }
