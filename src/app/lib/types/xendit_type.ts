@@ -99,7 +99,6 @@ export type FeeObject = {
   currency: Currency;
   [key: string]: any;
 };
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export type ProductData = {
   [key: string]: string | number | null | undefined;

@@ -53,7 +53,7 @@ GlobalCouponSchema.statics.getAllGlobalCoupon = async function (
   searchParams: URLSearchParams,
 ) {
   const Query = new QueryHandler(searchParams.toString());
-  let filters: Record<string, QueryValue> = Query.getFilterParams([]);
+  const filters: Record<string, QueryValue> = Query.getFilterParams([]);
 
   const { limit, page, sortBy, sortOrder } = Query.getPaginationParams();
 

@@ -14,7 +14,6 @@ import { ClientStoreOrderType } from "@/app/lib/types/store_order_type";
 import {
   ClientStoreOrderPaymentType,
   ClientStorePaymentRequest,
-  StoreOrderPaymentType,
 } from "@/app/lib/types/store_order_payment_type";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
 import { toast } from "sonner";

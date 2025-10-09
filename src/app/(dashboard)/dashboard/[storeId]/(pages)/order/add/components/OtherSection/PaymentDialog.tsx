@@ -1,9 +1,6 @@
 import React, { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
 import { Session } from "next-auth";
-import {
-  ClientStoreOrderType,
-  StoreOrderType,
-} from "@/app/lib/types/store_order_type";
+import { StoreOrderType } from "@/app/lib/types/store_order_type";
 import { X } from "lucide-react";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
 

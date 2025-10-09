@@ -5,10 +5,8 @@ import { CartItem } from "./components/CartItem";
 import { useCartContext } from "@/app/lib/context/CartContext";
 import { CartSummary } from "./components/CartSummary";
 import { useCart } from "./hooks/useCart";
-import { useAPIContext } from "@/app/lib/context/ApiContext";
 
-const page = () => {
-  const { APIEndpoint } = useAPIContext();
+const Page = () => {
   const { cart, checkout, setCheckout } = useCartContext();
   const {
     bookingConflicts,
@@ -16,8 +14,6 @@ const page = () => {
     handleAddCartItemToCheckout,
     checkIsItemAlreadyExistInCheckout,
   } = useCart({
-    cart,
-    APIEndpoint,
     checkout,
     setCheckout,
   });
@@ -67,4 +63,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

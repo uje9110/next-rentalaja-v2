@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import logoWhite from "../../../assets/img/logo/logo-rental-aja-white.png";
 import {
-  useHandleScrollFrontPageHeader,
+  handleScrollFrontPageHeader,
   useScrollFrontPageHeader,
 } from "../../hooks/useScroll_FrontPageHeader";
-import { LogOut, SearchCheck, User, X } from "lucide-react";
+import { LogOut, SearchCheck, User } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import SearchAndCheckDialog from "../../../lib/components/ProductSearchAndCheckDialog";
@@ -20,9 +20,7 @@ const AppHeader = () => {
   const searchbarWrapper = useRef<HTMLDivElement>(null);
   const [overScrollY, setOverScrollY] = useState(false);
 
-  useScrollFrontPageHeader(() =>
-    useHandleScrollFrontPageHeader(setOverScrollY),
-  );
+  useScrollFrontPageHeader(() => handleScrollFrontPageHeader(setOverScrollY));
 
   return (
     <nav

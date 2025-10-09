@@ -1,9 +1,5 @@
 import mongoose, { Connection, Schema } from "mongoose";
-import {
-  GlobalUserType,
-  GlobalUserStaticsType,
-  GlobalUserModelType,
-} from "../types/global_user_type";
+import { GlobalUserType, GlobalUserModelType } from "../types/global_user_type";
 import bcryptjs from "bcryptjs";
 import { UserNotFoundError } from "../utils/CustomErrorClasses";
 
@@ -85,7 +81,7 @@ GlobalUserSchema.statics.findOrCreateCheckoutUser = async function (
 
   // check if already exists to avoid duplicates
   const existing = await this.findOneGlobalUser(billing.email);
-  if (existing) { 
+  if (existing) {
     return { user: existing, isNew: false };
   }
 

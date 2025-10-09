@@ -2,9 +2,9 @@ import { dbConnect } from "@/app/lib/connection/dbConnect";
 import { createGlobalStoreModel } from "@/app/lib/model/global_store_model";
 import { handleApiError } from "@/app/lib/utils/ApiErrorHandler";
 import { StatusCodes } from "http-status-codes";
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const connection = await dbConnect(null);
     const GlobalStoreModel = createGlobalStoreModel(connection);

@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
 import moment from "moment";
+import { usePathname, useRouter } from "next/navigation";
 
 type AddItemToCartButtonProps = {
   isUsingDashboard?: boolean;
@@ -23,6 +24,9 @@ const AddItemToCartButton: FC<AddItemToCartButtonProps> = ({
   orderItemData,
   handleAddItemToCart,
 }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [open, setOpen] = useState(false);
 
   const needsReview =
@@ -32,6 +36,7 @@ const AddItemToCartButton: FC<AddItemToCartButtonProps> = ({
   const handleConfirm = () => {
     if (isUsingDashboard && handleAddCartItemToCheckout) {
       handleAddCartItemToCheckout(orderItemData);
+      router.replace(pathname);
     }
     handleAddItemToCart(orderItemData);
     setOpen(false);
@@ -54,7 +59,7 @@ const AddItemToCartButton: FC<AddItemToCartButtonProps> = ({
 
       {needsReview && (
         <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent className="lg:w-1/3 phone:w-5/6">
+          <DialogContent className="phone:w-5/6 lg:w-1/3">
             <DialogHeader>
               <DialogTitle>Review Item</DialogTitle>
             </DialogHeader>

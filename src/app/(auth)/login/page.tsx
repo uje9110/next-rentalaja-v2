@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { useLogin } from "./useLogin";
 
-const page = () => {
+const Page = () => {
   const {
     loginMutation,
     isPasswordVisible,
@@ -172,4 +172,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

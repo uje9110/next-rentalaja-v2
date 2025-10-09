@@ -2,7 +2,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import React, { FC } from "react";
 import { ClientCheckoutType } from "../types/client_checkout_type";
-import clsx from "clsx";
 
 type CheckoutBillingPreviewProps = {
   checkout: ClientCheckoutType;

@@ -1,11 +1,5 @@
 "use client";
-import {
-  ArrowDownWideNarrow,
-  ArrowUpWideNarrow,
-  Eye,
-  Filter,
-  LucideIcon,
-} from "lucide-react";
+import { Eye, Filter, LucideIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { Table } from "@tanstack/react-table";
 import {
@@ -24,8 +18,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useCustomTableFilter } from "../hooks/useCustomTableFilter";
-import { useEffect, useState } from "react";
-import { useUpdateSearchParam } from "@/app/(root)/hooks/useUpdateSearchParam";
 
 // Shared
 interface BaseFilterProps {

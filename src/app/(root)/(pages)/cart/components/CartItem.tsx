@@ -4,7 +4,6 @@ import {
   CartBookingValidationLoadingType,
   ClientCartType,
 } from "@/app/lib/types/client_cart_types";
-import { GlobalStoreType } from "@/app/lib/types/global_store_types";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
 import { Loader2, Store } from "lucide-react";
 import Image from "next/image";

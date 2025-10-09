@@ -3,7 +3,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import customerPlaceholder from "@/app/assets/img/icon/customer-placeholder.webp";
 import moment from "moment";
 import Link from "next/link";
-import Image from "next/image";
 import { ClientStoreUserType } from "@/app/lib/types/store_user_type";
 import { ImageWithFallback } from "@/app/lib/components/ImageWithFallback";
 

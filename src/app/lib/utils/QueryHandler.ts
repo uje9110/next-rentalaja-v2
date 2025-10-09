@@ -1,4 +1,5 @@
 import moment from "moment";
+import { ReadonlyURLSearchParams } from "next/navigation";
 
 export type QueryValue =
   | string
@@ -117,16 +118,29 @@ export class QueryHandler {
     return match;
   }
 
-  static fromSearchParams(searchParams: {
-    [key: string]: string | string[] | undefined;
-  }): QueryHandler {
-    const queryString = new URLSearchParams(
-      Object.entries(searchParams).flatMap(([key, value]) => {
-        if (typeof value === "string") return [[key, value]];
-        if (Array.isArray(value)) return value.map((v) => [key, v]);
-        return [];
-      }),
-    ).toString();
+  static fromSearchParams(
+    searchParams:
+      | ReadonlyURLSearchParams
+      | { [key: string]: string | string[] | undefined },
+  ): QueryHandler {
+    let queryString: string;
+
+    if (
+      searchParams instanceof URLSearchParams ||
+      searchParams instanceof ReadonlyURLSearchParams
+    ) {
+      // Convert directly from URLSearchParams
+      queryString = searchParams.toString();
+    } else {
+      // Convert from plain object
+      queryString = new URLSearchParams(
+        Object.entries(searchParams).flatMap(([key, value]) => {
+          if (typeof value === "string") return [[key, value]];
+          if (Array.isArray(value)) return value.map((v) => [key, v]);
+          return [];
+        }),
+      ).toString();
+    }
 
     return new QueryHandler(queryString);
   }

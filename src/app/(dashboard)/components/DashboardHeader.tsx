@@ -5,7 +5,6 @@ import { Clock, SearchCheck } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
 import moment from "moment";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useSession } from "next-auth/react";
 import SelectStore from "./SelectStore";
 import SearchAndCheckDialog from "@/app/lib/components/ProductSearchAndCheckDialog";
 import {
@@ -16,7 +15,6 @@ import {
 } from "@/components/ui/dialog";
 
 const DashboardHeader = () => {
-  const { data: session } = useSession();
   const { storeId } = useParams();
 
   const pathname = usePathname();

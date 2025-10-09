@@ -14,18 +14,11 @@ import axios from "axios";
 import { Dispatch, SetStateAction, useState } from "react";
 
 type useCartProps = {
-  APIEndpoint: string;
-  cart: ClientCartType[];
   checkout: ClientCheckoutType;
   setCheckout: Dispatch<SetStateAction<ClientCheckoutType>>;
 };
 
-export function useCart({
-  cart,
-  checkout,
-  setCheckout,
-  APIEndpoint,
-}: useCartProps) {
+export function useCart({ checkout, setCheckout }: useCartProps) {
   const [bookingConflicts, setBookingConflicts] =
     useState<CartBookingConflictsType>({});
   const [bookingValidationLoading, setBookingValidationLoading] =
@@ -88,23 +81,6 @@ export function useCart({
     }
   };
 
-  const validateBookings = async () => {
-    const conflicts: CartBookingConflictsType = {};
-    for (const cartItem of cart) {
-      for (const item of cartItem.items) {
-        const hasConflict = await checkItemCartBooking(
-          APIEndpoint,
-          item.itemID,
-          item.stockIds,
-          item.rentalDetails,
-          item.storeDetail.storeId,
-        );
-        conflicts[item.itemID] = hasConflict;
-      }
-    }
-    setBookingConflicts(conflicts);
-  };
-
   const checkIsItemAlreadyExistInCheckout = (
     orderItemData: StoreOrderItemType,
   ): boolean => {
@@ -128,8 +104,8 @@ export function useCart({
       const newCartItem: ClientCartType = {
         store: orderItemData.storeDetail,
         items: [orderItemData],
-        subtotal : 0,
-        total : 0
+        subtotal: 0,
+        total: 0,
       };
       setCheckout((prevState) => ({
         ...prevState,
@@ -178,6 +154,7 @@ export function useCart({
   };
 
   return {
+    checkItemCartBooking,
     bookingConflicts,
     bookingValidationLoading,
     handleAddCartItemToCheckout,

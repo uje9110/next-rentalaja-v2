@@ -1,6 +1,5 @@
 import axios from "axios";
 import React from "react";
-import { ClientStoreOrderPaymentType } from "@/app/lib/types/store_order_payment_type";
 import { QueryHandler } from "@/app/lib/utils/QueryHandler";
 import { NoncashPaymentTable } from "./components/NoncashPaymentTable";
 import { XenditTransaction } from "@/app/lib/types/xendit_type";

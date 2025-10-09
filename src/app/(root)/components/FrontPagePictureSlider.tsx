@@ -1,8 +1,10 @@
 "use client";
 
 import React, { FC, useEffect, useState } from "react";
-import Image, { StaticImageData } from "next/image";
+import { StaticImageData } from "next/image";
 import { ChevronLeftCircle, ChevronRightCircle, Circle } from "lucide-react";
+import imagePlaceholder from "@/app/assets/img/icon/image-placeholder.jpg";
+import { ImageWithFallback } from "@/app/lib/components/ImageWithFallback";
 
 type PictureSliderImageType = {
   title: string;
@@ -45,7 +47,7 @@ export const FrontPagePictureSlider: FC<PictureSliderProps> = ({
   }, [images.length, autoPlayInterval]);
 
   return (
-    <div className="bg-defaultBackground lg:w-fit-content flex h-auto items-center justify-center px-4 pt-4 lg:p-0">
+    <div className="bg-defaultBackground flex h-auto items-center justify-center px-4 pt-4 lg:w-full lg:p-0">
       <div
         className={`slider relative flex w-full overflow-hidden rounded-xl border-2 shadow-md ${maxWidth}`}
       >
@@ -57,9 +59,9 @@ export const FrontPagePictureSlider: FC<PictureSliderProps> = ({
             }`}
             style={{ transform: `translateX(-${imageIndex * 100}%)` }}
           >
-            <Image
+            <ImageWithFallback
               fill
-              quality={100}
+              fallbackSrc={imagePlaceholder.src}
               src={typeof item.link === "string" ? item.link : item.link.src}
               alt={item.title}
               className="object-cover"

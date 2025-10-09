@@ -6,6 +6,8 @@ export type UserRoleType = {
   permissions: string[];
 };
 
-export type UserRoleStaticsType = {};
+export type UserRoleStaticsType = {
+  placeholder: string;
+};
 
 export type UserRoleModelType = Model<UserRoleType> & UserRoleStaticsType;

@@ -11,9 +11,10 @@ import {
 import { Button } from "@/components/ui/button";
 import SingleOrderSidebar from "./SingleOrderSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ClientStoreOrderType } from "@/app/lib/types/store_order_type";
 
 type ResponsiveSidebarProps = {
-  orderData: any;
+  orderData: ClientStoreOrderType;
 };
 
 const ResponsiveSidebar: React.FC<ResponsiveSidebarProps> = ({ orderData }) => {

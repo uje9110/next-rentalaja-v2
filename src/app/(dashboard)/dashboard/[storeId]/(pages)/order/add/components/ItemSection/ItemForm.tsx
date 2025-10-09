@@ -1,16 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import axios from "axios";
-import React, {
-  ChangeEvent,
-  Dispatch,
-  FC,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import ItemFormItemModal from "./ItemFormItemModal";
-import { StoreOrderType } from "@/app/lib/types/store_order_type";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 import { StoreProductType } from "@/app/lib/types/store_product_type";
@@ -22,24 +13,42 @@ import { ImageWithFallback } from "@/app/lib/components/ImageWithFallback";
 import imagePlaceholder from "@/app/assets/img/icon/image-placeholder.jpg";
 
 interface ItemFormType {
+  isDefaultOpen?: string;
+  defaultItemID?: string;
+  defaultItemName?: string;
   itemData: StoreOrderItemType;
-  setOrderData: Dispatch<SetStateAction<StoreOrderType>>;
+  defaultValue: {
+    bookingStart?: string;
+    bookingEnd?: string;
+  };
 }
 
-const ItemForm: FC<ItemFormType> = ({ setOrderData, itemData }) => {
+const ItemForm: FC<ItemFormType> = ({
+  itemData,
+  isDefaultOpen = "no",
+  defaultItemID = "",
+  defaultItemName = "",
+  defaultValue,
+}) => {
   const { APIEndpoint } = useAPIContext();
   const { storeId } = useParams();
   const { data: session } = useSession();
-  if (!session) return;
 
   const [isItemDialogOpen, setIsItemDialogOpen] = useState<boolean>(false);
   const [products, setProducts] = useState<StoreProductType[]>([]);
   const [currentItem, setCurrentItem] = useState<StoreOrderItemType>(itemData);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const [itemDetail, setItemDetail] = useState<
-    StoreProductType | null | undefined
-  >();
+  useEffect(() => {
+    if (isDefaultOpen === "yes") {
+      setIsItemDialogOpen(true);
+      setCurrentItem({
+        ...currentItem,
+        itemID: defaultItemID,
+        itemName: defaultItemName,
+      });
+    }
+  }, [isDefaultOpen]);
 
   const handleSearchInput = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -52,7 +61,7 @@ const ItemForm: FC<ItemFormType> = ({ setOrderData, itemData }) => {
       const response = await axios.get(productEndpoint, {
         headers: {
           "x-store-id": storeId,
-          Authorization: `Bearer ${session.user.token}`,
+          Authorization: `Bearer ${session?.user.token}`,
         },
       });
       const data = response.data.json;
@@ -81,7 +90,7 @@ const ItemForm: FC<ItemFormType> = ({ setOrderData, itemData }) => {
     const response = await axios.get(`${APIEndpoint}/product?limit=4`, {
       headers: {
         "x-store-id": storeId,
-        Authorization: `Bearer ${session.user.token}`,
+        Authorization: `Bearer ${session?.user.token}`,
       },
     });
     setProducts(response.data.json);
@@ -128,8 +137,6 @@ const ItemForm: FC<ItemFormType> = ({ setOrderData, itemData }) => {
               <div
                 key={_id}
                 style={{
-                  // backgroundImage: `url("${primaryImage.link}")`,
-                  // backgroundSize: "cover",
                   height: "16rem",
                 }}
                 className="phone:h-32 relative flex h-64 grow flex-col items-start justify-end overflow-hidden rounded-lg object-cover p-4 shadow-lg after:absolute after:top-0 after:left-0 after:z-10 after:h-full after:w-full after:bg-gradient-to-b after:from-blue-200/10 after:via-slate-500/10 after:to-slate-900"
@@ -141,7 +148,7 @@ const ItemForm: FC<ItemFormType> = ({ setOrderData, itemData }) => {
                   fallbackSrc={imagePlaceholder.src}
                   width={100}
                   height={100}
-                  className="absolute top-0 left-0 w-full h-full object-cover"
+                  className="absolute top-0 left-0 h-full w-full object-cover"
                 />
                 <h3 className="relative z-20 font-semibold text-white">
                   {title}
@@ -155,7 +162,7 @@ const ItemForm: FC<ItemFormType> = ({ setOrderData, itemData }) => {
             <DialogTitle>{currentItem.itemName}</DialogTitle>
             <ItemFormItemModal
               currentItem={currentItem}
-              itemDetail={itemDetail}
+              defaultValue={defaultValue}
             />
           </DialogContent>
         </Dialog>

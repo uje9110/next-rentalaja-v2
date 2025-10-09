@@ -10,7 +10,9 @@ export type StoreOrderNoteType = {
   updatedAt?: Date;
 };
 
-export type StoreOrderNoteStaticType = {};
+export type StoreOrderNoteStaticType = {
+  placeholder: string;
+};
 
 export type StoreOrderNoteModelType = Model<StoreOrderNoteType> &
   StoreOrderNoteStaticType;

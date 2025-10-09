@@ -1,11 +1,8 @@
 import { ServerPageProps } from "@/app/lib/types/server_component_types";
 import { BookingOverdueNotificationType } from "@/app/lib/types/store_booking_overdue_type";
 import axios from "axios";
-import { Bell, RefreshCcw } from "lucide-react";
-import Link from "next/link";
-import React, { FC } from "react";
+import React from "react";
 import OverdueBookingsNotification from "./components/OverdueBookingsNotification";
-import SearchAndCheckDialog from "@/app/lib/components/ProductSearchAndCheckDialog";
 
 const Page = async ({ params }: ServerPageProps) => {
   const { storeId } = await params;

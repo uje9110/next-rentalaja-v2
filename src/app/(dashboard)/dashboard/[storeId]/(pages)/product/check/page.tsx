@@ -32,7 +32,11 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
       <h1 className="text-lg font-bold">Hasil Pencarian</h1>
       <div className="phone:px-2 flex w-full flex-col gap-4 lg:px-0">
         <SearchFilterInfo filters={filters} />
-        <ProductSearchResult products={products} searchFilter={filters} />
+        <ProductSearchResult
+          products={products}
+          searchFilter={filters}
+          isUsingDashboard={true}
+        />
       </div>
     </main>
   );

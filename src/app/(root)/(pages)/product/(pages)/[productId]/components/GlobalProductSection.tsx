@@ -1,8 +1,6 @@
 import { FrontPagePictureSlider } from "@/app/(root)/components/FrontPagePictureSlider";
 import { ClientGlobalProductType } from "@/app/lib/types/global_product_types";
-import { Store } from "lucide-react";
 import React, { FC } from "react";
-import SelectProductStore from "./SelectProductStore";
 
 type GlobalProductSectionProps = {
   globalProduct: ClientGlobalProductType;

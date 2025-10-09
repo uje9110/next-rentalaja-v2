@@ -1,4 +1,4 @@
-import mongoose, { Connection, Model, Schema } from "mongoose";
+import mongoose, { Connection, Schema } from "mongoose";
 import {
   StoreUserModelType,
   StoreUserStaticsType,
@@ -65,7 +65,7 @@ StoreUserSchema.statics.getAllStoreUser = async function (
   searchParams: URLSearchParams,
 ) {
   const Query = new QueryHandler(searchParams.toString());
-  let filters: Record<string, QueryValue> = Query.getFilterParams([
+  const filters: Record<string, QueryValue> = Query.getFilterParams([
     "membershipId",
     "search",
     "status",

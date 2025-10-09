@@ -12,7 +12,7 @@ import { useCheckoutSubmit } from "../../../lib/hooks/useCheckoutSubmit";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 import { useSession } from "next-auth/react";
 
-const page = () => {
+const Page = () => {
   const { APIEndpoint } = useAPIContext();
   const {
     checkout,
@@ -81,4 +81,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

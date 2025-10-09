@@ -1,15 +1,12 @@
-import mongoose, { Model } from "mongoose";
+import { Model } from "mongoose";
 import { ClientStoreOrderType } from "./store_order_type";
 import { XenditPaymentRequestResponse } from "./xendit_type";
-import { ClientCartType } from "./client_cart_types";
-import { CheckoutBillingType } from "./client_checkout_type";
-import { GlobalUserType } from "./global_user_type";
 import { StoreOrderBillingType } from "./store_order_billing_type";
 
 export type ClientStorePaymentRequest = {
   paymentAmount?: number;
-  paymentMethod: string;
-  paymentType: string;
+  paymentMethod?: string;
+  paymentType?: string;
   paymentDesc?: string;
 };
 

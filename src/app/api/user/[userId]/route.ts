@@ -1,5 +1,4 @@
 import { dbConnect } from "@/app/lib/connection/dbConnect";
-import { createGlobalUserModel } from "@/app/lib/model/global_user_model";
 import { createStoreUserModel } from "@/app/lib/model/store_user_model";
 import { handleApiError } from "@/app/lib/utils/ApiErrorHandler";
 import { StatusCodes } from "http-status-codes";

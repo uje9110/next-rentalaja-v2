@@ -14,7 +14,7 @@ export function useScrollFrontPageHeader(
   }, [throttled]);
 }
 
-export const useHandleScrollFrontPageHeader = (
+export const handleScrollFrontPageHeader = (
   setOverScrollY: Dispatch<SetStateAction<boolean>>,
 ): void => {
   const scrollY = window.scrollY;

@@ -1,8 +1,7 @@
 "use client";
 import { useMutation } from "@tanstack/react-query";
 import { getSession, signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type LoginData = {
   email: string;
@@ -10,26 +9,33 @@ type LoginData = {
 };
 
 export function useLogin() {
-  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loginData, setLoginData] = useState<LoginData>({
     email: "",
     password: "",
   });
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const searchParam = useSearchParams();
-  const redirect = searchParam.get("redirect");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [redirect, setRedirect] = useState<string | null>(null);
+
+  // ✅ Safe client-side URL param reading
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setRedirect(params.get("redirect"));
+    }
+  }, []);
 
   const loginMutation = useMutation({
     mutationFn: async () => {
       const result = await signIn("credentials", {
-        redirect: false, // prevent automatic redirect
-        callbackUrl: redirect ?? "/",
+        redirect: false,
+        callbackUrl: redirect ?? "/", // use dynamic redirect if exists
         ...loginData,
       });
 
       if (result?.error) {
         setErrorMessage(result.error);
-        throw new Error(result.error); //
+        throw new Error(result.error);
       }
 
       const session = await getSession();
@@ -37,7 +43,6 @@ export function useLogin() {
         localStorage.setItem("STORE_ID", "RENTALAJA_GARUT");
       }
 
-      // manually redirect if login was successful
       if (result?.ok && result.url) {
         window.location.href = result.url;
       }
@@ -46,18 +51,14 @@ export function useLogin() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setLoginData((prevState) => {
-      return {
-        ...prevState,
-        [name]: value,
-      };
-    });
+    setLoginData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     loginMutation.mutate();
   };
+
   return {
     isPasswordVisible,
     setIsPasswordVisible,

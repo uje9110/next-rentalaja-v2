@@ -10,7 +10,9 @@ export type StoreOrderDiscountType = {
   createdAt?: Date;
   updateAt?: Date;
 };
-export type StoreOrderDiscountStaticsType = {};
+export type StoreOrderDiscountStaticsType = {
+  placeholder: string;
+};
 
 export type StoreOrderDiscountModelType = Model<StoreOrderDiscountType> &
   StoreOrderDiscountStaticsType;

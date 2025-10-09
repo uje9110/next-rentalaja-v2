@@ -8,11 +8,9 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import PaymentDialog from "./PaymentDialog";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 import { StoreOrderType } from "@/app/lib/types/store_order_type";
 import { GlobalCouponType } from "@/app/lib/types/global_coupon_type";
-import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { StoreOrderBillingType } from "@/app/lib/types/store_order_billing_type";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
@@ -43,7 +41,6 @@ const PaymentForm: FC<PaymentFormTypes> = ({
 }) => {
   const { APIEndpoint } = useAPIContext();
   const { data: session } = useSession();
-  if (!session) return;
 
   const [paymentData, setPaymentData] = useState({
     paymentAmount: 0,
@@ -51,7 +48,6 @@ const PaymentForm: FC<PaymentFormTypes> = ({
     paymentType: "",
   });
 
-  const [couponString, setCouponString] = useState<string>("");
   const [coupons, setCoupons] = useState<GlobalCouponType[]>([]);
 
   const [membershipData, setMembershipData] = useState({
@@ -134,39 +130,12 @@ const PaymentForm: FC<PaymentFormTypes> = ({
     }
   };
 
-  const handleCouponInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setCouponString(value);
-  };
-
-  const handleCouponSubmit = async () => {
-    try {
-      const couponResponse = await axios.get(
-        `${APIEndpoint}/all/coupon/${couponString}`,
-        {
-          headers: {
-            Authorization: `Bearer ${session.user.token}`,
-          },
-        },
-      );
-      const couponData = couponResponse.data;
-      if (couponResponse.status === 200) {
-        addDiscount(couponData);
-      } else {
-        toast.warning(`Kupon tidak bisa digunakan`);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(`Error dalam penggunaan kupon`);
-    }
-  };
-
   const membershipDiscountValue = async () => {
     const couponResponse = await axios.get(
       `${APIEndpoint}/coupon/${membershipData.membershipDiscount}`,
       {
         headers: {
-          Authorization: `Bearer ${session.user.token}`,
+          Authorization: `Bearer ${session?.user.token}`,
           "x-store-id": localStorage.getItem("STORE_ID"),
         },
       },
@@ -179,7 +148,7 @@ const PaymentForm: FC<PaymentFormTypes> = ({
     const membershipEndpoint = `${APIEndpoint}/membership/${billingData.membershipId}`;
     const response = await axios.get(membershipEndpoint, {
       headers: {
-        Authorization: `Bearer ${session.user.token}`,
+        Authorization: `Bearer ${session?.user.token}`,
         "x-store-id": localStorage.getItem("STORE_ID"),
       },
     });

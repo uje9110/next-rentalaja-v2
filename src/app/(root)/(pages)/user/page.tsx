@@ -8,7 +8,7 @@ import UserFavorite from "./components/UserFavorite";
 import UserSetting from "./components/UserSetting/UserSetting";
 import UserOrder from "./components/UserOrder";
 
-const page = () => {
+const Page = () => {
   const {
     session,
     AuthEndpoint,
@@ -103,4 +103,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

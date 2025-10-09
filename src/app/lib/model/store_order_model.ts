@@ -23,7 +23,7 @@ import { createStoreUserModel } from "./store_user_model";
 import { createStorePaymentModel } from "./store_payment_model";
 import { GlobalCouponType } from "../types/global_coupon_type";
 import { ClientStorePaymentRequest } from "../types/store_order_payment_type";
-import { QueryHandler } from "../utils/QueryHandler";
+import { QueryHandler, QueryValue } from "../utils/QueryHandler";
 import { StoreOrderUpdateLogType } from "../types/store_order_updateLogs_type";
 import { createStoreOrderNoteModel } from "./store_order_note_model";
 import { StoreOrderNoteType } from "../types/store_order_note_type";
@@ -378,7 +378,7 @@ StoreOrderSchema.statics.getAllStoreOrder = async function (
 ) {
   const Query = new QueryHandler(searchParams.toString());
 
-  let filters: any = Query.getFilterParams([
+  let filters: Record<string, QueryValue | ObjectId> = Query.getFilterParams([
     "productId",
     "status",
     "search",
@@ -389,7 +389,7 @@ StoreOrderSchema.statics.getAllStoreOrder = async function (
   const { dateBy, dateStart, dateEnd, dateStartInMs, dateEndInMs } =
     Query.getDateParams();
 
-  if (filters.customerID) {
+  if (typeof filters.customerID === "string") {
     filters.customerID = new ObjectId(filters.customerID);
   }
 

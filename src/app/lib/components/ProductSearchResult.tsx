@@ -6,6 +6,7 @@ import imagePlaceholder from "@/app/assets/img/icon/image-placeholder.jpg";
 
 type ProductSearchResultProps = {
   products: ClientSearchProductResultType[];
+  isUsingDashboard?: boolean;
   searchFilter: {
     bookingStart?: string;
     bookingEnd?: string;
@@ -17,11 +18,18 @@ type ProductSearchResultProps = {
 const ProductSearchResult: React.FC<ProductSearchResultProps> = ({
   products,
   searchFilter,
+  isUsingDashboard = false,
 }) => {
   return (
-    <div className="flex w-full flex-col gap-4 lg:flex lg:flex-row">
+    <div className="flex-wrap flex w-full flex-col gap-4 lg:flex lg:flex-row">
       {products.map((product) => {
         const { productDetail, availableStockCount } = product;
+        let href;
+        if (!isUsingDashboard) {
+          href = `/product/${product._id}?bookingStart=${searchFilter.bookingStart}&bookingEnd=${searchFilter.bookingEnd}&storeId=${searchFilter.storeId}`;
+        } else {
+          href = `/dashboard/${product?.productDetail?.storeDetail?.storeId}/order/add?openItemModal=yes&productId=${product._id}&productName=${product?.productDetail?.title}&bookingStart=${searchFilter.bookingStart}&bookingEnd=${searchFilter.bookingEnd}`;
+        }
 
         return (
           <div
@@ -36,7 +44,7 @@ const ProductSearchResult: React.FC<ProductSearchResultProps> = ({
                 fallbackSrc={imagePlaceholder.src}
                 width={100}
                 height={100}
-                className="w-full h-full object-cover"
+                className="h-full w-full object-cover"
               />
             </div>
 
@@ -49,7 +57,7 @@ const ProductSearchResult: React.FC<ProductSearchResultProps> = ({
                 </p>
               </div>
               <Link
-                href={`/product/${product._id}?bookingStart=${searchFilter.bookingStart}&bookingEnd=${searchFilter.bookingEnd}&storeId=${searchFilter.storeId}`}
+                href={href as string}
                 target="__blank"
                 className="w-fit rounded-md bg-teal-400 px-4 py-2 text-xs font-semibold text-white shadow"
               >

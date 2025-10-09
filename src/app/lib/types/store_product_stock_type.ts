@@ -34,7 +34,9 @@ export type ClientStoreProductStockType = StoreProductStockType & {
   rentedByOrderDetail: ClientStoreOrderType[];
 };
 
-export type StoreProductStockStaticsType = {};
+export type StoreProductStockStaticsType = {
+  placeholder: string;
+};
 
 export type StoreProductStockModelType = Model<StoreProductStockType> &
   StoreProductStockStaticsType;

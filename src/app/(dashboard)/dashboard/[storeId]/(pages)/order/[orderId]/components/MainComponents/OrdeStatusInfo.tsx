@@ -5,12 +5,7 @@ import { useDashboardSingleOrderUtility } from "../../hooks/useDashboardSingleOr
 import OrderStatusChangerButtons from "../OrderMutationComponents/OrderStatusChanger/OrderStatusChangerButtons";
 import { GlobalUserType } from "@/app/lib/types/global_user_type";
 import { RevertOrderDialog } from "../OrderMutationComponents/OrderRevert/OrderRevertDialog";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 type OrderStatusInfoProps = {
   orderData: ClientStoreOrderType;
@@ -97,7 +92,7 @@ export const OrdeStatusInfo: FC<OrderStatusInfoProps> = ({
         open={isRevertOrderDialogOpen}
         onOpenChange={setIsRevertOrderDialogOpen}
       >
-        <DialogContent className="lg:w-1/3 lg:h-5/6">
+        <DialogContent className="lg:h-5/6 lg:w-1/3">
           <DialogTitle>Perubahan status khusus</DialogTitle>
           <RevertOrderDialog
             setIsRevertOrderDialogOpen={setIsRevertOrderDialogOpen}

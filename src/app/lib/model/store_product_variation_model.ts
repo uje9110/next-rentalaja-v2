@@ -1,4 +1,4 @@
-import { Connection, Model, Schema } from "mongoose";
+import { Connection, Schema } from "mongoose";
 import {
   StoreProductVariationModelType,
   StoreProductVariationType,

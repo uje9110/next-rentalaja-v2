@@ -1,8 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useParams } from "next/navigation";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { Loader } from "lucide-react";

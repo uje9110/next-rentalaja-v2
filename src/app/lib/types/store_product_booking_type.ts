@@ -13,7 +13,9 @@ export type StoreProductBookingType = {
   updatedAt?: Date;
 };
 
-export type StoreProductBookingStaticType = {};
+export type StoreProductBookingStaticType = {
+  placeholder: string;
+};
 
 export type StoreProductBookingModelType = Model<StoreProductBookingType> &
   StoreProductBookingStaticType;

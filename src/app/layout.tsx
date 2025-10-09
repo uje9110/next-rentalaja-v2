@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${quicksand.variable} ${poppins.variable}`}>
       <QueryProvider>
         <APIContextProvider>
           <body className={`font-primary`}>{children}</body>

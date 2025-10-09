@@ -52,7 +52,7 @@ const OrderRevertPopover: FC<RevertOrderMenuPopoverProps> = ({
                 <span>Reschedule</span>
               </p>
             </DialogTrigger>
-            <DialogContent className="phone:w-full phone:p-4 phone:rounded-md flex h-[800px] min-h-[600px] w-2/6 flex-col items-start justify-start">
+            <DialogContent className="phone:w-full phone:p-4 phone:rounded-md flex h-[800px] min-h-[600px] w-2/6 flex-col items-start justify-start lg:w-1/3">
               <DialogTitle>Reschedule Item</DialogTitle>
               <DialogDescription>
                 Atur ulang jadwal alat yang disewa.

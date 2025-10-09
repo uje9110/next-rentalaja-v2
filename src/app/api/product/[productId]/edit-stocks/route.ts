@@ -3,7 +3,6 @@ import { createStoreProductModel } from "@/app/lib/model/store_product_model";
 import { StoreProductStockType } from "@/app/lib/types/store_product_stock_type";
 import { handleApiError } from "@/app/lib/utils/ApiErrorHandler";
 import { StatusCodes } from "http-status-codes";
-import { AnyBulkWriteOperation } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(

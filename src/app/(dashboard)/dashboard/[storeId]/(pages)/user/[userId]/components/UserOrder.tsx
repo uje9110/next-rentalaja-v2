@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 import { ClientStoreOrderType } from "@/app/lib/types/store_order_type";
-import { OrderTable } from "../../../order/components/OrderTable";
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { columns } from "../../../order/components/Columns";
 import CustomDataTable from "@/app/lib/components/CustomDataTable";

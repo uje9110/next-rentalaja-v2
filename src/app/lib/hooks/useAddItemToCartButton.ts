@@ -1,6 +1,5 @@
 import { ClientCartType } from "@/app/lib/types/client_cart_types";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
-import { ClientStoreProductType } from "@/app/lib/types/store_product_type";
 import { Dispatch, SetStateAction } from "react";
 
 type useAddItemToCartButtonProps = {

@@ -4,14 +4,6 @@ import axios from "axios";
 import { StatusCodes } from "http-status-codes";
 import { NextRequest, NextResponse } from "next/server";
 
-type BaseQuery = {
-  "created[gte]": string;
-  "created[lte]": string;
-  categoriesIds?: string[]; // Add this
-  page?: number;
-  limit?: number;
-};
-
 const secretKey = process.env.XENDIT_SECRET as string;
 const encodedAuth = Buffer.from(`${secretKey}:`).toString("base64");
 

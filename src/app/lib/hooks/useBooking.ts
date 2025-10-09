@@ -66,6 +66,7 @@ export const useBooking = () => {
   };
 
   return {
+    setCurrDay,
     currMonth,
     setCurrMonth,
     currYear,

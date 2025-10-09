@@ -7,7 +7,6 @@ import {
   ClientStorePaymentRequest,
 } from "../types/store_order_payment_type";
 import { Connection } from "mongoose";
-import { ClientCartType } from "../types/client_cart_types";
 import { dbConnect } from "../connection/dbConnect";
 import { createGlobalUserModel } from "./global_user_model";
 import {
@@ -91,7 +90,7 @@ PaymentScema.statics.createOneStorePayment = async function (paymentData: {
   }
 
   // PAYMENT DESC
-  let newPaymentDesc: string = paymentDesc
+  const newPaymentDesc: string = paymentDesc
     ? paymentDesc
     : `${paymentType} untuk order ${orderId} store ${storeId}`;
 

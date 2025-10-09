@@ -1,11 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { FC } from "react";
 import axios from "axios";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 import { useOrder } from "@/app/lib/hooks/useOrder";
@@ -20,14 +13,7 @@ import BookingCalendar from "@/app/lib/components/BookingCalendar";
 import BookingSelectVariation from "@/app/lib/components/BookingSelectVariations";
 import BookingItemAmount from "@/app/lib/components/BookingItemAmount";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
-import {
-  ClientStoreProductType,
-  StoreProductType,
-} from "@/app/lib/types/store_product_type";
-import {
-  ClientStoreOrderType,
-  StoreOrderType,
-} from "@/app/lib/types/store_order_type";
+import { ClientStoreProductType } from "@/app/lib/types/store_product_type";
 import BookingCalendarHours from "@/app/lib/components/BookingCalendarHours";
 import AddItemToCartButton from "@/app/lib/components/AddItemToCartButton";
 import { useAddItemToCartButton } from "@/app/lib/hooks/useAddItemToCartButton";
@@ -36,16 +22,23 @@ import { useCart } from "@/app/(root)/(pages)/cart/hooks/useCart";
 
 interface ItemFormItemModalTypes {
   currentItem: StoreOrderItemType;
-  itemDetail: StoreProductType | undefined | null;
+  defaultValue: {
+    bookingStart?: string;
+    bookingEnd?: string;
+  };
 }
 
 const ItemFormItemModal: FC<ItemFormItemModalTypes> = ({
   currentItem,
-  itemDetail,
+  defaultValue,
 }) => {
   const { APIEndpoint } = useAPIContext();
   const params = useParams();
   const { storeId } = params;
+
+  const [defaultStartDate, defaultStartHour] = defaultValue.bookingStart?.split(
+    "T",
+  ) ?? ["", ""];
 
   const { data: storeProduct } = useQuery({
     queryKey: ["storeProducts"],
@@ -74,8 +67,6 @@ const ItemFormItemModal: FC<ItemFormItemModalTypes> = ({
   const { orderItemData, setOrderItemData } = useOrder({ storeProduct });
 
   const { handleAddCartItemToCheckout } = useCart({
-    cart,
-    APIEndpoint,
     checkout,
     setCheckout,
   });
@@ -104,6 +95,7 @@ const ItemFormItemModal: FC<ItemFormItemModalTypes> = ({
   } = useBookingCalendarHours({
     setOrderItemData,
     orderItemData,
+    defaultStartHour,
   });
 
   // USE BOOKING CALENDAR
@@ -118,6 +110,7 @@ const ItemFormItemModal: FC<ItemFormItemModalTypes> = ({
     setIsBookingCalendarHourOpen,
     setOrderItemData,
     currDateInMs,
+    defaultStartDate,
   });
 
   // USE BOOKING VARIATION
@@ -146,7 +139,7 @@ const ItemFormItemModal: FC<ItemFormItemModalTypes> = ({
       >
         <div className="modalBody phone:h-auto h-full">
           <div
-            key={itemDetail?._id}
+            key={currentItem._id as string}
             className="flex h-full flex-col justify-between gap-4"
           >
             <div className="phone:h-full phone:flex-col flex h-full flex-row gap-4 lg:flex lg:flex-row">
@@ -168,6 +161,7 @@ const ItemFormItemModal: FC<ItemFormItemModalTypes> = ({
                   handleDecreaseYear={handleDecreaseYear}
                   handleIncreaseMonth={handleIncreaseMonth}
                   handleIncreaseYear={handleIncreaseYear}
+                  defaultStartDate={defaultStartDate}
                 />
                 <BookingCalendarHours
                   bookingHourAndMinute={bookingHourAndMinute}
@@ -180,6 +174,7 @@ const ItemFormItemModal: FC<ItemFormItemModalTypes> = ({
                   setIsBookingCalendarHourOpen={setIsBookingCalendarHourOpen}
                   setBookingHourAndMinute={setBookingHourAndMinute}
                   checkHourAvaibilty={checkHourAvaibilty}
+                  defaultStartHour={defaultStartHour}
                 />
               </div>
 

@@ -1,7 +1,4 @@
-import {
-  ClientStoreOrderPaymentType,
-  StoreOrderPaymentType,
-} from "@/app/lib/types/store_order_payment_type";
+import { StoreOrderPaymentType } from "@/app/lib/types/store_order_payment_type";
 import { ClientStoreOrderType } from "@/app/lib/types/store_order_type";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
 import React, { ChangeEvent, Dispatch, FC, SetStateAction } from "react";

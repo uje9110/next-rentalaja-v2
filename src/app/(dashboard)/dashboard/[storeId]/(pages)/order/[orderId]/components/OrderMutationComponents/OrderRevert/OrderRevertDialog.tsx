@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CheckCircle, Loader, TriangleAlert, X, XCircle } from "lucide-react";
+import { CheckCircle, Loader, TriangleAlert, XCircle } from "lucide-react";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import PaymentRefund from "./PaymentRefund";
 import { ClientStoreOrderType } from "@/app/lib/types/store_order_type";
@@ -24,9 +24,6 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
 }) => {
   const { APIEndpoint } = useAPIContext();
   const { data: session } = useSession();
-  if (!session) {
-    return;
-  }
 
   const stockEndpoint = `${APIEndpoint}/stock`;
   const orderEndpoint = `${APIEndpoint}/order`;
@@ -44,7 +41,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
   const [paymentRefundData, setPaymentRefundData] =
     useState<StoreOrderPaymentType>({
       orderID: orderData._id,
-      createdBy: session.user.id,
+      createdBy: session?.user.id,
       paymentAmount: 0,
       paymentMethod: "",
       paymentType: "Refund",
@@ -89,7 +86,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
         ? { status: "rented", rentedByOrderId: orderData._id }
         : { status: "available", rentedByOrderId: "" };
 
-    const token = session.user.token;
+    const token = session?.user.token;
     const storeId = orderData.storeDetail.storeId;
     const stockUpdatePromises = orderData.items.flatMap((item) =>
       item.stockIds.map((stockId) =>
@@ -114,7 +111,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
         },
         {
           headers: {
-            Authorization: `Bearer ${session.user.token}`,
+            Authorization: `Bearer ${session?.user.token}`,
             "x-request-type": "updatePayments",
             "x-store-id": orderData.storeDetail.storeId,
           },
@@ -129,7 +126,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
           },
           {
             headers: {
-              Authorization: `Bearer ${session.user.token}`,
+              Authorization: `Bearer ${session?.user.token}`,
               "x-request-type": "updatePayments",
               "x-store-id": orderData.storeDetail.storeId,
             },
@@ -144,7 +141,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
                 { orderID: `ORDER-${paymentChanneledOrderNum}` },
                 {
                   headers: {
-                    Authorization: `Bearer ${session.user.token}`,
+                    Authorization: `Bearer ${session?.user.token}`,
                     "x-store-id": orderData.storeDetail.storeId,
                   },
                 },
@@ -206,7 +203,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
         refundFormData,
         {
           headers: {
-            Authorization: `Bearer ${session.user.token}`,
+            Authorization: `Bearer ${session?.user.token}`,
             "x-request-type": "updateOrderStatus",
             "x-store-id": orderData.storeDetail.storeId,
           },
@@ -225,7 +222,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
           },
           {
             headers: {
-              Authorization: `Bearer ${session.user.token}`,
+              Authorization: `Bearer ${session?.user.token}`,
               "x-request-type": "updatePayments",
               "x-store-id": orderData.storeDetail.storeId,
             },
@@ -249,7 +246,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
 
   const submitOrderStatusRevert = async () => {
     setLoading(true);
-    let cancelOrderExecSuccess;
+    // let cancelOrderExecSuccess;
 
     if (!updateInfo) {
       setErrorMsg("Alasan masih kosong!");
@@ -267,7 +264,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
       updateLogs: [
         ...orderData.updateLogs,
         {
-          updatedBy: `${session.user.firstName} ${session.user.lastName}`,
+          updatedBy: `${session?.user.firstName} ${session?.user.lastName}`,
           updateTime: new Date(),
           updateInfo: `Order di ubah ke status ${revertOrderStatusTo}, ${updateInfo}`,
         },
@@ -299,9 +296,9 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
     ) {
       try {
         if (existedPaymentAction === "refund") {
-          cancelOrderExecSuccess = await refundPaymentUpdate(orderData);
+          await refundPaymentUpdate(orderData);
         } else if (existedPaymentAction === "channel") {
-          cancelOrderExecSuccess = await channelPaymentUpdate(orderData);
+          await channelPaymentUpdate(orderData);
         }
       } catch (error) {
         console.error("Failed to process refund or channel", error);
@@ -315,7 +312,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
         updatePayload,
         {
           headers: {
-            Authorization: `Bearer ${session.user.token}`,
+            Authorization: `Bearer ${session?.user.token}`,
             "x-request-type": "updateOrderStatus",
             "x-store-id": orderData.storeDetail.storeId,
           },

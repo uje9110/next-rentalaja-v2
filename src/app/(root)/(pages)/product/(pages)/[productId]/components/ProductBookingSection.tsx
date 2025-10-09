@@ -31,10 +31,6 @@ const ProductBookingSection: FC<BookingSectionProp> = ({
     "T",
   ) ?? ["", ""];
 
-  const [defaultEndDate, defaultEndHour] = defaultValue.bookingEnd?.split(
-    "T",
-  ) ?? ["", ""];
-
   // USE BOOKING
   const {
     currMonth,

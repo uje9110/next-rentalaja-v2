@@ -9,7 +9,7 @@ import { RegistrationTwo } from "./components/RegistrationTwo";
 import { RegistrationThree } from "./components/RegistrationThree";
 import { useRegistration } from "./hook/useRegister";
 
-const page = () => {
+const Page = () => {
   const {
     registerMutation,
     registerData,
@@ -102,4 +102,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -1,7 +1,6 @@
 import { Calendar1, ChevronLeft, ChevronRight, Circle } from "lucide-react";
-import React, { Dispatch, FC, SetStateAction } from "react";
+import React, { FC } from "react";
 import { daysArr, monthArr } from "../const/MonthAndDays";
-import { StoreOrderItemType } from "../types/store_order_item_type";
 import { ClientStoreProductStockType } from "../types/store_product_stock_type";
 import { ClientStoreProductType } from "../types/store_product_type";
 import moment from "moment";
@@ -35,7 +34,6 @@ type BookingCalendarProps = {
 
 const BookingCalendar: FC<BookingCalendarProps> = ({
   selectedDate,
-  defaultStartDate,
   storeProduct,
   currMonth,
   currYear,
@@ -109,7 +107,7 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
           </div>
 
           {/* ---- Dates ---- */}
-          <div className="calendar-info-wrapper flex h-full flex-row flex-wrap pt-2 text-center">
+          <div className="calendar-info-wrapper flex h-fit flex-row flex-wrap pt-2 text-center">
             {datesOfMonth.map((date, index) => {
               // Handle empty (padding) dates
               if (date === null) {

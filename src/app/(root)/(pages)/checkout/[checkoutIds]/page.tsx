@@ -1,7 +1,6 @@
 import { StoreOrderHandler } from "@/app/lib/utils/StoreOrderHandler";
 import React from "react";
 import { CheckoutDetail } from "./components/CheckoutDetail";
-import { AlertCircle, CircleCheck } from "lucide-react";
 
 type PageProps = {
   params: Promise<{ checkoutIds: string }>;

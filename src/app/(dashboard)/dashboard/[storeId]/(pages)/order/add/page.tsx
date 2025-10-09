@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import CustomerSelect from "./components/BillingSection/CustomerSelect";
 import { useOrder } from "@/app/lib/hooks/useOrder";
 import ItemForm from "./components/ItemSection/ItemForm";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
@@ -15,10 +14,25 @@ import CheckoutSubmit from "@/app/lib/components/CheckoutSubmit";
 import CheckoutItemList from "@/app/lib/components/CheckoutItemList";
 import CheckoutBillingPreview from "@/app/lib/components/CheckoutBillingPreview";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
+import { QueryHandler } from "@/app/lib/utils/QueryHandler";
 
 const Page = () => {
   const { APIEndpoint } = useAPIContext();
-  const { setOrderData, orderItemData } = useOrder({});
+  const { orderItemData } = useOrder({});
+
+  const searchParam = useSearchParams();
+  const queryHandler = QueryHandler.fromSearchParams(searchParam);
+
+  // Example usage
+  const { bookingStart, openItemModal, productId, productName } =
+    queryHandler.getFilterParams([
+      "bookingStart",
+      "bookingEnd",
+      "openItemModal",
+      "productId",
+      "productName",
+    ]);
 
   const {
     checkout,
@@ -53,8 +67,6 @@ const Page = () => {
   // step state
   const [step, setStep] = useState<1 | 2>(1);
 
-  console.log(checkout);
-
   return (
     <main className="phone:h-full phone:w-full phone:flex-col phone:p-2 flex h-[calc(100vh-2.5rem)] w-full flex-1 flex-row gap-4 px-2 lg:flex lg:flex-row lg:p-0">
       {/* Left Section (Steps) */}
@@ -87,7 +99,13 @@ const Page = () => {
         {/* Step content */}
         {step === 1 && (
           <div className="h-fit w-full">
-            <ItemForm setOrderData={setOrderData} itemData={orderItemData} />
+            <ItemForm
+              itemData={orderItemData}
+              isDefaultOpen={openItemModal as string}
+              defaultItemID={productId as string}
+              defaultItemName={productName as string}
+              defaultValue={{ bookingStart: bookingStart as string }}
+            />
             <div className="mt-4 flex justify-end">
               <Button size="sm" onClick={() => setStep(2)}>
                 Lanjut ke Billing

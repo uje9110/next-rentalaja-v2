@@ -1,6 +1,5 @@
 import { dbConnect } from "@/app/lib/connection/dbConnect";
 import { createStorePaymentModel } from "@/app/lib/model/store_payment_model";
-import { createStoreSalesModel } from "@/app/lib/model/store_sales_model";
 import { handleApiError } from "@/app/lib/utils/ApiErrorHandler";
 import { StatusCodes } from "http-status-codes";
 import { NextRequest, NextResponse } from "next/server";

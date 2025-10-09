@@ -15,8 +15,7 @@ const page = async ({ searchParams }: ProductsPageProps) => {
 
   const queryHandler = QueryHandler.fromSearchParams(resolvedSearchParams);
 
-  const { page, limit, sortBy, sortOrder } =
-    queryHandler.getPaginationParams(5);
+  const { sortBy } = queryHandler.getPaginationParams(5);
 
   const apiQueryString = queryHandler.toQueryString();
 

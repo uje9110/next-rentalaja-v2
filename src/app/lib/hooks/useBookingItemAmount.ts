@@ -56,7 +56,9 @@ export function useBookingItemAmount({
     });
     setAvailableStocks(
       availableStock
-        ?.filter((item) => item.status === "available" || item.status === "rented")
+        ?.filter(
+          (item) => item.status === "available" || item.status === "rented",
+        )
         .map((item) => item._id as string)
         .sort(),
     );
@@ -71,10 +73,7 @@ export function useBookingItemAmount({
       orderItemData?.rentalDetails.rentalEndInLocaleMs,
       storeProduct?.stocksDetails,
     );
-  }, [
-    orderItemData?.rentalDetails.rentalStartInLocaleMs,
-    orderItemData?.rentalDetails.rentalEndInLocaleMs,
-  ]);
+  }, [orderItemData, storeProduct]);
 
   return {
     availableStocks,

@@ -59,6 +59,10 @@ const SearchAndCheckDialog = ({
     if (selectedCategory) params.set("category", selectedCategory);
     if (selectedStore) params.set("storeId", selectedStore);
 
+    if (isUsingDashboard) {
+      params.set("storeId", storeId as string);
+    }
+
     const endpoint = isUsingDashboard
       ? `/dashboard/${storeId}/product/check?${params.toString()}`
       : `/product/search?${params.toString()}`;

@@ -18,7 +18,9 @@ export type StoreProductVariationType = {
   updatedAt: Date;
 };
 
-export type StoreProductVariationStaticsType = {};
+export type StoreProductVariationStaticsType = {
+  placeholder: string;
+};
 
 export type StoreProductVariationModelType = Model<StoreProductVariationType> &
   StoreProductVariationStaticsType;

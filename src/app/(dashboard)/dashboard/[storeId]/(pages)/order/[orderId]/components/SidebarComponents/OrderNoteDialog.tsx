@@ -3,7 +3,7 @@ import { StoreOrderNoteType } from "@/app/lib/types/store_order_note_type";
 import { ClientStoreOrderType } from "@/app/lib/types/store_order_type";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { CheckCircle, Loader, Pencil, XCircle } from "lucide-react";
+import { Loader, Pencil, XCircle } from "lucide-react";
 import { Session } from "next-auth";
 import React, {
   ChangeEvent,

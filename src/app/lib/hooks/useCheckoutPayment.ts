@@ -1,6 +1,6 @@
 "use client";
 import { ClientCheckoutType } from "@/app/lib/types/client_checkout_type";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 type UseCheckoutPaymentProps = {
   setCheckout: Dispatch<SetStateAction<ClientCheckoutType>>;

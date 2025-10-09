@@ -1,13 +1,14 @@
 "use client";
 
 import { useAPIContext } from "@/app/lib/context/ApiContext";
-import { GlobalStoreType } from "@/app/lib/types/global_store_types";
+import {
+  ByCityGlobalStoreType,
+  GlobalStoreType,
+} from "@/app/lib/types/global_store_types";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -17,11 +18,6 @@ import { Store } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
-interface StoresDataType {
-  _id: string;
-  cityStores: GlobalStoreType[];
-}
 
 const SelectStore = () => {
   const router = useRouter();
@@ -35,20 +31,23 @@ const SelectStore = () => {
 
   const { data: stores = [] } = useQuery({
     queryKey: ["authorizedStores"],
-    queryFn: async (): Promise<GlobalStoreType[]> => {
-      const res = await axios.get(`${APIEndpoint}/global/stores`);
+    queryFn: async (): Promise<ByCityGlobalStoreType[]> => {
+      const res = await axios.get(`${APIEndpoint}/global/store`);
       return res.data.json;
     },
     enabled: session?.user?.roleId === "001",
   });
 
   useEffect(() => {
-    if (session?.user?.roleId === "001") {
-      setAuthorizedStore(stores);
+    if (session?.user?.roleId === "001" && stores.length > 0) {
+      const mappedStores = stores.flatMap(({ cityStores }) => {
+        return [...cityStores];
+      });
+      setAuthorizedStore(mappedStores);
     } else if (session?.user?.authorizedStore) {
       setAuthorizedStore(session.user.authorizedStore);
     }
-  }, [session?.user?.roleId, stores]);
+  }, [session?.user, stores]);
 
   const handleStoreChange = (value: string) => {
     // Change the route instead of localStorage

@@ -5,7 +5,6 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { ClientStoreSalesType } from "@/app/lib/types/store_sales_types";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
-import { ImageLightBox } from "@/app/lib/components/ImageLightBox";
 
 const SalesDetailDialog: FC<{ salesData: ClientStoreSalesType }> = ({
   salesData,

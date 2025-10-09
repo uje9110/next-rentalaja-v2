@@ -1,5 +1,4 @@
 import React from "react";
-import { useCart } from "../../(root)/(pages)/cart/hooks/useCart";
 import { useCartContext } from "@/app/lib/context/CartContext";
 import { Store } from "lucide-react";
 import Image from "next/image";

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import React from "react";
 import HomepageCategoryButtons from "./components/HomepageCategoryButtons";
 import ProductCardSlider from "./components/ProductCardSlider";

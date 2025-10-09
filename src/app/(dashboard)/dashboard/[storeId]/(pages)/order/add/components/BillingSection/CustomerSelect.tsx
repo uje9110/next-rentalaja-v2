@@ -10,10 +10,7 @@ import React, {
 import axios from "axios";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 import { Loader, User } from "lucide-react";
-import {
-  ClientStoreOrderType,
-  StoreOrderType,
-} from "@/app/lib/types/store_order_type";
+import { StoreOrderType } from "@/app/lib/types/store_order_type";
 import { GlobalUserType } from "@/app/lib/types/global_user_type";
 import { useSession } from "next-auth/react";
 import { StoreOrderBillingType } from "@/app/lib/types/store_order_billing_type";
@@ -33,8 +30,6 @@ const CustomerSelect: FC<CustomerSelectTypes> = ({
 }) => {
   const { APIEndpoint } = useAPIContext();
   const { data: session } = useSession();
-
-  if (!session) return;
 
   const [customerSearchInput, setSearchCustomerSearchInput] =
     useState<string>("");
@@ -118,7 +113,7 @@ const CustomerSelect: FC<CustomerSelectTypes> = ({
       const customerSearchResponse = await axios(`${APIEndpoint}/global/user`, {
         params: { search: searchString },
         headers: {
-          Authorization: `Bearer ${session.user.token}`,
+          Authorization: `Bearer ${session?.user.token}`,
         },
       });
       if (customerSearchResponse.status === 200) {

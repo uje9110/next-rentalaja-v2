@@ -1,6 +1,5 @@
-import { StoreOrderBillingType } from "@/app/lib/types/store_order_billing_type";
 import { StoreOrderType } from "@/app/lib/types/store_order_type";
-import React, { ChangeEvent, Dispatch, FC, SetStateAction } from "react";
+import React, { ChangeEvent, FC } from "react";
 
 interface BillingFormType {
   orderData: StoreOrderType;

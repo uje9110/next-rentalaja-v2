@@ -24,7 +24,6 @@ import { useAPIContext } from "../context/ApiContext";
 import { GlobalUserType } from "../types/global_user_type";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ClientCheckoutType } from "../types/client_checkout_type";
-import clsx from "clsx";
 
 type CheckoutBillingProp = {
   isUsingDashboard?: boolean;
@@ -119,7 +118,7 @@ export const CheckoutBilling: FC<CheckoutBillingProp> = ({
   const [retainingCustomerEmail, setRetainingCustomerEmail] =
     useState<string>("");
 
-  let { data: retainingCustomerList = [] } = useRetainingCustomers(
+  const { data: retainingCustomerList = [] } = useRetainingCustomers(
     APIEndpoint,
     retainingCustomerEmail,
   );

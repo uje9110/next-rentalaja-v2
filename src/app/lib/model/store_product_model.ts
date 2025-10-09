@@ -80,7 +80,7 @@ StoreProductSchema.statics.getAllStoreProduct = async function (
   const categories = await GlobalCategoryHandler.getGlobalCategories();
 
   const Query = new QueryHandler(searchParams.toString());
-  let filters: Record<string, QueryValue> = Query.getFilterParams([
+  const filters: Record<string, QueryValue> = Query.getFilterParams([
     "search",
     "categoriesIds",
     "status",

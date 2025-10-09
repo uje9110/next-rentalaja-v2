@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect } from "react";
 import { RescheduleDialogContentProps } from "./RescheduleDialogContent";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -16,6 +16,8 @@ import { useBookingSelectVariation } from "@/app/lib/hooks/useBookingSelectVaria
 import { useBookingItemAmount } from "@/app/lib/hooks/useBookingItemAmount";
 import { useOrder } from "@/app/lib/hooks/useOrder";
 import { useParams } from "next/navigation";
+import BookingCalendarHours from "@/app/lib/components/BookingCalendarHours";
+import { ClientStoreProductType } from "@/app/lib/types/store_product_type";
 
 interface RescheduleStepTwoProps extends RescheduleDialogContentProps {
   itemID: string;
@@ -32,22 +34,25 @@ export const RescheduleStepTwo: FC<RescheduleStepTwoProps> = ({
   const params = useParams();
   const { storeId } = params;
 
-  const { data: storeProduct = [] } = useQuery({
+  const { data: storeProduct } = useQuery({
     queryKey: ["storeProducts"],
-    queryFn: async () => {
+    queryFn: async (): Promise<ClientStoreProductType | undefined> => {
       try {
         const response = await axios.get(`${APIEndpoint}/product/${itemID}`, {
           headers: {
             "x-store-id": storeId,
           },
         });
-        return response.data.product;
+        return response.data.json;
       } catch (error) {
         console.log(error);
-        return [];
+        return undefined;
       }
     },
+    enabled: !!itemID, // ✅ only run when itemID is truthy
   });
+
+  console.log(storeProduct);
 
   // USE ORDER
   const { orderItemData, setOrderItemData } = useOrder({ storeProduct });
@@ -137,7 +142,7 @@ export const RescheduleStepTwo: FC<RescheduleStepTwoProps> = ({
 
   useEffect(() => {
     updateNewItemDataAtIndex(itemIndex, orderItemData);
-  }, [orderItemData]);
+  }, [itemIndex, orderItemData]);
 
   return (
     <div className="flex h-[300px] max-h-[500px] flex-col gap-2">
@@ -175,10 +180,22 @@ export const RescheduleStepTwo: FC<RescheduleStepTwoProps> = ({
             handleIncreaseMonth={handleIncreaseMonth}
             handleIncreaseYear={handleIncreaseYear}
           />
+          <BookingCalendarHours
+            bookingHourAndMinute={bookingHourAndMinute}
+            getSelectedDateValueInMs={getSelectedDateValueInMs}
+            storeProduct={storeProduct}
+            hoursArr={hoursArr}
+            minutesArr={minutesArr}
+            currDateInMs={currDateInMs}
+            isBookingCalendarHourOpen={isBookingCalendarHourOpen}
+            setIsBookingCalendarHourOpen={setIsBookingCalendarHourOpen}
+            setBookingHourAndMinute={setBookingHourAndMinute}
+            checkHourAvaibilty={checkHourAvaibilty}
+          />
           <BookingSelectVariation
             storeProduct={storeProduct}
             orderItemData={orderItemData}
-            variationsDetails={storeProduct.variationsDetails}
+            variationsDetails={storeProduct?.variationsDetails}
             handleBookingVariation={handleBookingVariation}
             checkBookingVariantAvailability={checkBookingVariantAvailability}
           />

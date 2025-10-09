@@ -24,7 +24,6 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
 
   const [filters, setFilters] = useState<Record<string, string | Date>>({});
   // console.log(filters);
-  
 
   const [dateStart, setDateStart] = useState<Date | undefined>(() => {
     const dateString = searchParams.get("dateStart");
@@ -43,11 +42,11 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
   });
 
   useEffect(() => {
-    let defaultFilter: Record<string, string | Date> = {};
+    const defaultFilter: Record<string, string | Date> = {};
     filterData.forEach((filter) => {
       if (filter.defaultValue) {
         if (filter.filterName === "dateRange") {
-          Object.entries(filter.defaultValue as Object).forEach(
+          Object.entries(filter.defaultValue as object).forEach(
             ([key, value]) => {
               defaultFilter[key] = new Date(value);
             },
@@ -58,7 +57,7 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
       }
     });
     setFilters(defaultFilter);
-  }, []);
+  }, [filterData]);
 
   // Initialize from searchParams on first mount
   useEffect(() => {

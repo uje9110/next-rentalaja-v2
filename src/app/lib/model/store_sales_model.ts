@@ -393,7 +393,7 @@ StoreSalesSchema.statics.getSalesAnalyticPerProduct = async function (
   const categoryId = filters.categoriesIds;
   delete filters.categoriesIds;
 
-  const { limit, page, sortBy, sortOrder } = Query.getPaginationParams();
+  const { limit, page } = Query.getPaginationParams();
   const { dateStart, dateEnd, dateBy } = Query.getDateParams();
 
   if (dateBy) {
@@ -475,7 +475,7 @@ StoreSalesSchema.statics.getSalesAnalyticPerUser = async function (
   const categoryId = filters.categoriesIds;
   delete filters.categoriesIds;
 
-  const { limit, page, sortBy, sortOrder } = Query.getPaginationParams();
+  const { limit, page } = Query.getPaginationParams();
   const { dateStart, dateEnd, dateBy } = Query.getDateParams();
 
   if (dateBy) {

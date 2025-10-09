@@ -3,7 +3,6 @@ import OrderBillingInfo from "./components/MainComponents/OrderBillingInfo";
 import { StoreOrderHandler } from "@/app/lib/utils/StoreOrderHandler";
 import { OrdeStatusInfo } from "./components/MainComponents/OrdeStatusInfo";
 import OrderLineItems from "./components/MainComponents/OrderLineItems";
-import SingleOrderSidebar from "./components/SidebarComponents/SingleOrderSidebar";
 import { StoreUserHandler } from "@/app/lib/utils/StoreUserHandler";
 import ResponsiveSidebar from "./components/SidebarComponents/ResponsiveSidebar";
 

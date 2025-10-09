@@ -30,7 +30,6 @@ type BookingCalendarHoursProps = {
 
 const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
   bookingHourAndMinute,
-  defaultStartHour,
   storeProduct,
   hoursArr,
   minutesArr,
@@ -41,7 +40,6 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
   getSelectedDateValueInMs,
 }) => {
   if (!storeProduct) return;
-  const [defaultHour, defaultMinute] = defaultStartHour?.split(":") ?? ["", ""];
 
   const handleClose = () => {
     setIsBookingCalendarHourOpen(false);

@@ -30,13 +30,14 @@ const CheckoutPayment: FC<CheckoutPaymentProps> = ({
 
   useEffect(() => {
     if (isUsingDashboard) {
-      setCheckout &&
+      if (setCheckout) {
         setCheckout((prev) => {
           return {
             ...prev,
             isSkippingPayment: isSkippingPayment,
           };
         });
+      }
     }
   }, [isSkippingPayment]);
 

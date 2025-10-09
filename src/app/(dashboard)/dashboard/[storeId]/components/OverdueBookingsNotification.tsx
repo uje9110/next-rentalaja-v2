@@ -1,6 +1,6 @@
 "use client";
 import { BookingOverdueNotificationType } from "@/app/lib/types/store_booking_overdue_type";
-import { Bell, RefreshCcw } from "lucide-react";
+import { Bell } from "lucide-react";
 import Link from "next/link";
 import React, { FC } from "react";
 

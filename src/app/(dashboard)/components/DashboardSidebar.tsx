@@ -82,6 +82,7 @@ const DashboardSidebar: FC<DashboardSidebarProps> = ({
       setSidebarMenus(SidebarMenuCustomerService);
     }
   }, [session]);
+  
   return (
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader>
