@@ -70,7 +70,7 @@ const RescheduleStepThree: FC<RescheduleStepThreeProps> = ({
           newItemData: newItemData,
           updatedBy: `${session?.user.firstName} ${session?.user.lastName}`,
         },
-        { headers: { "x-store-id": localStorage.getItem("STORE_ID") || "" } },
+        { headers: { "x-store-id": orderData.storeDetail.storeId || "" } },
       );
 
       return response.data.success;

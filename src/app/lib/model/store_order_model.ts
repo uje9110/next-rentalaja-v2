@@ -508,6 +508,15 @@ StoreOrderSchema.statics.getStoreOrderPayments = async function (
   const StorePaymentModel = createStorePaymentModel(storeConnection);
   const orderPayments = await StorePaymentModel.aggregate([
     { $match: { orderID: orderId } },
+    {
+      $lookup: {
+        from: "orders",
+        localField: "orderID",
+        foreignField: "_id",
+        as: "orderDetail",
+      },
+    },
+    { $unwind: "$orderDetail" },
   ]);
 
   return orderPayments;
