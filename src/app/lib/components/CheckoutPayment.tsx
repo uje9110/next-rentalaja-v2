@@ -46,7 +46,7 @@ const CheckoutPayment: FC<CheckoutPaymentProps> = ({
     <div className="border-accent-custom relative flex w-full flex-col overflow-hidden rounded-md bg-white shadow-sm">
       <div>
         <div className="flex items-center justify-between bg-sky-100 px-4 py-2 text-sm font-semibold">
-          <h3>Metode Pembayaran</h3>
+          <h3 className="phone:text-sm">Metode Pembayaran</h3>
           {isUsingDashboard && (
             <div className="z-20 flex items-center justify-center gap-2">
               <p className="text-xs font-medium text-gray-600">
@@ -68,7 +68,7 @@ const CheckoutPayment: FC<CheckoutPaymentProps> = ({
                 className="row-wrapper flex w-full flex-col justify-between gap-2"
               >
                 <div className="flex w-full flex-row justify-between">
-                  <label className="text-sm" htmlFor={value}>
+                  <label className="phone:text-xs text-sm" htmlFor={value}>
                     {title}
                   </label>
                   <input
@@ -97,7 +97,7 @@ const CheckoutPayment: FC<CheckoutPaymentProps> = ({
         </div>
       </div>
       <div>
-        <h3 className="bg-sky-100 px-4 py-2 text-sm font-semibold">
+        <h3 className="phone:text-sm bg-sky-100 px-4 py-2 text-sm font-semibold">
           Tipe Pembayaran
         </h3>
         <div className="flex flex-col gap-2 px-4 py-2 pb-4">
@@ -110,7 +110,7 @@ const CheckoutPayment: FC<CheckoutPaymentProps> = ({
                 className="row-wrapper flex w-full flex-col justify-between gap-2"
               >
                 <div className="flex w-full flex-row justify-between">
-                  <label className="text-sm" htmlFor={value}>
+                  <label className="text-sm phone:text-xs" htmlFor={value}>
                     {title}
                   </label>
                   <input

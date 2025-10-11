@@ -37,9 +37,9 @@ export const CartItem: React.FC<CartItemProps> = ({
             {/* Store Header */}
             <p className="flex items-center gap-2 border-b border-sky-200 bg-sky-100 p-4 py-2">
               <span className="text-colorSecondary">
-                <Store />
+                <Store className="phone:w-4" />
               </span>
-              <span className="subheader-custom font-semibold">
+              <span className="subheader-custom phone:text-sm font-semibold">
                 {store.storeName}
               </span>
             </p>
@@ -105,7 +105,7 @@ export const CartItem: React.FC<CartItemProps> = ({
                         {/* Item Details */}
                         <div className="flex w-2/3 flex-col gap-1">
                           {/* Item Name */}
-                          <h3 className="font-uppercase truncate text-lg font-semibold">
+                          <h3 className="font-uppercase truncate text-lg font-semibold phone:text-sm">
                             {itemName}
                           </h3>
 

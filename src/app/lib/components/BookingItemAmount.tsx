@@ -20,9 +20,9 @@ const BookingItemAmount: React.FC<BookingItemAmountProps> = ({
 }) => {
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-2">
-        <Layers2 size={18} />
-        <h3 className="subheader-custom">Pilih Tanggal Booking</h3>
+      <div className="phone:gap-1 flex items-center gap-2">
+        <Layers2 className="phone:w-4" />
+        <h3 className="subheader-custom phone:text-sm">Pilih Tanggal Booking</h3>
       </div>
       <div className="flex flex-col gap-1">
         <Select

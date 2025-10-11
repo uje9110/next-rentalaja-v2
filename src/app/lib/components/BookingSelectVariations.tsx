@@ -34,11 +34,11 @@ const BookingSelectVariation: React.FC<BookingSelectVariationProps> = ({
 
   return (
       <div className="flex flex-col gap-2 w-full">
-        <div className="flex items-center gap-2">
-          <CalendarClock size={18} />
-          <h3 className="subheader-custom">Pilih Paket Sewa</h3>
+        <div className="flex items-center gap-2 phone:gap-1">
+          <CalendarClock className="phone:w-4" />
+          <h3 className="subheader-custom phone:text-sm">Pilih Paket Sewa</h3>
         </div>
-        <div className="flex flex-row flex-wrap justify-between gap-4 w-full">
+        <div className="flex flex-row flex-wrap justify-between gap-4 w-full phone:gap-2">
           {variationsDetails
             .sort((a, b) => a.hoursValue - b.hoursValue)
             .map((item, index: number) => {
@@ -58,7 +58,7 @@ const BookingSelectVariation: React.FC<BookingSelectVariationProps> = ({
               return (
                 <div
                   key={_id}
-                  className="relative w-[48%] max-w-[49%] min-w-[45%]"
+                  className="relative w-[48%] max-w-[49%] min-w-[45%] phone:w-[48.5%] phone:gap-0"
                 >
                   {/* hidden input */}
                   <input
@@ -87,28 +87,28 @@ const BookingSelectVariation: React.FC<BookingSelectVariationProps> = ({
                   {/* visible card */}
                   <label
                     htmlFor={`variation-${index}`}
-                    className="border-accent-custom flex cursor-pointer flex-col rounded-md bg-white p-4 shadow-sm transition-all peer-checked:bg-sky-100 peer-disabled:cursor-not-allowed peer-disabled:bg-gray-200 hover:shadow-md"
+                    className="border-accent-custom flex cursor-pointer flex-col rounded-md bg-white p-4 shadow-sm transition-all peer-checked:bg-sky-100 peer-disabled:cursor-not-allowed peer-disabled:bg-gray-200 hover:shadow-md phone:gap-0"
                   >
                     {/* Title + Bonus */}
-                    <span className="text-sm font-semibold">
+                    <p className="text-sm font-semibold phone:text-xs">
                       {variationTitle}
                       {variationBonus?.title && (
                         <span className="ml-1 text-xs font-light">
                           ({variationBonus.title})
                         </span>
                       )}
-                    </span>
+                    </p>
 
                     {/* Rental End Date */}
                     <p className="mt-2 text-xs">
-                      <span className="block font-light">Waktu kembali:</span>
+                      <span className="block font-light text-gray-400">Waktu kembali:</span>
                       <span className="block font-medium text-teal-400">
                         {moment(bookingEndInMs).format("DD MMM YYYY, HH:mm")}
                       </span>
                     </p>
 
                     {/* Price */}
-                    <span className="mt-3 text-base font-bold text-sky-800">
+                    <span className="mt-3 text-base font-bold text-sky-800 phone:text-sm">
                       {variationPrice.toLocaleString("id-ID", {
                         style: "currency",
                         currency: "IDR",

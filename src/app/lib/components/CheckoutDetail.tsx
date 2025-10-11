@@ -6,13 +6,13 @@ const CheckoutDetail = () => {
   const { checkout } = useCartContext();
   return (
     <div className="border-accent-custom relative flex w-full flex-col overflow-hidden rounded-md bg-white shadow-sm">
-      <h3 className="bg-sky-100 px-4 py-2 text-sm font-semibold">
+      <h3 className="phone:text-sm bg-sky-100 px-4 py-2 text-sm font-semibold">
         Rincian Pembayaran
       </h3>
       <div className="flex flex-col gap-2 px-4 py-2">
         <div className="row-wrapper flex w-full flex-row justify-between text-sm">
-          <p className="text-gray-400">Subtotal</p>
-          <p className="text-gray-400">
+          <p className="text-xs text-gray-400">Subtotal</p>
+          <p className="text-xs text-gray-400">
             {checkout.subtotal.toLocaleString("id-ID", {
               style: "currency",
               currency: "IDR",
@@ -21,7 +21,9 @@ const CheckoutDetail = () => {
           </p>
         </div>
         <div>
-          <p className="text-sm font-semibold text-slate-500">Diskon :</p>
+          <p className="font phone:text-xs text-sm font-semibold text-slate-500">
+            Diskon :
+          </p>
           {checkout.discounts.map((discount) => {
             const { _id, couponName, couponType, couponValue } = discount;
             const thisTotalDiscount =
@@ -33,8 +35,8 @@ const CheckoutDetail = () => {
                 key={_id}
                 className="row-wrapper flex w-full flex-row justify-between text-sm"
               >
-                <span className="text-gray-400">{couponName}</span>
-                <span className="text-gray-400">
+                <span className="text-xs text-gray-400">{couponName}</span>
+                <span className="text-xs text-gray-400">
                   {CurrencyHandlers.changeToLocaleCurrency(thisTotalDiscount)}
                 </span>
               </div>
@@ -42,8 +44,8 @@ const CheckoutDetail = () => {
           })}
         </div>
         <div className="row-wrapper flex w-full flex-row justify-between text-sm">
-          <p className="text-gray-400">Total Diskon</p>
-          <p className="text-gray-400">
+          <p className="text-xs text-gray-400">Total Diskon</p>
+          <p className="text-xs text-gray-400">
             {CurrencyHandlers.changeToLocaleCurrency(
               CurrencyHandlers.calculateDiscount(
                 checkout.discounts,
@@ -53,8 +55,8 @@ const CheckoutDetail = () => {
           </p>
         </div>
         <div className="row-wrapper flex w-full flex-row justify-between text-sm">
-          <p className="text-gray-400">Total</p>
-          <p className="text-gray-400">
+          <p className="text-xs text-gray-400">Total</p>
+          <p className="text-xs text-gray-400">
             {checkout.total.toLocaleString("id-ID", {
               style: "currency",
               currency: "IDR",

@@ -30,7 +30,11 @@ const Page = async ({
 
   const coupons = await getCoupons();
 
-  return <CouponTable coupons={coupons} />;
+  return (
+    <div className="phone:px-2">
+      <CouponTable coupons={coupons} />;
+    </div>
+  );
 };
 
 export default Page;

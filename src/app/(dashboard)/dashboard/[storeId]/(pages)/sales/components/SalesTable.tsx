@@ -39,8 +39,8 @@ const SalesTable: FC<SalesTableProps> = ({ sales }) => {
   );
 
   useEffect(() => {
-    setFilteredSales(sales)
-  }, [sales])
+    setFilteredSales(sales);
+  }, [sales]);
 
   const columns = getColumns(setIsDialogOpen, setSalesData);
 
@@ -115,7 +115,7 @@ const SalesTable: FC<SalesTableProps> = ({ sales }) => {
   ] as const satisfies CustomTableFilterProps[];
 
   return (
-    <div className="m-2 flex flex-col gap-2">
+    <div className="phone:w-[calc(100vw-1.5rem)] m-2 flex flex-col gap-2">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <SalesDetailDialog salesData={salesData as ClientStoreSalesType} />

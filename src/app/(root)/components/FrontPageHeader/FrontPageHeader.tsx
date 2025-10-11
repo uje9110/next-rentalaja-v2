@@ -24,7 +24,7 @@ const AppHeader = () => {
 
   return (
     <nav
-      className={`z-50 flex w-full justify-center ${overScrollY ? "phone:sticky phone:top-1 lg:top-4" : "relative w-full"}`}
+      className={`z-50 flex w-full justify-center phone:pb-4 ${overScrollY ? "phone:sticky phone:top-1 lg:top-4" : "relative w-full"}`}
     >
       <div
         className={`bg-colorPrimary flex h-16 flex-row items-center justify-between transition-all duration-400 ${overScrollY ? "phone:w-[94%] rounded-md p-3 lg:w-[59%]" : "phone:px-4 phone:w-full lg:w-full lg:px-12"}`}
@@ -32,13 +32,13 @@ const AppHeader = () => {
         <div className="relative h-14 w-64">
           <Link
             href="/"
-            className="absolute top-1/2 flex h-10 w-40 -translate-y-1/2 items-center"
+            className="phone:w-25 phone:h-7 absolute top-1/2 flex h-10 w-40 -translate-y-1/2 items-center"
           >
             <Image
               src={logoWhite.src}
               fill
               alt="Logo"
-              className="object-cover"
+              className="phone:object-fill object-cover"
             />
           </Link>
         </div>
@@ -55,7 +55,7 @@ const AppHeader = () => {
                   className={`relative flex h-10 flex-1 items-center justify-between overflow-hidden rounded-full border-2 border-gray-200 bg-white`}
                 >
                   <span
-                    className={`ml-4 text-gray-500 ${overScrollY ? "phone:truncate w-36" : ""}`}
+                    className={`ml-4 text-gray-500 phone:text-xs ${overScrollY ? "phone:truncate w-36" : ""}`}
                   >
                     Cari atau cek jadwal alat
                   </span>
@@ -77,17 +77,17 @@ const AppHeader = () => {
           >
             <a
               href="/login"
-              className="flex items-center gap-2 rounded-full border-2 border-white px-2 text-sm text-white lg:h-[40px]"
+              className="flex items-center gap-2 rounded-full border border-white px-2 text-sm text-white lg:h-[40px]"
             >
-              <User />
-              <span>
+              <User className="phone:w-4" />
+              <span className="phone:text-xs">
                 {" "}
                 {session?.user.firstName ? session?.user.firstName : "Login"}
               </span>
             </a>
             <LogOut
               onClick={() => signOut()}
-              className="cursor-pointer text-white"
+              className="phone:w-4 cursor-pointer text-white"
             />
           </div>
         </div>

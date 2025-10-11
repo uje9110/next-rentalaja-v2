@@ -52,9 +52,11 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
 
   return (
     <div className="flex flex-col gap-2 lg:h-full lg:w-full">
-      <div className="flex items-center gap-2">
-        <Calendar1 size={18} />
-        <h3 className="subheader-custom">Pilih Tanggal Booking</h3>
+      <div className="phone:gap-1 flex items-center gap-2">
+        <Calendar1 className="phone:w-4" />
+        <h3 className="subheader-custom phone:text-sm">
+          Pilih Tanggal Booking
+        </h3>
       </div>
       <div className="flex flex-col gap-2">
         <div className="border-accent-custom w-full rounded-md bg-white p-4 pb-2 shadow-lg">
@@ -64,16 +66,16 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
             <div className="flex flex-row items-center gap-3">
               <button
                 onClick={handleDecreaseMonth}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow transition hover:bg-sky-100"
+                className="phone:w-6 phone:h-6 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow transition hover:bg-sky-100"
               >
                 <ChevronLeft size={18} className="text-sky-700" />
               </button>
-              <p className="text-lg font-semibold text-sky-900">
+              <p className="text-lg font-semibold text-sky-900 phone:text-sm">
                 {monthArr[currMonth]}
               </p>
               <button
                 onClick={handleIncreaseMonth}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow transition hover:bg-sky-100"
+                className="phone:w-6 phone:h-6 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow transition hover:bg-sky-100"
               >
                 <ChevronRight size={18} className="text-sky-700" />
               </button>
@@ -83,14 +85,14 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
             <div className="flex flex-row items-center gap-3">
               <button
                 onClick={handleDecreaseYear}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow transition hover:bg-sky-100"
+                className="phone:w-6 phone:h-6 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow transition hover:bg-sky-100"
               >
                 <ChevronLeft size={18} className="text-sky-700" />
               </button>
-              <p className="text-lg font-semibold text-sky-900">{currYear}</p>
+              <p className="text-lg font-semibold text-sky-900 phone:text-sm">{currYear}</p>
               <button
                 onClick={handleIncreaseYear}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white shadow transition hover:bg-sky-100"
+                className="phone:w-6 phone:h-6 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow transition hover:bg-sky-100"
               >
                 <ChevronRight size={18} className="text-sky-700" />
               </button>
@@ -100,7 +102,7 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
           {/* ---- Name Of Days ---- */}
           <div className="name-of-days-wrapper mb-3 grid grid-cols-7 rounded-md bg-sky-100 py-2 text-sm font-semibold text-sky-800 shadow-inner">
             {daysArr.map((day) => (
-              <p key={day} className="text-center">
+              <p key={day} className="text-center phone:text-xs">
                 {day}
               </p>
             ))}
@@ -156,7 +158,7 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
                     required
                     checked={selectedDate === formattedValue}
                     value={formattedValue}
-                    className="peer absolute top-1/2 left-1/2 z-0 h-8 w-8 -translate-x-1/2 -translate-y-1/2 opacity-0"
+                    className="peer phone:w-6 phone:h-6 absolute top-1/2 left-1/2 z-0 h-8 w-8 -translate-x-1/2 -translate-y-1/2 opacity-0"
                     onChange={(e) => handleBookingCalendarDateChange(e)}
                     onClick={() => openBookingCalendarHours()}
                     disabled={
@@ -176,7 +178,7 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
                   />
                   <label
                     htmlFor={`input-${date}`}
-                    className="dateBookingLabel hover:text-colorPrimary absolute z-10 flex h-8 w-8 items-center justify-center rounded-full peer-checked:bg-teal-400 peer-checked:text-white peer-disabled:text-slate-400 hover:border-2 hover:border-blue-500 hover:bg-sky-100"
+                    className="dateBookingLabel hover:text-colorPrimary phone:w-6 phone:h-6 absolute z-10 flex h-8 w-8 items-center justify-center rounded-full peer-checked:bg-teal-400 peer-checked:text-white peer-disabled:text-slate-400 hover:border-2 hover:border-blue-500 hover:bg-sky-100"
                   >
                     {date}
                   </label>

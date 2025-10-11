@@ -47,7 +47,7 @@ const RadioSelector = ({
   onChange: (val: string) => void;
 }) => (
   <div className="space-y-2">
-    <Label>{label}</Label>
+    <Label className="phone:text-xs">{label}</Label>
     <RadioGroup
       onValueChange={(val) => onChange(val)}
       value={value ?? ""}
@@ -58,7 +58,7 @@ const RadioSelector = ({
           key={option.value}
           htmlFor={option.value}
           className={cn(
-            "cursor-pointer rounded-sm border px-4 py-1 text-sm font-medium transition-all",
+            "phone:text-xs cursor-pointer rounded-sm border px-4 py-1 text-sm font-medium transition-all",
             "flex items-center justify-center gap-2",
             value === option.value
               ? "border-teal-400 bg-teal-400 text-white shadow-md"
@@ -147,7 +147,7 @@ export const CheckoutBilling: FC<CheckoutBillingProp> = ({
   return (
     <Card className="border-accent-custom w-full overflow-hidden rounded-md p-0 pb-4 shadow-sm">
       <CardHeader className="gap-0 bg-sky-100 px-4 py-2">
-        <CardTitle className="text-sm">Informasi Akun</CardTitle>
+        <CardTitle className="phone:text-sm text-sm">Informasi Akun</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
@@ -177,12 +177,14 @@ export const CheckoutBilling: FC<CheckoutBillingProp> = ({
         {/* Step 2a: Existing Account */}
         {hasAccount === "yes" && (
           <div className="space-y-2">
-            <Label htmlFor="email">Akun Terdaftar</Label>
+            <Label htmlFor="email " className="phone:text-xs">
+              Akun Terdaftar
+            </Label>
             <Input
               id="email"
               name="email"
               placeholder="Masukkan email terdaftar Anda"
-              className="border-accent-custom text-sm focus-visible:ring-2 focus-visible:ring-sky-200"
+              className="border-accent-custom phone:text-xs text-sm focus-visible:ring-2 focus-visible:ring-sky-200"
               onChange={handleCheckoutBillingChange}
             />
           </div>
@@ -191,7 +193,9 @@ export const CheckoutBilling: FC<CheckoutBillingProp> = ({
         {/* Step 2b: Retaining Customer */}
         {retainingCustomer === "yes" && (
           <div className="w-full space-y-2">
-            <Label htmlFor="email">Akun Terdaftar</Label>
+            <Label htmlFor="email " className="phone:text-xs">
+              Akun Terdaftar
+            </Label>
             <div className="w-full">
               <Popover
                 open={isCustomerListOpen}
@@ -203,7 +207,7 @@ export const CheckoutBilling: FC<CheckoutBillingProp> = ({
                     name="email"
                     value={retainingCustomerEmail}
                     placeholder="Cari customer"
-                    className="border-accent-custom text-sm focus-visible:ring-2 focus-visible:ring-sky-200"
+                    className="border-accent-custom phone:text-xs text-sm focus-visible:ring-2 focus-visible:ring-sky-200"
                     onChange={(e) => setRetainingCustomerEmail(e.target.value)}
                   />
                 </PopoverTrigger>
@@ -239,7 +243,7 @@ export const CheckoutBilling: FC<CheckoutBillingProp> = ({
 
         {/* Step 2c: New Account / New Customer */}
         {(hasAccount === "no" || retainingCustomer === "no") && (
-          <div className="space-y-3 text-sm">
+          <div className="phone:text-xs space-y-3 text-sm">
             {[
               { id: "firstName", label: "Nama Depan", placeholder: "Budi" },
               {
@@ -266,10 +270,12 @@ export const CheckoutBilling: FC<CheckoutBillingProp> = ({
               },
             ].map(({ id, label, placeholder, type }) => (
               <div key={id} className="flex flex-col gap-1">
-                <Label htmlFor={id}>{label}</Label>
+                <Label className="phone:text-xs" htmlFor={id}>
+                  {label}
+                </Label>
                 <Input
                   onChange={handleCheckoutBillingChange}
-                  className="border-accent-custom text-sm focus-visible:ring-2 focus-visible:ring-sky-200"
+                  className="border-accent-custom phone:text-xs text-sm focus-visible:ring-2 focus-visible:ring-sky-200"
                   id={id}
                   name={id}
                   type={type ?? "text"}

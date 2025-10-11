@@ -65,7 +65,7 @@ const StoreProductSection: FC<StoreProductSectionProp> = ({
         </div>
       ) : (
         <div className="border-accent-custom mx-4 mt-2 flex items-center justify-center rounded-md border border-dashed bg-white p-2 shadow-sm lg:mx-0">
-          <p className="text-sm text-gray-500">
+          <p className="phone:text-xs text-center text-sm text-gray-500">
             Silahkan pilih cabang terlebih dahulu untuk memboking
           </p>
         </div>

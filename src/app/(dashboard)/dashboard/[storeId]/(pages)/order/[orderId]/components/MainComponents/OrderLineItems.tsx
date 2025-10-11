@@ -302,7 +302,7 @@ const OrderLineItems: FC<OrderLineItemsProps> = ({ orderData }) => {
       </div>
 
       <div className="flex w-full">
-        <div className="flex w-1/2 items-center justify-center">
+        <div className="phone:hidden flex w-1/2 items-center justify-center lg:flex">
           {isOrderPaymentFullfilled(
             orderData.paymentDetails,
             orderData.total,
@@ -318,25 +318,25 @@ const OrderLineItems: FC<OrderLineItemsProps> = ({ orderData }) => {
         </div>
 
         {/* ITEM TOTAL */}
-        <div className="relative z-20 flex h-auto w-1/2 justify-end pt-4">
+        <div className="phone:w-full relative z-20 flex h-auto w-1/2 justify-end pt-4 lg:w-1/2">
           <div className="phone:w-full phone:justify-end flex w-full flex-row gap-2">
-            <div className="phone:w-2/5 flex w-full flex-col items-end">
-              <p className="p-2 font-semibold">Subtotal</p>
-              <p className="p-2 font-semibold">Diskon</p>
-              <p className="p-2 font-semibold">Total</p>
-              <p className="p-2 font-semibold">Terbayar</p>
-              <p className="p-2 font-semibold">Sisa Pembayaran</p>
-              <p className="p-2 font-semibold">Denda</p>
+            <div className="phone:w-full flex w-full flex-col items-end lg:w-1/3">
+              <p className="phone:w-full p-2 font-semibold">Subtotal</p>
+              <p className="phone:w-full p-2 font-semibold">Diskon</p>
+              <p className="phone:w-full p-2 font-semibold">Total</p>
+              <p className="phone:w-full p-2 font-semibold">Terbayar</p>
+              <p className="phone:w-full p-2 font-semibold">Sisa Pembayaran</p>
+              <p className="phone:w-full p-2 font-semibold">Denda</p>
             </div>
 
-            <div className="phone:w-1/4 flex w-full flex-col items-end">
+            <div className="phone:w-full flex w-full flex-col items-end lg:w-1/3">
               {/* ORDER SUBTOTAL */}
               <p className="p-2">
                 {CurrencyHandlers.changeToLocaleCurrency(orderData.subtotal)}
               </p>
 
               {/* DISKON */}
-              <p className="-ml-3 p-2">
+              <p className="p-2">
                 -{" "}
                 {CurrencyHandlers.changeToLocaleCurrency(
                   orderData.discounts.reduce((total, item) => {
@@ -354,7 +354,7 @@ const OrderLineItems: FC<OrderLineItemsProps> = ({ orderData }) => {
               <p className="p-2">
                 {CurrencyHandlers.changeToLocaleCurrency(orderData.total)}
               </p>
-              <p className="-ml-[11px] p-2">
+              <p className="p-2">
                 - {CurrencyHandlers.changeToLocaleCurrency(totalPayments)}
               </p>
               <p className="p-2">

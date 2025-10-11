@@ -34,8 +34,9 @@ const OrderRevertPopover: FC<RevertOrderMenuPopoverProps> = ({
   return (
     <Popover>
       <PopoverTrigger>
-        <div className="rounded-sm border border-slate-400/50 bg-sky-100 p-1">
+        <div className="phone:flex phone:flex-row phone:items-center phone:px-3 phone:py-1 phone:gap-2 rounded-sm border border-slate-400/50 bg-sky-100 p-1">
           <Grip size={16} className="text-slate-600" />
+          <p className="lg:hidden">Other</p>
         </div>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-full p-0">

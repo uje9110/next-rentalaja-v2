@@ -16,21 +16,24 @@ const SelectProductStore: FC<SelectProductStoreProps> = ({
 }) => {
   return (
     <div className="flex w-full flex-col gap-3 px-4 lg:w-[60%] lg:p-0">
-      <div className="flex items-center gap-2">
-        <Store size={18} />
-        <h3 className="subheader-custom">Pilih cabang</h3>
+      <div className="phone:gap-1 flex items-center gap-2">
+        <Store className="phone:w-4" />
+        <h3 className="subheader-custom phone:text-sm">Pilih cabang</h3>
       </div>
-      <div className="flex w-full flex-row gap-4">
+      <div className="flex w-full flex-row gap-4 phone:gap-2">
         {globalProduct.availableStores.map((item) => {
           const { storeName, storeId, storeAddress } = item;
           return (
-            <div className="relative h-20" key={storeId}>
+            <div
+              className="phone:w-[calc(53%-1rem)] relative h-20"
+              key={storeId}
+            >
               <input
                 checked={selectedStore === storeId}
                 id={storeId}
                 name="selectedStore"
                 type="radio"
-                className="peer sr-only"
+                className="peer absolute h-0 w-0 opacity-0"
                 value={storeId}
                 onChange={(e) => {
                   handleSelectStore(e.target.value);
@@ -38,10 +41,12 @@ const SelectProductStore: FC<SelectProductStoreProps> = ({
               />
               <label
                 htmlFor={storeId}
-                className="border-accent-custom flex cursor-pointer flex-col gap-2 rounded-md bg-white p-2 shadow-sm peer-checked:border-2 peer-checked:bg-sky-100"
+                className="border-accent-custom phone:gap-1 flex cursor-pointer flex-col gap-2 rounded-md bg-white p-2 shadow-sm peer-checked:border-2 peer-checked:bg-sky-100"
               >
-                <p className="text-sm font-medium">{storeName}</p>
-                <p className="text-xs font-light">{storeAddress?.address}</p>
+                <p className="phone:text-sm text-sm font-medium">{storeName}</p>
+                <p className="phone:text-[10px] text-xs font-light">
+                  {storeAddress?.address}
+                </p>
               </label>
             </div>
           );

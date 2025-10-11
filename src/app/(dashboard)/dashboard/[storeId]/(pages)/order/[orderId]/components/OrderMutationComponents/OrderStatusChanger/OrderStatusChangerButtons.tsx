@@ -235,7 +235,7 @@ const OrderStatusChangerButtons: FC<OrderStatusChangerButtonsProps> = ({
   };
 
   return (
-    <div className="relative flex w-2/5 items-center justify-end gap-1">
+    <div className="phone:w-full phone:flex phone:flex-row phone:justify-center relative flex w-2/5 items-center justify-end gap-1 lg:w-fit">
       {renderButtons()}
       <OrderRevertPopover
         orderData={orderData}

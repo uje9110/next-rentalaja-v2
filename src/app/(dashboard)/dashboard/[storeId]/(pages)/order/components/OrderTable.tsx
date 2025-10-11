@@ -91,7 +91,7 @@ export const OrderTable = <TData, TValue>({
   ] as const satisfies CustomTableFilterProps[];
 
   return (
-    <div className="flex flex-col gap-4 rounded-md bg-white p-4 border border-slate-400/50">
+    <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 rounded-md border border-slate-400/50 bg-white p-4">
       {/* filter */}
       <CustomTableFilter
         filterData={filterData}

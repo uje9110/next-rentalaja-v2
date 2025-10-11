@@ -36,7 +36,7 @@ const Page = async ({
   const cashPayments = await getCashPayments();
 
   return (
-    <div className="m-2 flex flex-col gap-4 rounded-md border-[1px] border-slate-400/50 bg-white p-4 shadow-sm">
+    <div className="phone:m-0 phone:px-2 m-2 flex flex-col gap-4 rounded-md border-[1px] border-slate-400/50 bg-white p-4 shadow-sm">
       <CashPaymentTable payments={cashPayments} />
     </div>
   );

@@ -17,7 +17,7 @@ const BookingPeriodeDetail: React.FC<BookingPeriodeDetailProps> = ({
           <h4 className="text-center text-sm font-semibold text-green-500">
             Mulai
           </h4>
-          <p className="flex flex-col items-center justify-center text-xs">
+          <p className="flex flex-col items-center justify-center text-xs text-center phone:text-[10px]">
             <span>
               {orderItemData.rentalDetails.rentalStartInLocaleMs === 0
                 ? "Silahkan pilih tanggal sewa"
@@ -38,7 +38,7 @@ const BookingPeriodeDetail: React.FC<BookingPeriodeDetailProps> = ({
           <h4 className="text-center text-sm font-semibold text-red-500">
             Selesai
           </h4>
-          <p className="flex flex-col items-center justify-center text-xs">
+          <p className="flex flex-col items-center justify-center text-xs text-center phone:text-[10px]">
             <span>
               {orderItemData.rentalDetails.rentalEndInLocaleMs === 0
                 ? "Silahkan pilih paket sewa"

@@ -36,10 +36,12 @@ const Page = async ({
   const products = await getProducts();
 
   return (
-    <ProductTable
-      storeId={storeId}
-      data={products as ClientStoreProductType[]}
-    />
+    <div className="phone:px-2">
+      <ProductTable
+        storeId={storeId}
+        data={products as ClientStoreProductType[]}
+      />
+    </div>
   );
 };
 

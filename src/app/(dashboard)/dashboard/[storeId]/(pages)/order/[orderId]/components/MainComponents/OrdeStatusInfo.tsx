@@ -23,35 +23,13 @@ export const OrdeStatusInfo: FC<OrderStatusInfoProps> = ({
     useState<boolean>(false);
 
   return (
-    <div className="phone:order-1 flex h-32 w-full flex-col items-start justify-center rounded-lg border border-slate-400/50 bg-white p-4 shadow lg:order-1">
-      <div className="flex w-full flex-row justify-between">
-        <p className="flex w-3/5 items-center gap-2 text-sm font-semibold">
-          {/* {window.innerWidth < 640 ? (
-            <Sheet>
-              <SheetTrigger>
-                <p className="rounded-sm bg-teal-400 p-1 text-white">
-                  <PanelRightClose size={20} strokeWidth={2} />
-                </p>
-              </SheetTrigger>
-              <SheetContent side={"left"} className="flex flex-col gap-4">
-                <SheetHeader>
-                  <p className="text-start font-semibold">Detail Tambahan</p>
-                </SheetHeader>
-                <SingleOrderSidebar
-                  session={session as Session}
-                  orderId={orderData._id as string}
-                  paymentData={paymentData}
-                  setPaymentData={setPaymentData}
-                  isLoading={isLoading}
-                  setIsLoading={setIsLoading}
-                />
-              </SheetContent>
-            </Sheet>
-          ) : null} */}
-          <span className="text-colorSecondary flex items-center text-base font-bold">
-            {orderData._id}
-          </span>
-        </p>
+    <div className="phone:order-1 phone:gap-4 phone:h-35 flex h-32 w-full flex-col items-start justify-center rounded-lg border border-slate-400/50 bg-white p-4 shadow lg:order-1 lg:h-32">
+      <div className="phone:flex-col phone:items-center phone:justify-center phone:w-full phone:gap-2 flex w-full flex-row justify-between lg:flex lg:flex-row lg:items-center lg:justify-between">
+        <div className="phone:text-center text-colorSecondary phone:w-full phone:flex phone:justify-center flex w-3/5 items-center gap-2 text-sm font-semibold lg:w-fit">
+          <span className="lg:hidden">-----</span>
+          <p>{orderData._id}</p>
+          <span className="lg:hidden">-----</span>
+        </div>
 
         {/* ACTION BUTTONS CONTAINER */}
         <OrderStatusChangerButtons
@@ -62,8 +40,8 @@ export const OrdeStatusInfo: FC<OrderStatusInfoProps> = ({
         />
       </div>
 
-      <div className="flex flex-col gap-1">
-        <div className="flex flex-row items-center gap-2 capitalize">
+      <div className="phone:w-full flex flex-col gap-1">
+        <div className="phone:justify-between phone:w-full phone:flex phone:flex-row flex flex-row items-center gap-2 capitalize">
           <p className="w-[140px] text-xs">Status Pembayaran</p>
           <p
             style={{
@@ -71,18 +49,18 @@ export const OrdeStatusInfo: FC<OrderStatusInfoProps> = ({
                 orderData.paymentStatus as string,
               ),
             }}
-            className="w-auto rounded-md bg-blue-500 px-2 py-1 text-center text-xs font-[500] tracking-wide text-white"
+            className="phone:text-[10px] lg:text-xs w-fit rounded-sm bg-blue-500 px-2 py-1 text-center text-xs font-[500] tracking-wide text-white"
           >
             {orderData.paymentStatus}
           </p>
         </div>
-        <div className="flex flex-row items-center gap-2 capitalize">
+        <div className="phone:justify-between phone:w-full phone:flex phone:flex-row flex flex-row items-center gap-2 capitalize">
           <p className="w-[140px] text-xs">Status Order &nbsp;</p>
           <p
             style={{
               backgroundColor: getOrderStatusColor(orderData.status as string),
             }}
-            className="w-auto rounded-md bg-blue-500 px-2 py-1 text-center text-xs font-[500] tracking-wide text-white"
+            className="phone:text-[10px] lg:text-xs w-fit rounded-sm bg-blue-500 px-2 py-1 text-center text-xs font-[500] tracking-wide text-white"
           >
             {orderData.status}
           </p>

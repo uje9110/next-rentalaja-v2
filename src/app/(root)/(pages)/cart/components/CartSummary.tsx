@@ -10,7 +10,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ checkout }) => {
     <div className="w-full lg:flex lg:w-1/2 lg:flex-col lg:gap-4">
       {/* CHECKOUT SUMMARY */}
       <div className="border-accent-custom flex h-fit w-full flex-col gap-2 overflow-hidden rounded-md bg-white shadow-sm">
-        <h3 className="text-md bg-sky-100 px-4 py-2 font-semibold">
+        <h3 className="text-md bg-sky-100 px-4 py-2 font-semibold phone:text-sm">
           Rangkuman Penyewaan
         </h3>
 

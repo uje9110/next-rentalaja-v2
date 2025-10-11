@@ -58,13 +58,16 @@ const SelectStore = () => {
   return (
     <div className="input-wrapper phone:w-full flex w-full items-center justify-between gap-2">
       <Select defaultValue={currentStoreId} onValueChange={handleStoreChange}>
-        <SelectTrigger className="flex w-fit justify-start gap-2 border-0 text-xs shadow-none focus:border-0">
-          <Store size={16} />
-          <SelectValue placeholder="Pilih Store" className="text-xs" />
+        <SelectTrigger className="phone:text-xs phone:py-0 border-accent-custom flex w-fit justify-start gap-2 rounded-full border shadow-none focus:border-0">
+          <SelectValue placeholder="Pilih Store" />
         </SelectTrigger>
         <SelectContent>
           {authorizedStore.map(({ storeId, storeName }) => (
-            <SelectItem key={storeId} value={storeId} className="text-xs">
+            <SelectItem
+              key={storeId}
+              value={storeId}
+              className="phone:text-xs text-xs lg:text-xs"
+            >
               {storeName}
             </SelectItem>
           ))}

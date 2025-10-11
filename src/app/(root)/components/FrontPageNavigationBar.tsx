@@ -35,7 +35,7 @@ const FrontPageNavigationBar = () => {
   const { itemAmountInCart } = useCartContext();
 
   return (
-    <section className="nav-menu phone:w-[90%] phone:left-1/2 phone:bottom-3 phone:-translate-x-1/2 fixed bottom-0 left-1/2 z-30 flex h-[64px] w-full -translate-x-1/2 flex-row items-center justify-center gap-2 rounded-lg bg-white p-2 shadow-sm lg:mb-3 lg:w-[20%] lg:rounded-xl lg:py-4">
+    <section className="nav-menu phone:rounded-t-3xl border-accent-custom phone:left-1/2 phone:bottom-0 phone:-translate-x-1/2 phone:w-full fixed bottom-0 left-1/2 z-30 flex h-[64px] w-full -translate-x-1/2 flex-row items-center justify-center gap-2 border bg-white p-2 shadow-sm lg:mb-3 lg:w-[20%] lg:rounded-lg lg:py-4">
       {navMenu.map((menu, index) => {
         const { title, icon, link } = menu;
         return (

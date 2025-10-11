@@ -42,7 +42,7 @@ export default function Page() {
   }, [session, stores]);
 
   return (
-    <main className="flex h-screen w-full items-center justify-center bg-sky-50">
+    <main className="flex h-screen w-full items-center justify-center bg-sky-50 px-4">
       <Card className="border-accent-custom w-full max-w-3xl gap-0 overflow-hidden border p-0 shadow-sm">
         <CardHeader className="border-accent-custom gap-0 border-0 border-b bg-sky-100 py-4 [.border-b]:pb-4">
           <CardTitle className="text-center text-2xl font-semibold">

@@ -22,9 +22,9 @@ const CheckoutItemList = () => {
             >
               <p className="flex items-center gap-2 border-b border-sky-200 bg-sky-100 p-4 py-2">
                 <span className="text-colorSecondary">
-                  <Store />
+                  <Store className="phone:w-4" />
                 </span>
-                <span className="subheader-custom font-semibold">
+                <span className="subheader-custom phone:text-sm font-semibold">
                   {store.storeName}
                 </span>
               </p>
@@ -42,10 +42,10 @@ const CheckoutItemList = () => {
                   return (
                     <div
                       key={itemID}
-                      className="relative flex h-full w-full flex-row items-center justify-start gap-4 p-4 lg:gap-8"
+                      className="relative flex h-full w-full flex-row items-center justify-between gap-4 p-4 lg:gap-8"
                     >
-                      <div className="flex w-1/4 flex-col gap-2">
-                        <div className="relative h-[100px] w-[100px]">
+                      <div className="flex w-1/4 flex-col gap-2 phone:w-1/3">
+                        <div className="relative h-[100px] w-[100px] phone:w-full ">
                           <Image
                             fill
                             src={itemImage}

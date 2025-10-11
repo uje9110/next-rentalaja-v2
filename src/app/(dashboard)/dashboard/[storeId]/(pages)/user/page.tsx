@@ -35,7 +35,11 @@ const Page = async ({
 
   const users = await getUsers();
 
-  return <UserTable users={users} />;
+  return (
+    <div className="phone:px-2">
+      <UserTable users={users} />;
+    </div>
+  );
 };
 
 export default Page;

@@ -64,11 +64,11 @@ export const CustomTableFilter = <TData,>({
 
   return (
     <div className="flex w-full flex-row justify-between">
-      {window.innerWidth < 640 ? (
-        <div className="flex gap-2">
+      <div>
+        {/* Mobile version */}
+        <div className="flex gap-2 sm:hidden">
           <Sheet>
             <SheetTrigger>
-              {" "}
               <p className="ml-auto flex gap-2 rounded-md border border-slate-400/50 p-2 text-xs text-slate-500 shadow-sm hover:bg-slate-100 hover:text-slate-600">
                 <Filter size={16} />
                 Buka Filter
@@ -82,7 +82,7 @@ export const CustomTableFilter = <TData,>({
                 <SheetDescription className="text-start">
                   Gunakan filter untuk mencari order dengan ketentuan tertentu
                 </SheetDescription>
-                <div className="phone:flex phone:flex-col flex flex-row justify-start gap-2">
+                <div className="flex flex-col gap-2">
                   {filterData.map((filter) =>
                     filterBuilderHelper(filter, "w-[240px]"),
                   )}
@@ -91,11 +91,12 @@ export const CustomTableFilter = <TData,>({
             </SheetContent>
           </Sheet>
         </div>
-      ) : (
-        <div className="phone:flex phone:flex-col flex flex-row justify-start gap-2 lg:flex-row">
+
+        {/* Desktop version */}
+        <div className="hidden flex-row justify-start gap-2 sm:flex lg:flex-row">
           {filterData.map((filter) => filterBuilderHelper(filter, ""))}
         </div>
-      )}
+      </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
