@@ -1,7 +1,7 @@
 // app/product/search/page.tsx
 import React from "react";
 import { QueryHandler } from "@/app/lib/utils/QueryHandler"; // adjust path if needed
-import { StoreProductHandler } from "@/app/lib/utils/StoreProductHandler";
+import { StoreProductHandler } from "@/app/lib/utils/api-call/StoreProductHandler";
 import SearchFilterInfo from "@/app/lib/components/ProductSearchFilterInfo";
 import ProductSearchResult from "@/app/lib/components/ProductSearchResult";
 
@@ -25,7 +25,10 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
 
   const apiQueryString = queryHandler.toQueryString();
 
-  const products = await StoreProductHandler.getProductSearch(apiQueryString);
+  const products = await StoreProductHandler.getProductSearch({
+    urlSearchParam: apiQueryString,
+    isFromClient: false,
+  });
 
   return (
     <main className="relative flex h-screen w-full flex-col items-center gap-4 pt-5 pb-4">

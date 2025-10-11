@@ -1,4 +1,4 @@
-import { GlobalProductHandler } from "@/app/lib/utils/GlobalProductHandler";
+import { GlobalProductHandler } from "@/app/lib/utils/api-call/GlobalProductHandler";
 import React from "react";
 import GlobalProductSection from "./components/GlobalProductSection";
 import StoreProductSection from "./components/StoreProductSection";
@@ -22,10 +22,12 @@ const page = async ({ params, searchParams }: ProductDetailPageProps) => {
   ]);
 
   const { productId } = await params;
-  const globalProduct =
-    await GlobalProductHandler.getSingleGlobalProduct(productId);
+  const globalProduct = await GlobalProductHandler.getSingleGlobalProduct({
+    productId,
+    isFromClient: false,
+  });
   return (
-    <main className="single-product-page bg-defaultBackground phone:pb-20 relative flex h-full  flex-col items-center gap-4 pb-40 lg:p-4 lg:pb-80">
+    <main className="single-product-page bg-defaultBackground phone:pb-20 relative flex h-full flex-col items-center gap-4 pb-40 lg:p-4 lg:pb-80">
       <GlobalProductSection globalProduct={globalProduct} />
       <StoreProductSection
         globalProduct={globalProduct}

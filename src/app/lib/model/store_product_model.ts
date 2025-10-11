@@ -11,7 +11,7 @@ import {
 } from "../types/store_product_type";
 import { GlobalStoreType } from "../types/global_store_types";
 import { QueryHandler, QueryValue } from "../utils/QueryHandler";
-import { GlobalCategoryHandler } from "../utils/GlobalCategoryHandler";
+import { GlobalCategoryHandler } from "../utils/api-call/GlobalCategoryHandler";
 import { dbConnect } from "../connection/dbConnect";
 import { createStoreProductVariatonModel } from "./store_product_variation_model";
 import { StoreProductVariationType } from "../types/store_product_variation_type";
@@ -77,7 +77,9 @@ const StoreProductSchema = new Schema<StoreProductType>(
 StoreProductSchema.statics.getAllStoreProduct = async function (
   searchParams: URLSearchParams,
 ) {
-  const categories = await GlobalCategoryHandler.getGlobalCategories();
+  const categories = await GlobalCategoryHandler.getGlobalCategories({
+    isFromClient: false,
+  });
 
   const Query = new QueryHandler(searchParams.toString());
   const filters: Record<string, QueryValue> = Query.getFilterParams([

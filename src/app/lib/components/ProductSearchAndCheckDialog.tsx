@@ -2,12 +2,12 @@
 import { DateTimePicker } from "@/app/lib/components/DateTimePicker";
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { GlobalCategoryHandler } from "@/app/lib/utils/GlobalCategoryHandler";
+import { GlobalCategoryHandler } from "@/app/lib/utils/api-call/GlobalCategoryHandler";
 import { CalendarIcon, LibraryBig, Store, Tag } from "lucide-react";
 import ProductFilterSelect from "../../(root)/(pages)/product/components/ProductFilter";
 import { GlobalCategoryType } from "@/app/lib/types/global_category_types";
 import { useRouter } from "next/navigation";
-import { GlobalStoreHandler } from "@/app/lib/utils/GlobalStoreHandler";
+import { GlobalStoreHandler } from "@/app/lib/utils/api-call/GlobalStoreHandler";
 import { ByCityGlobalStoreType } from "@/app/lib/types/global_store_types";
 import moment from "moment";
 
@@ -29,13 +29,13 @@ const SearchAndCheckDialog = ({
   const { data: categories } = useQuery({
     queryKey: ["categories"],
     queryFn: async (): Promise<GlobalCategoryType[]> =>
-      GlobalCategoryHandler.getGlobalCategories(""),
+      GlobalCategoryHandler.getGlobalCategories({ isFromClient: true }),
   });
 
   const { data: stores } = useQuery({
     queryKey: ["stores"],
     queryFn: async (): Promise<ByCityGlobalStoreType[]> =>
-      GlobalStoreHandler.getGlobalStores(""),
+      GlobalStoreHandler.getGlobalStores({ isFromClient: true }),
   });
 
   const handleSearch = () => {

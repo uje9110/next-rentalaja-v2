@@ -5,7 +5,7 @@ import SelectProductStore from "./SelectProductStore";
 import { ClientGlobalProductType } from "@/app/lib/types/global_product_types";
 import ProductBookingSection from "./ProductBookingSection";
 import { useQuery } from "@tanstack/react-query";
-import { StoreProductHandler } from "@/app/lib/utils/StoreProductHandler";
+import { StoreProductHandler } from "@/app/lib/utils/api-call/StoreProductHandler";
 import { ClientStoreProductType } from "@/app/lib/types/store_product_type";
 
 type StoreProductSectionProp = {
@@ -31,10 +31,11 @@ const StoreProductSection: FC<StoreProductSectionProp> = ({
     queryKey: ["storeProduct", selectedStore],
     queryFn: async (): Promise<ClientStoreProductType | null> => {
       try {
-        const response = await StoreProductHandler.getSingleStoreProduct(
+        const response = await StoreProductHandler.getSingleStoreProduct({
           productId,
-          selectedStore as string,
-        );
+          storeId: selectedStore as string,
+          isFromClient: true,
+        });
         return response;
       } catch (error) {
         console.log(error);

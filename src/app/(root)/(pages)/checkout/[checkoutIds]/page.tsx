@@ -1,4 +1,4 @@
-import { StoreOrderHandler } from "@/app/lib/utils/StoreOrderHandler";
+import { StoreOrderHandler } from "@/app/lib/utils/api-call/StoreOrderHandler";
 import React from "react";
 import { CheckoutDetail } from "./components/CheckoutDetail";
 
@@ -14,7 +14,11 @@ const page = async ({ params }: PageProps) => {
 
   const orderPromises = checkoutIdsArray.map(async (id: string) => {
     const [storeId, orderId] = decodeURIComponent(id).split(":");
-    const order = await StoreOrderHandler.getOneStoreOrder(orderId, storeId);
+    const order = await StoreOrderHandler.getOneStoreOrder({
+      orderId,
+      storeId,
+      isFromClient: false,
+    });
     return order;
   });
 

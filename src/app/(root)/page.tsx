@@ -3,14 +3,15 @@ export const dynamic = "force-dynamic";
 import React from "react";
 import HomepageCategoryButtons from "./components/HomepageCategoryButtons";
 import ProductCardSlider from "./components/ProductCardSlider";
-import { GlobalProductHandler } from "../lib/utils/GlobalProductHandler";
+import { GlobalProductHandler } from "../lib/utils/api-call/GlobalProductHandler";
 
 const Homepage = async () => {
-  const globalProductBySales = await GlobalProductHandler.getGlobalProducts(
-    "limit=10&page=1&sortBy=totalSales",
-  );
+  const globalProductBySales = await GlobalProductHandler.getGlobalProducts({
+    urlSearchParam: "limit=10&page=1&sortBy=totalSales",
+    isFromClient: false,
+  });
   const globalProductByCreatedAt = await GlobalProductHandler.getGlobalProducts(
-    "limit=10&page=1&sortBy=createdAt",
+    { urlSearchParam: "limit=10&page=1&sortBy=createdAt", isFromClient: false },
   );
   return (
     <main className="home-page bg-defaultBackground relative flex h-full w-full flex-col items-center gap-4 p-4 pb-40">

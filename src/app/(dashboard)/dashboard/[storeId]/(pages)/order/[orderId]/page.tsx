@@ -1,9 +1,9 @@
 import React from "react";
 import OrderBillingInfo from "./components/MainComponents/OrderBillingInfo";
-import { StoreOrderHandler } from "@/app/lib/utils/StoreOrderHandler";
+import { StoreOrderHandler } from "@/app/lib/utils/api-call/StoreOrderHandler";
 import { OrdeStatusInfo } from "./components/MainComponents/OrdeStatusInfo";
 import OrderLineItems from "./components/MainComponents/OrderLineItems";
-import { StoreUserHandler } from "@/app/lib/utils/StoreUserHandler";
+import { StoreUserHandler } from "@/app/lib/utils/api-call/StoreUserHandler";
 import ResponsiveSidebar from "./components/SidebarComponents/ResponsiveSidebar";
 
 const Page = async ({
@@ -13,11 +13,16 @@ const Page = async ({
 }) => {
   const { storeId, orderId } = await params;
 
-  const order = await StoreOrderHandler.getOneStoreOrder(orderId, storeId);
-  const { globalUserDetails } = await StoreUserHandler.getSingleStoreUser(
-    order.customerID as string,
+  const order = await StoreOrderHandler.getOneStoreOrder({
+    orderId,
     storeId,
-  );
+    isFromClient: false,
+  });
+  const { globalUserDetails } = await StoreUserHandler.getSingleStoreUser({
+    userId: order.customerID as string,
+    storeId,
+    isFromClient: false,
+  });
 
   return (
     <main className="phone:flex-col phone:gap-0 flex flex-row gap-2 lg:flex lg:h-full lg:flex-row lg:gap-2">
