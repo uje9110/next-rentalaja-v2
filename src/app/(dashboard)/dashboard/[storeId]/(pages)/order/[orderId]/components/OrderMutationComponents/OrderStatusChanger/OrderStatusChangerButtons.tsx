@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
 import { toast } from "sonner";
 import { GlobalUserType } from "@/app/lib/types/global_user_type";
+import { useRouter } from "next/navigation";
 
 type OrderStatusChangerButtonsProps = {
   orderData: ClientStoreOrderType;
@@ -28,6 +29,7 @@ const OrderStatusChangerButtons: FC<OrderStatusChangerButtonsProps> = ({
 }) => {
   const { APIEndpoint } = useAPIContext();
   const { data: session } = useSession();
+  const router = useRouter();
 
   if (!session) return null;
 
@@ -61,7 +63,10 @@ const OrderStatusChangerButtons: FC<OrderStatusChangerButtonsProps> = ({
         ],
       });
 
-      if (orderRes.status === 200) return orderRes.data.json;
+      if (orderRes.status === 200) {
+        router.refresh();
+        return orderRes.data.json;
+      }
       return null;
     } catch (error) {
       console.error(error);

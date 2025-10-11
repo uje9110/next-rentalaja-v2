@@ -10,6 +10,7 @@ import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
 import { StoreOrderUpdateLogType } from "@/app/lib/types/store_order_updateLogs_type";
 import { validateObj } from "@/app/lib/utils/ValidationHandler";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface RevertOrderDialogType {
   setIsRevertOrderDialogOpen: Dispatch<SetStateAction<boolean>>;
@@ -24,6 +25,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
 }) => {
   const { APIEndpoint } = useAPIContext();
   const { data: session } = useSession();
+  const router = useRouter();
 
   const stockEndpoint = `${APIEndpoint}/stock`;
   const orderEndpoint = `${APIEndpoint}/order`;
@@ -321,6 +323,7 @@ const RevertOrderDialog: FC<RevertOrderDialogType> = ({
 
       if (updateOrderRes.status === 200) {
         await updateAllStocks(updateOrderRes.data.json, revertOrderStatusTo);
+        router.refresh();
         setIsRevertOrderStatusSuccesed(true);
         setIsRevertOrderDialogOpen(false);
       } else {

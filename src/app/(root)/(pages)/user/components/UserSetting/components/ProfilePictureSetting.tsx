@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Plus } from "lucide-react";
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction } from "react";
 
 type ProfileSettingType = {
@@ -16,6 +17,7 @@ const ProfileSetting: React.FC<ProfileSettingType> = ({
   setProfilePic,
   APIEndpoint,
 }) => {
+  const router = useRouter();
   const handleProfilePic = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return; // Prevent errors if no file is selected
 
@@ -43,7 +45,7 @@ const ProfileSetting: React.FC<ProfileSettingType> = ({
         },
       );
       if (response.status === 200) {
-        window.location.reload();
+        router.refresh();
       }
     } catch (error) {
       console.log(error);

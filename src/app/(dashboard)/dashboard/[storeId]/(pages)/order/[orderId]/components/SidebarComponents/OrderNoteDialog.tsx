@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { Loader, Pencil, XCircle } from "lucide-react";
 import { Session } from "next-auth";
+import { useRouter } from "next/navigation";
 import React, {
   ChangeEvent,
   Dispatch,
@@ -27,6 +28,7 @@ const OrderNoteDialog: FC<OrderNoteDialogType> = ({
   setIsOrderNoteDialogOpen,
 }) => {
   const { APIEndpoint } = useAPIContext();
+  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -61,7 +63,7 @@ const OrderNoteDialog: FC<OrderNoteDialogType> = ({
   const orderNoteMutation = useMutation({
     mutationFn: async (): Promise<StoreOrderNoteType | null> => {
       try {
-        const orderNoteRes = await axios.post(
+        const response = await axios.post(
           `${APIEndpoint}/order/${orderData._id}/add-order-note`,
           orderNote,
           {
@@ -71,7 +73,10 @@ const OrderNoteDialog: FC<OrderNoteDialogType> = ({
             },
           },
         );
-        return orderNoteRes.data.json;
+        if (response.status === 200) {
+          router.refresh();
+        }
+        return response.data.json;
       } catch (error) {
         console.log(error);
         return null;

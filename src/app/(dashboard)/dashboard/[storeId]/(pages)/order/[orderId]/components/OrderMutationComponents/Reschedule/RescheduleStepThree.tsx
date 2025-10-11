@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
 import { ClientStoreOrderType } from "@/app/lib/types/store_order_type";
+import { useRouter } from "next/navigation";
 
 interface RescheduleStepThreeProps extends RescheduleDialogContentProps {
   newItemData: StoreOrderItemType[];
@@ -26,6 +27,7 @@ const RescheduleStepThree: FC<RescheduleStepThreeProps> = ({
   const queryClient = useQueryClient();
   const { APIEndpoint } = useAPIContext();
   const { data: session } = useSession();
+  const router = useRouter();
 
   const [otpSent, setOtpSent] = useState(false);
   const [otpValue, setOtpValue] = useState("");
@@ -72,6 +74,10 @@ const RescheduleStepThree: FC<RescheduleStepThreeProps> = ({
         },
         { headers: { "x-store-id": orderData.storeDetail.storeId || "" } },
       );
+
+      if (response.status === 200) {
+        router.refresh();
+      }
 
       return response.data.success;
     },

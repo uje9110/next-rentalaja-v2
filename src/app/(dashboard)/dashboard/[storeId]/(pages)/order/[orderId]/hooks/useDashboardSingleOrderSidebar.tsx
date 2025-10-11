@@ -62,7 +62,7 @@ export function useDashboardSingleOrderSidebar(
   const overdueNotification = useMutation({
     mutationFn: async () => {
       try {
-        const response = await axios.post(
+        await axios.post(
           `${ServiceEndpoint}/notification/wa/booking_overdue`,
           orderData,
           {
@@ -71,7 +71,7 @@ export function useDashboardSingleOrderSidebar(
             },
           },
         );
-        console.log(response.data);
+       
       } catch (error) {
         console.log(error);
       }

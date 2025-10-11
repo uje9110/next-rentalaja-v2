@@ -1,3 +1,4 @@
+"use client";
 import axios from "axios";
 import { Session } from "next-auth";
 import React, {
@@ -18,6 +19,7 @@ import {
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
 import { toast } from "sonner";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
+import { useRouter } from "next/navigation";
 
 interface OrderPaymentDialogType {
   orderData: ClientStoreOrderType;
@@ -31,7 +33,7 @@ const OrderPaymentDialog: FC<OrderPaymentDialogType> = ({
   setIsPaymentDialogOpen,
 }) => {
   const queryClient = useQueryClient();
-
+  const router = useRouter();
   const { APIEndpoint } = useAPIContext();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -97,6 +99,9 @@ const OrderPaymentDialog: FC<OrderPaymentDialogType> = ({
           },
         },
       );
+      if (response.status === 200) {
+        router.refresh();
+      }
       return response.data.order;
     } catch (error) {
       console.log(error);
@@ -297,6 +302,7 @@ const OrderPaymentDialog: FC<OrderPaymentDialogType> = ({
                   <textarea
                     onChange={(e) => paymentInputsChange(e)}
                     name="paymentDesc"
+                    placeholder="Wajib diisi"
                     className="w-full rounded-md border-2 border-slate-400/40 bg-white p-2 py-1 text-sm shadow-sm"
                   />
                 </div>

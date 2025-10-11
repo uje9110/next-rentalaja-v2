@@ -36,6 +36,7 @@ import { toast } from "sonner";
 import RichText from "@/app/lib/components/RichTextEditor";
 import { FormHandler } from "@/app/lib/utils/FormHandler";
 import { ImageWithFallback } from "@/app/lib/components/ImageWithFallback";
+import { useRouter } from "next/navigation";
 
 type newProductDataTypes = {
   title?: string;
@@ -52,6 +53,7 @@ interface ProductDetailProps {
 
 const ProductDetail: FC<ProductDetailProps> = ({ product }) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const { data: session } = useSession();
   const { APIEndpoint } = useAPIContext();
   const [isNotEditing, setIsNotEditing] = useState<boolean>(true);
@@ -92,7 +94,10 @@ const ProductDetail: FC<ProductDetailProps> = ({ product }) => {
             },
           },
         );
-        return response.data.product;
+        if (response.status === 200) {
+          router.refresh();
+        }
+        return response.data.json;
       } catch (error) {
         console.log(error);
         throw error;

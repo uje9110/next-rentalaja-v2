@@ -5,7 +5,7 @@ import { Edit, Plus, Save, X } from "lucide-react";
 import clsx from "clsx";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { StoreProductStockType } from "@/app/lib/types/store_product_stock_type";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
@@ -20,6 +20,7 @@ const DataTable = ({
   storeId: string;
 }) => {
   const { APIEndpoint } = useAPIContext();
+  const router = useRouter();
   const { productId } = useParams();
   const { data: session } = useSession();
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -90,7 +91,10 @@ const DataTable = ({
           },
         },
       );
-      return response.data.stocks; // <-- Return updated data
+      if (response.status === 200) {
+        router.refresh();
+      }
+      return response.data.json; // <-- Return updated data
     },
     mutationKey: ["stocksDetails"],
     onError: async () => {

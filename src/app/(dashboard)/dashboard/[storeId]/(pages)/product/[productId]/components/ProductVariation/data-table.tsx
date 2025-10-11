@@ -12,7 +12,7 @@ import axios from "axios";
 import clsx from "clsx";
 import { Edit, Plus, Save, X } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -30,6 +30,7 @@ interface DataTableProps {
 const DataTable = ({ data, getColumns, storeId }: DataTableProps) => {
   const { data: session } = useSession();
   const { APIEndpoint } = useAPIContext();
+  const router = useRouter();
   const { productId } = useParams();
   const [isEditing, setIsEditing] = useState(false);
   const [variationsArray, setVariationsArray] =
@@ -60,7 +61,10 @@ const DataTable = ({ data, getColumns, storeId }: DataTableProps) => {
           },
         },
       );
-      return response.data.variations; // <-- Return updated data
+      if (response.status === 200) {
+        router.refresh();
+      }
+      return response.data.json; // <-- Return updated data
     },
     mutationKey: ["variationsDetail"],
     onError: async () => {

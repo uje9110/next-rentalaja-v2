@@ -21,6 +21,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { LoaderCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React, {
   Dispatch,
   FC,
@@ -257,6 +258,7 @@ const UserDetail: FC<{ user: GlobalUserType; isLoading: boolean }> = ({
   isLoading,
 }) => {
   const { APIEndpoint } = useAPIContext();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const [userData, setUserData] = useState<GlobalUserType | undefined>(user);
   const [selectedRole, setSelectedRole] = useState<string>("");
@@ -318,7 +320,10 @@ const UserDetail: FC<{ user: GlobalUserType; isLoading: boolean }> = ({
           `${APIEndpoint}/user/store/${userData?._id}`,
           userData,
         );
-        return response.data.user;
+        if (response.status === 200) {
+          router.refresh();
+        }
+        return response.data.json;
       } catch (error) {
         console.log(error);
         return {};

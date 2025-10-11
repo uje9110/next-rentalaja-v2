@@ -62,7 +62,6 @@ const PaymentsDetailDialog: FC<PaymentDetailsDialogType> = ({
         { headers: { Authorization: `Bearer ${session.user.token}` } },
       );
       if (res.status === 200) {
-        console.log("SUKSESS");
         setIsPaymentDetailDialogOpen(false);
         toast.success(`QRCODE berhasil dikirim ke email customer`);
       }
