@@ -44,9 +44,5 @@ export default function Layout({ children }: { children: ReactNode }) {
   }
 
   // ✅ Normal layout rendering
-  return (
-    <SessionProvider>
-      <CartContextProvider>{children}</CartContextProvider>
-    </SessionProvider>
-  );
+  return <CartContextProvider>{children}</CartContextProvider>;
 }
