@@ -25,7 +25,7 @@ export default function ProductFilterSelect({
 }: FilterSelectProps) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="border-colorSecondary/50 flex w-full items-center gap-2 rounded-md border-2 px-2 py-1 text-sm">
+      <SelectTrigger className="border-colorSecondary/50 phone:text-xs lg:phone:sm flex w-full items-center gap-2 rounded-md border-2 px-2 py-1 text-sm">
         {
           <>
             {icon}

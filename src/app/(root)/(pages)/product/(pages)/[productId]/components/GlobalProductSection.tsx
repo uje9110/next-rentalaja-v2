@@ -15,7 +15,7 @@ const GlobalProductSection: FC<GlobalProductSectionProps> = ({
       <FrontPagePictureSlider
         showButton={false}
         images={[globalProduct.primaryImage, ...globalProduct.images]}
-        height="h-120 lg:h-120 phone:h-90"
+        height="h-120 lg:h-120 phone:h-100"
       />
 
       <div className="phone:flex phone:flex-col phone:gap-3 lg:w-1/2">

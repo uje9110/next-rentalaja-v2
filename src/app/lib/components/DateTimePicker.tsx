@@ -46,7 +46,7 @@ export function DateTimePicker({
       {/* Date Picker */}
       <div className="flex w-[48%] flex-col gap-3">
         <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild className="w-[48%]">
+          <PopoverTrigger asChild className="phone:text-xs lg:phone:sm w-[48%]">
             <Button
               variant="outline"
               id="date-picker"
@@ -94,7 +94,7 @@ export function DateTimePicker({
             setDate(newDateTime);
           }}
           className={clsx(
-            "bg-background appearance-none border border-slate-400/50",
+            "bg-background phone:text-xs lg:phone:sm appearance-none border border-slate-400/50",
             textSize,
           )}
         />

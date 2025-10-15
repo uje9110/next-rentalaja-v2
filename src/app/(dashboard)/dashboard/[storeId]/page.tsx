@@ -36,7 +36,7 @@ const Page = async ({ params }: ServerPageProps) => {
   const overdueBookings = await getOverdueBookings(storeId);
 
   return (
-    <div className="flex h-fit w-full flex-col gap-4 rounded-lg phone:px-2">
+    <div className="flex h-fit w-full flex-col gap-4 rounded-lg phone:px-2 lg:px-0">
       <OverdueBookingsNotification overdueBookings={overdueBookings} />
     </div>
   );

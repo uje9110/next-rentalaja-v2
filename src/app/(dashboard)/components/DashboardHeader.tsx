@@ -85,7 +85,7 @@ const DashboardHeader = () => {
                   </p>
                 </div>
               </DialogTrigger>
-              <DialogContent className="phone:w-5/6 lg:w-2/5">
+              <DialogContent className="phone:w-5/6 lg:w-1/5">
                 <DialogTitle>Cari & Cek Jadwal Alat</DialogTitle>
                 <SearchAndCheckDialog
                   isUsingDashboard={true}

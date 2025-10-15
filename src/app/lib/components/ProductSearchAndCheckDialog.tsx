@@ -71,8 +71,8 @@ const SearchAndCheckDialog = ({
   };
 
   return (
-    <>
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-0">
+      <div className="phone:gap-2 flex flex-col gap-4 lg:gap-4">
         <DateTimePicker date={dateStart} setDate={setDateStart} />
         <DateTimePicker date={dateEnd} setDate={setDateEnd} />
 
@@ -106,7 +106,12 @@ const SearchAndCheckDialog = ({
         )}
       </div>
 
-      <div className="bg-muted/30 text-muted-foreground mt-4 space-y-2 rounded-lg border p-3 text-sm">
+      <div className="bg-muted/30 text-muted-foreground mt-4 space-y-2 rounded-lg border border-dashed p-3 text-sm">
+        {!dateStart && !dateEnd && !selectedCategory && !selectedStore && (
+          <p className="phone:text-xs lg:phone:sm w-full text-center">
+            Isi filter terlebih dahulu
+          </p>
+        )}
         {dateStart && (
           <div className="flex items-center gap-2">
             <CalendarIcon className="text-primary h-4 w-4" />
@@ -147,11 +152,11 @@ const SearchAndCheckDialog = ({
 
       <button
         onClick={handleSearch}
-        className="mt-4 rounded-md bg-sky-500 px-4 py-2 font-semibold text-white"
+        className="phone:text-xs lg:phone:sm mt-4 rounded-md bg-sky-500 px-4 py-2 font-semibold text-white"
       >
         Cari alat
       </button>
-    </>
+    </div>
   );
 };
 
