@@ -15,7 +15,7 @@ const Page = async ({
   const resolvedSearchParam = await searchParams;
   const Query = QueryHandler.fromSearchParams(resolvedSearchParam);
 
-  const getSales = async (): Promise<ClientStoreSalesType[]> => {
+  const getSales = async (): Promise<ClientStoreSalesType[] | []> => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_URL}/api/sales`,
@@ -35,7 +35,7 @@ const Page = async ({
 
   const sales = await getSales();
 
-  return <SalesTable sales={sales} />;
+  return <SalesTable sales={sales as ClientStoreSalesType[]} />;
 };
 
 export default Page;

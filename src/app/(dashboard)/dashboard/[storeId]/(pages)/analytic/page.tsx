@@ -53,7 +53,7 @@ const Page = async ({
   const salesAnalytic = await getSalesAnalytic();
 
   return (
-    <div className="phone:w-[calc(100vw-1.5rem)] m-2 flex flex-col gap-4">
+    <div className="phone:w-[calc(100vw-1.5rem)] phone:m-2 m-2 flex flex-col gap-4 lg:m-0 lg:w-full">
       <div className="flex flex-col gap-4 rounded-lg border border-slate-400/50 bg-white p-4 shadow-sm">
         <SalesAnalyticGraphAndTableFilter />
         <SalesAnalyticPerPeriodeGraph

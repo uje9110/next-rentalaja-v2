@@ -1,4 +1,5 @@
 import { Model, Schema } from "mongoose";
+import { StoreOrderType } from "./store_order_type";
 
 export type StoreProductBookingType = {
   _id: Schema.Types.ObjectId | string;
@@ -14,7 +15,7 @@ export type StoreProductBookingType = {
 };
 
 export type StoreProductBookingStaticType = {
-  placeholder: string;
+  deleteBookingFromCanceledOrder: (orderData: StoreOrderType) => Promise<void>;
 };
 
 export type StoreProductBookingModelType = Model<StoreProductBookingType> &

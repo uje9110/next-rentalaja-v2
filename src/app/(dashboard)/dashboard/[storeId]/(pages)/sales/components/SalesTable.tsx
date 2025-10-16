@@ -72,17 +72,17 @@ const SalesTable: FC<SalesTableProps> = ({ sales }) => {
       filterName: "dateBy",
       filterTitle: "Filter Tanggal",
       filterValues: [{ label: "Tanggal Dibuat", value: "createdAt" }],
-      defaultValue: "createdAt",
+      // defaultValue: "createdAt",
     },
     {
       filterType: "dateTimePicker",
       filterIcon: CalendarIcon,
       filterName: "dateRange",
       filterTitle: "Tanggal Sales",
-      defaultValue: {
-        dateStart: moment(new Date()).format("YYYY-MM-DD:00:00:00"),
-        dateEnd: moment(new Date()).format("YYYY-MM-DD:23:59:00"),
-      },
+      // defaultValue: {
+      //   dateStart: moment(new Date()).format("YYYY-MM-DD:00:00:00"),
+      //   dateEnd: moment(new Date()).format("YYYY-MM-DD:23:59:00"),
+      // },
     },
     {
       filterType: "select",
@@ -115,7 +115,7 @@ const SalesTable: FC<SalesTableProps> = ({ sales }) => {
   ] as const satisfies CustomTableFilterProps[];
 
   return (
-    <div className="phone:w-[calc(100vw-1.5rem)] m-2 flex flex-col gap-2">
+    <div className="phone:w-[calc(100vw-1.5rem)] m-2 phone:m-2 lg:m-0 flex flex-col gap-2 lg:w-full">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <SalesDetailDialog salesData={salesData as ClientStoreSalesType} />

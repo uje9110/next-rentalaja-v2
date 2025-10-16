@@ -5,6 +5,12 @@ import {
 } from "../types/store_sales_types";
 import { QueryHandler, QueryValue } from "../utils/QueryHandler";
 import moment from "moment";
+import { StoreOrderType } from "../types/store_order_type";
+import { StoreOrderItemType } from "../types/store_order_item_type";
+import { CurrencyHandlers } from "../utils/CurrencyHandler";
+import { createStoreProductModel } from "./store_product_model";
+import { dbConnect } from "../connection/dbConnect";
+import { createGlobalProductModel } from "./global_product_model";
 
 const StoreSalesSchema = new Schema<StoreSalesType>(
   {
@@ -29,6 +35,62 @@ const StoreSalesSchema = new Schema<StoreSalesType>(
   },
   { timestamps: true },
 );
+
+StoreSalesSchema.statics.createSalesByOrder = async function (
+  orderData: StoreOrderType,
+) {
+  const storeConnection = await dbConnect(orderData.storeDetail.storeId);
+  const ProductModel = createStoreProductModel(storeConnection);
+  const createSalesPromises = orderData.items.map(async (item) => {
+    const profit = item.itemAmount * item.itemVariation.variationPrice;
+    const discount = CurrencyHandlers.calculateDiscount(
+      orderData.discounts,
+      orderData.subtotal,
+    );
+    const netProfit = profit - discount;
+    const sale = await this.create({
+      createdAt: new Date(item.rentalDetails.rentalStartInLocaleMs),
+      fromOrderId: orderData._id,
+      belongToProductId: item.itemID,
+      soldAmount: item.itemAmount,
+      profit,
+      netProfit,
+    });
+    await ProductModel.findByIdAndUpdate(item.itemID, {
+      $push: { salesIds: sale._id },
+    });
+  });
+
+  await Promise.all(createSalesPromises);
+};
+
+StoreSalesSchema.statics.deleteSalesByOrder = async function (
+  orderData: StoreOrderType,
+) {
+  const storeConnection = await dbConnect(orderData.storeDetail.storeId);
+  const ProductModel = createStoreProductModel(storeConnection);
+
+  const existingSales = await this.find({ fromOrderId: orderData._id });
+  if (existingSales.length > 0) {
+    const deletedSalesArray = [];
+    for (const sale of existingSales) {
+      const deletedSale = await this.findByIdAndDelete({
+        _id: sale._id,
+      });
+      deletedSalesArray.push(deletedSale);
+    }
+    // DELETE SALE ID FROM PRODUCT SALES FIELD
+    for (const sale of deletedSalesArray) {
+      if (!sale) {
+        return;
+      }
+      await ProductModel.findOneAndUpdate(
+        { _id: sale.belongToProductId },
+        { $pull: { salesIds: sale._id } },
+      );
+    }
+  }
+};
 
 StoreSalesSchema.statics.getAllStoreSales = async function (
   searchParams: URLSearchParams,
@@ -546,6 +608,16 @@ StoreSalesSchema.statics.getSalesAnalyticPerUser = async function (
 
   return this.aggregate(pipeline);
 };
+
+/** POST PROCESSING */
+/**** Global Product Sales Update */
+StoreSalesSchema.post("save", async function () {
+  const connection = await dbConnect(null);
+  const GlobalProductModel = createGlobalProductModel(connection);
+  await GlobalProductModel.findByIdAndUpdate(this.belongToProductId, {
+    $inc: { totalSales: this.soldAmount },
+  });
+});
 
 export const createStoreSalesModel = (connection: Connection) => {
   return (

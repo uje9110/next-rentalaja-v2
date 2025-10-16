@@ -94,7 +94,7 @@ const ProductTable = ({
   ] as const satisfies CustomTableFilterProps[];
 
   return (
-    <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 rounded-md border border-slate-400/50 bg-white p-4">
+    <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 rounded-md border border-slate-400/50 bg-white p-4 lg:w-full">
       {/* filter */}
       <CustomTableFilter
         pageTitle="Product"

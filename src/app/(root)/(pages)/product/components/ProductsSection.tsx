@@ -8,7 +8,7 @@ type ProductsSectionProps = {
 
 const ProductsSection: FC<ProductsSectionProps> = ({ products }) => {
   return (
-    <div className="flex w-full flex-row flex-wrap justify-between gap-3 px-4 lg:w-[60%] lg:justify-center lg:gap-4 lg:p-4">
+    <div className="flex w-full flex-row flex-wrap justify-between gap-3 px-4 lg:w-[60%] lg:justify-center lg:gap-4 lg:p-4 pb-32">
       {products.map((product) => {
         return <ProductCard productData={product} key={product._id} />;
       })}

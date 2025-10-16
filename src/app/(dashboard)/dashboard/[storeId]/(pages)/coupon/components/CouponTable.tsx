@@ -13,7 +13,7 @@ const CouponTable: FC<{ coupons: GlobalCouponType[] }> = ({ coupons }) => {
     getCoreRowModel: getCoreRowModel(),
   });
   return (
-    <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 rounded-md border border-slate-400/50 bg-white p-4">
+    <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 rounded-md border border-slate-400/50 bg-white p-4 lg:w-full">
       <CustomDataTable table={table} columns={columns} />
     </div>
   );

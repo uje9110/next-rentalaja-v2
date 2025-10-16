@@ -144,6 +144,8 @@ const OrderStatusChangerButtons: FC<OrderStatusChangerButtonsProps> = ({
         "processing",
         "pickupDateTimeInMs",
       );
+
+      router.refresh();
     } catch (error) {
       console.error("Error updating stocks:", error);
     }
@@ -165,6 +167,7 @@ const OrderStatusChangerButtons: FC<OrderStatusChangerButtonsProps> = ({
         "completed",
         "returnDateTimeInMs",
       );
+      router.refresh();
     } catch (error) {
       console.error("Error updating stocks:", error);
     }

@@ -27,6 +27,7 @@ import { QueryHandler, QueryValue } from "../utils/QueryHandler";
 import { StoreOrderUpdateLogType } from "../types/store_order_updateLogs_type";
 import { createStoreOrderNoteModel } from "./store_order_note_model";
 import { StoreOrderNoteType } from "../types/store_order_note_type";
+import { createStoreSalesModel } from "./store_sales_model";
 
 const StoreOrderSchema = new Schema<StoreOrderType>(
   {
@@ -673,6 +674,34 @@ StoreOrderSchema.post("save", async function () {
   await StoreUserModel.findByIdAndUpdate(this.customerID, {
     $push: { purchaseHistory: this._id },
   });
+});
+
+/**** SALES CREATION OR ORDER CANCELATION */
+StoreOrderSchema.post(["findOneAndUpdate", "updateOne"], async function (doc) {
+  const updatedDoc = doc || (await this.model.findOne(this.getQuery()));
+  if (!updatedDoc) return;
+
+  const storeConnection = await dbConnect(updatedDoc.storeDetail?.storeId);
+  const StoreSalesModel = createStoreSalesModel(storeConnection);
+  const StoreDiscountModel = createStoreOrderDiscountModel(storeConnection);
+  const StoreBookingModel = createStoreProductBookingModel(storeConnection);
+
+  if (["processing", "completed"].includes(updatedDoc.status)) {
+    const existingSales = await StoreSalesModel.find({
+      fromOrderId: updatedDoc._id,
+    });
+
+    if (existingSales.length < 1) {
+      await StoreSalesModel.createSalesByOrder(updatedDoc);
+    }
+
+    if (updatedDoc.discountIds?.length) {
+      await StoreDiscountModel.settleDiscountByOrder(updatedDoc);
+    }
+  } else if (["canceled"].includes(updatedDoc.status)) {
+    await StoreSalesModel.deleteSalesByOrder(updatedDoc);
+    await StoreBookingModel.deleteBookingFromCanceledOrder(updatedDoc);
+  }
 });
 
 export const createStoreOrderModel = (

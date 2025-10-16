@@ -36,7 +36,7 @@ const Page = async ({
   const users = await getUsers();
 
   return (
-    <div className="phone:px-2">
+    <div className="phone:px-2 lg:px-0">
       <UserTable users={users} />;
     </div>
   );

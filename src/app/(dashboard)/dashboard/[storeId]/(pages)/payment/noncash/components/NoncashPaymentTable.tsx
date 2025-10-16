@@ -62,7 +62,7 @@ export const NoncashPaymentTable: FC<NoncashPaymentTableProps> = ({
   ] as const satisfies CustomTableFilterProps[];
 
   return (
-    <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4">
+    <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 lg:w-full">
       <CustomTableFilter
         filterData={filterData}
         pageTitle="Filter Payment"

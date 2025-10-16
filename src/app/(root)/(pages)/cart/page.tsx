@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import EmptyCart from "./components/EmptyCart";
 import { CartItem } from "./components/CartItem";
 import { useCartContext } from "@/app/lib/context/CartContext";
@@ -13,15 +13,23 @@ const Page = () => {
     bookingValidationLoading,
     handleAddCartItemToCheckout,
     checkIsItemAlreadyExistInCheckout,
+    validateBookings,
+    removeItemFromCart,
   } = useCart({
     checkout,
     setCheckout,
   });
+
+  useEffect(() => {
+    validateBookings();
+  }, [cart]);
+
   const isThereBookingConflict = Object.entries(bookingConflicts).some(
     ([, conflicts]) => {
       return conflicts === true;
     },
   );
+
   return (
     <main className="checkout-page bg-defaultBackground relative flex max-h-fit min-h-screen w-full flex-col items-center gap-4 p-4 pt-5 pb-40 lg:h-screen lg:flex-row lg:items-start lg:justify-center">
       {cart.length > 0 ? (
@@ -43,6 +51,7 @@ const Page = () => {
           {/* ITEMS */}
           <div className="flex w-full flex-col gap-4 lg:w-1/2">
             <CartItem
+              removeItemFromCart={removeItemFromCart}
               cart={cart}
               bookingConflicts={bookingConflicts}
               bookingValidationLoading={bookingValidationLoading}

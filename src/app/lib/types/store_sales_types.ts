@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import { ClientStoreOrderType } from "./store_order_type";
+import { ClientStoreOrderType, StoreOrderType } from "./store_order_type";
 import { StoreProductType } from "./store_product_type";
 
 export type StoreSalesType = {
@@ -58,6 +58,8 @@ export type ClientSalesAnalyticPerUserType = {
 };
 
 export type StoreSalesStaticsType = {
+  createSalesByOrder: (orderData: StoreOrderType) => Promise<void>;
+  deleteSalesByOrder: (orderData: StoreOrderType) => Promise<void>;
   getAllStoreSales: (
     searchParams: URLSearchParams,
   ) => Promise<ClientStoreSalesType[]>;

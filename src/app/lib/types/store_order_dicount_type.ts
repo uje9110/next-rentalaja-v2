@@ -1,4 +1,5 @@
 import { Model } from "mongoose";
+import { StoreOrderType } from "./store_order_type";
 
 export type StoreOrderDiscountType = {
   _id: string;
@@ -11,7 +12,7 @@ export type StoreOrderDiscountType = {
   updateAt?: Date;
 };
 export type StoreOrderDiscountStaticsType = {
-  placeholder: string;
+  settleDiscountByOrder: (orderData: StoreOrderType) => Promise<void>;
 };
 
 export type StoreOrderDiscountModelType = Model<StoreOrderDiscountType> &

@@ -23,7 +23,6 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
     useUpdateSearchParam();
 
   const [filters, setFilters] = useState<Record<string, string | Date>>({});
-  // console.log(filters);
 
   const [dateStart, setDateStart] = useState<Date | undefined>(() => {
     const dateString = searchParams.get("dateStart");
@@ -77,7 +76,7 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
     if (Object.keys(filters).length > 0) {
       updateSearchParams(filters);
     }
-  }, [filters, updateSearchParams]);
+  }, [filters]);
 
   // // 🟢 Date effects
   useEffect(() => {
@@ -85,14 +84,14 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
       const isoStart = moment(dateStart).format("YYYY-MM-DDTHH:mm:ss");
       updateSearchParam("dateStart", isoStart);
     }
-  }, [dateStart, updateSearchParam]);
+  }, [dateStart]);
 
   useEffect(() => {
     if (dateEnd) {
       const isoEnd = moment(dateEnd).format("YYYY-MM-DDTHH:mm:ss");
       updateSearchParam("dateEnd", isoEnd);
     }
-  }, [dateEnd, updateSearchParam]);
+  }, [dateEnd]);
 
   const filterBuilderHelper = (
     filter: CustomTableFilterProps,

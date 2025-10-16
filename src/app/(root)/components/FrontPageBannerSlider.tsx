@@ -14,7 +14,7 @@ export default function FrontPageBannerSlider() {
   }
 
   return (
-    <div className="phone:pt-6">
+    <div className="phone:pt-6 lg:w-full">
       <FrontPagePictureSlider
         images={bannerImages}
         height="lg:h-[280px] phone:h-[150px]"

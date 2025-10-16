@@ -37,8 +37,7 @@ const Page = async ({
   const orders = await getOrders();
 
   return (
-    <div className="phone:px-2">
-
+    <div className="phone:px-2 lg:px-0">
       <OrderTable columns={columns} data={orders as ClientStoreOrderType[]} />
     </div>
   );

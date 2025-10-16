@@ -5,13 +5,16 @@ import {
   ClientCartType,
 } from "@/app/lib/types/client_cart_types";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
-import { Loader2, Store } from "lucide-react";
+import { Loader2, Pencil, Store, Trash } from "lucide-react";
+import moment from "moment";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type CartItemProps = {
   bookingConflicts: CartBookingConflictsType;
   bookingValidationLoading: CartBookingValidationLoadingType;
   cart: ClientCartType[];
+  removeItemFromCart: (itemId: string, isItemExistInCheckout: boolean) => void;
   handleAddCartItemToCheckout: (orderItemData: StoreOrderItemType) => void;
   checkIsItemAlreadyExistInCheckout: (
     orderItemData: StoreOrderItemType,
@@ -22,9 +25,12 @@ export const CartItem: React.FC<CartItemProps> = ({
   bookingConflicts,
   bookingValidationLoading,
   cart,
+  removeItemFromCart,
   handleAddCartItemToCheckout,
   checkIsItemAlreadyExistInCheckout,
 }) => {
+  const router = useRouter();
+
   return (
     <div className="flex w-full flex-col gap-6">
       {cart.map((cartItem) => {
@@ -53,11 +59,12 @@ export const CartItem: React.FC<CartItemProps> = ({
                   itemVariation,
                   itemSubtotal,
                   itemImage,
+                  rentalDetails,
                   //   availableStock,
                 } = item;
 
                 // Check if item exists in checkout
-                const itemExistsInCheckout =
+                const isItemExistInCheckout =
                   checkIsItemAlreadyExistInCheckout(item);
 
                 // Check for booking conflicts
@@ -86,138 +93,73 @@ export const CartItem: React.FC<CartItemProps> = ({
                         <input
                           type="checkbox"
                           id={`${itemID}-checkbox`}
-                          checked={itemExistsInCheckout}
+                          checked={isItemExistInCheckout}
                           onChange={() => handleAddCartItemToCheckout(item)}
                           disabled={hasConflict} // Disable checkbox if conflict exists
                         />
 
                         {/* Item Image */}
-                        <div className="flex w-1/3 flex-col gap-2">
+                        <div className="relative flex h-20 w-20 flex-col gap-2">
                           <Image
-                            width={100}
-                            height={100}
+                            fill
                             src={itemImage}
                             alt={itemImage}
-                            className="aspect-square w-[100px] rounded-md border-2 object-cover lg:w-[150px]"
+                            className="aspect-square rounded-md border-2 object-cover"
                           />
                         </div>
 
                         {/* Item Details */}
                         <div className="flex w-2/3 flex-col gap-1">
                           {/* Item Name */}
-                          <h3 className="font-uppercase truncate text-lg font-semibold phone:text-sm">
-                            {itemName}
-                          </h3>
+                          <div className="flex w-full items-center justify-between">
+                            <h3 className="font-uppercase phone:text-xs truncate text-lg font-semibold">
+                              {itemName}
+                            </h3>
+                            <div className="flex flex-row gap-2">
+                              <button
+                                className="rounded-sm bg-red-500 px-1 text-[10px] font-semibold text-white"
+                                onClick={() =>
+                                  removeItemFromCart(
+                                    itemID,
+                                    isItemExistInCheckout,
+                                  )
+                                }
+                              >
+                                <Trash className="phone:w-4 lg:w-6" />
+                              </button>
+                              <button
+                                className="rounded-sm bg-green-500 px-1 text-[10px] font-semibold text-white"
+                                onClick={() =>
+                                  router.push(`/product/${itemID}`)
+                                }
+                              >
+                                <Pencil className="phone:w-4 lg:w-6" />
+                              </button>
+                            </div>
+                          </div>
 
                           {hasConflict ? null : (
                             <div className="flex w-full flex-col gap-1">
-                              {/* Variation Details */}
-                              <div className="flex w-full items-center justify-between lg:flex-row">
-                                <p className="text-xs text-gray-400 lg:text-sm">
-                                  Paket: &nbsp;
-                                </p>
-                                <span className="text-xs text-gray-400 lg:text-sm">
-                                  {itemVariation.variationName}
-                                </span>
-                              </div>
-
                               {/* Item Amount */}
                               <div className="flex w-full flex-row items-center justify-between">
-                                <p className="text-xs text-gray-400 lg:text-sm">
+                                <p className="phone:text-[10px] text-xs font-medium text-gray-400 lg:text-sm">
                                   Jumlah Item: &nbsp;
                                 </p>
                                 <div className="flex flex-row">
                                   <div className="flex flex-row gap-2">
-                                    {/* Decrease Item Button */}
-                                    {/* <button
-                                      className="flex h-[20px] w-[20px] flex-col items-center justify-center rounded-md bg-slate-400 p-2"
-                                      onClick={() => {
-                                        if (itemExistsInCheckout) {
-                                          toast.warning(
-                                            "Uncheck item terlebih dahulu sebelum mengurangi jumlah",
-                                            {
-                                              position: "top-right",
-                                              autoClose: 5000,
-                                              hideProgressBar: false,
-                                              closeOnClick: true,
-                                              pauseOnHover: true,
-                                              draggable: true,
-                                              progress: undefined,
-                                              theme: "light",
-                                            },
-                                          );
-                                        } else {
-                                          handleDecreaseItemAmount(
-                                            itemID,
-                                            cartArray,
-                                            setCartArray,
-                                          );
-                                        }
-                                      }}
-                                    >
-                                      -
-                                    </button> */}
-                                    <p className="rounded-sm border px-2 py-0.5 text-xs">
+                                    <span className="phone:text-[10px] text-xs font-medium text-gray-400 lg:text-sm">
                                       {itemAmount}
-                                    </p>
-
-                                    {/* Increase Item Button */}
-                                    {/* <button
-                                      className="flex h-[20px] w-[20px] flex-col items-center justify-center rounded-md bg-slate-400 p-2"
-                                      onClick={() => {
-                                        if (itemExistsInCheckout) {
-                                          toast.warning(
-                                            "Uncheck item terlebih dahulu sebelum menambah jumlah",
-                                            {
-                                              position: "top-right",
-                                              autoClose: 5000,
-                                              hideProgressBar: false,
-                                              closeOnClick: true,
-                                              pauseOnHover: true,
-                                              draggable: true,
-                                              progress: undefined,
-                                              theme: "light",
-                                            },
-                                          );
-                                        } else {
-                                          if (
-                                            itemAmount < availableStock.length
-                                          ) {
-                                            handleIncreaseItemAmount(
-                                              itemID,
-                                              cartArray,
-                                              setCartArray,
-                                            );
-                                          } else {
-                                            toast.warning(
-                                              "Jumlah item telah mencapai maksimum",
-                                              {
-                                                position: "top-right",
-                                                autoClose: 5000,
-                                                hideProgressBar: false,
-                                                closeOnClick: true,
-                                                pauseOnHover: true,
-                                                draggable: true,
-                                                progress: undefined,
-                                                theme: "light",
-                                              },
-                                            );
-                                          }
-                                        }
-                                      }}
-                                    >
-                                      +
-                                    </button> */}
+                                    </span>
                                   </div>
                                 </div>
                               </div>
 
                               {/* Item Subtotal */}
                               <div className="flex w-full flex-row items-center justify-between">
-                                <p className="text-xs text-gray-400 lg:text-sm">
+                                <p className="phone:text-[10px] text-xs font-medium text-gray-400 lg:text-sm">
                                   Total Harga: &nbsp;
                                 </p>
-                                <span className="text-xs text-gray-400 lg:text-sm">
+                                <span className="phone:text-[10px] text-xs font-medium text-gray-400 lg:text-sm">
                                   {itemSubtotal.toLocaleString("id-ID", {
                                     style: "currency",
                                     currency: "IDR",
@@ -225,39 +167,70 @@ export const CartItem: React.FC<CartItemProps> = ({
                                   })}
                                 </span>
                               </div>
+
+                              {/* Variation Details */}
+                              <div className="phone:gap-0 flex flex-col gap-0 lg:gap-1">
+                                <div className="flex w-full items-center justify-between lg:flex-row">
+                                  <p className="phone:text-[10px] text-xs font-medium text-gray-400 lg:text-sm">
+                                    Paket: &nbsp;
+                                  </p>
+                                  <div className="phone:text-[10px] text-xs font-medium text-gray-400 lg:text-sm">
+                                    <p>{itemVariation.variationName}</p>
+                                  </div>
+                                </div>
+
+                                <div className="flex w-full items-center justify-between lg:flex-row">
+                                  <p className="text-[8px] text-gray-400 lg:text-sm">
+                                    Mulai: &nbsp;
+                                  </p>
+                                  <div className="text-[8px] text-gray-400 lg:text-sm">
+                                    {moment(
+                                      rentalDetails.rentalStartInLocaleMs,
+                                    ).format("DD MMM YYYY HH:mm")}
+                                  </div>
+                                </div>
+
+                                <div className="flex w-full items-center justify-between lg:flex-row">
+                                  <p className="text-[8px] text-gray-400 lg:text-sm">
+                                    Selesai: &nbsp;
+                                  </p>
+                                  <div className="text-[8px] text-gray-400 lg:text-sm">
+                                    {moment(
+                                      rentalDetails.rentalEndInLocaleMs,
+                                    ).format("DD MMM YYYY HH:mm")}
+                                  </div>
+                                </div>
+                              </div>
                             </div>
                           )}
 
                           {/* Conflict Warning */}
-                          {/* {hasConflict && (
+                          {hasConflict && (
                             <div className="flex flex-col items-start gap-0">
                               <p className="text-xs text-red-500">
                                 ⚠️ Bookingan alat ini telah kadaluarsa
                                 klik&nbsp;
                                 <a
-                                  href={`../store/${storeInfo.storeStrings}/${itemID}`}
+                                  href={`../store/${store.storeStrings}/${itemID}`}
                                   className="font-bold text-sky-600"
                                 >
                                   di sini
                                 </a>{" "}
                                 untuk mengubah jadwal booking.
                               </p>
-
-                              Remove Item Button
-                              <button
+                              {/* <button
                                 onClick={() =>
-                                  handleDecreaseItemAmount(
+                                  removeItemFromCart(
                                     itemID,
-                                    cartArray,
-                                    setCartArray,
+                                    isItemExistInCheckout,
                                   )
                                 }
                                 className="mt-2 rounded-md bg-red-600 px-2 py-1 text-xs text-white"
                               >
                                 Hapus Item
-                              </button>
+                              </button> */}
                             </div>
-                          )} */}
+                          )}
                         </div>
                       </>
                     )}

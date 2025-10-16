@@ -1,8 +1,10 @@
+"use client";
 import { ClientSearchProductResultType } from "@/app/lib/types/store_product_type";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { ImageWithFallback } from "./ImageWithFallback";
 import imagePlaceholder from "@/app/assets/img/icon/image-placeholder.jpg";
+import { Input } from "@/components/ui/input";
 
 type ProductSearchResultProps = {
   products: ClientSearchProductResultType[];
@@ -20,53 +22,80 @@ const ProductSearchResult: React.FC<ProductSearchResultProps> = ({
   searchFilter,
   isUsingDashboard = false,
 }) => {
+  const [filteredProduct, setFilteredProduct] =
+    useState<ClientSearchProductResultType[]>(products);
+
+  const handleFilterProductByTitle = (searchString: string) => {
+    if (!searchString.trim()) {
+      // if input is empty, show all products again
+      setFilteredProduct(products);
+      return;
+    }
+
+    const regex = new RegExp(searchString, "i");
+    const filtered = products.filter((prod) =>
+      regex.test(prod.productDetail.title),
+    );
+
+    setFilteredProduct(filtered);
+  };
+
   return (
-    <div className="flex-wrap flex w-full flex-col gap-4 lg:flex lg:flex-row">
-      {products.map((product) => {
-        const { productDetail, availableStockCount } = product;
-        let href;
-        if (!isUsingDashboard) {
-          href = `/product/${product._id}?bookingStart=${searchFilter.bookingStart}&bookingEnd=${searchFilter.bookingEnd}&storeId=${searchFilter.storeId}`;
-        } else {
-          href = `/dashboard/${product?.productDetail?.storeDetail?.storeId}/order/add?openItemModal=yes&productId=${product._id}&productName=${product?.productDetail?.title}&bookingStart=${searchFilter.bookingStart}&bookingEnd=${searchFilter.bookingEnd}`;
-        }
+    <div className="flex flex-col gap-2 w-full">
+      <Input
+        className="border-accent-custom focus-visible:border-custom-accent focus:border-custom-accent border bg-white text-sm focus:ring-sky-100 focus-visible:ring-2 focus-visible:ring-sky-200"
+        placeholder="Cari alat berdasarkan nama"
+        onChange={(e) => handleFilterProductByTitle(e.target.value)}
+      />
+      <div className="flex w-full flex-wrap gap-2 pb-24 lg:flex lg:flex-row">
+        {filteredProduct.map((product) => {
+          const { productDetail, availableStockCount } = product;
+          let href;
+          if (!isUsingDashboard) {
+            href = `/product/${product._id}?bookingStart=${searchFilter.bookingStart}&bookingEnd=${searchFilter.bookingEnd}&storeId=${searchFilter.storeId}`;
+          } else {
+            href = `/dashboard/${product?.productDetail?.storeDetail?.storeId}/order/add?openItemModal=yes&productId=${product._id}&productName=${product?.productDetail?.title}&bookingStart=${searchFilter.bookingStart}&bookingEnd=${searchFilter.bookingEnd}`;
+          }
 
-        return (
-          <div
-            key={product._id}
-            className="border-accent-custom flex gap-4 rounded-md bg-white p-4 shadow-sm transition hover:shadow-md"
-          >
-            {/* Image */}
-            <div className="h-28 w-28 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-              <ImageWithFallback
-                src={productDetail.primaryImage.link}
-                alt=""
-                fallbackSrc={imagePlaceholder.src}
-                width={100}
-                height={100}
-                className="h-full w-full object-cover"
-              />
-            </div>
-
-            {/* Details */}
-            <div className="flex flex-col justify-between">
-              <div>
-                <h2 className="text-lg font-semibold">{productDetail.title}</h2>
-                <p className="text-sm text-sky-400">
-                  Stock tersedia: {availableStockCount}
-                </p>
+          return (
+            <div
+              key={product._id}
+              className="border-accent-custom flex phone:w-[49%] lg:w-[25%] flex-col gap-4 rounded-md bg-white p-2 shadow-sm transition hover:shadow-md"
+            >
+              {/* Image */}
+              <div className="w-full flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                <ImageWithFallback
+                  src={productDetail.primaryImage.link}
+                  alt=""
+                  fallbackSrc={imagePlaceholder.src}
+                  width={100}
+                  height={100}
+                  className="aspect-square h-full w-full object-cover"
+                />
               </div>
-              <Link
-                href={href as string}
-                target="__blank"
-                className="w-fit rounded-md bg-teal-400 px-4 py-2 text-xs font-semibold text-white shadow"
-              >
-                Booking Alat ini
-              </Link>
+
+              {/* Details */}
+              <div className="flex flex-col justify-between gap-2">
+                <div>
+                  <h2 className="phone:text-base text-lg font-semibold lg:text-lg">
+                    {productDetail.title}
+                  </h2>
+                  <p className="phone:text-xs text-sm text-sky-400 lg:text-sm">
+                    Stock tersedia: {availableStockCount}
+                  </p>
+                </div>
+                <Link
+                  href={href as string}
+                  target="__blank"
+                  className="w-fit rounded-sm bg-teal-400 px-3 py-1 text-xs font-semibold text-white shadow"
+                >
+                  Booking Alat ini
+                </Link>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

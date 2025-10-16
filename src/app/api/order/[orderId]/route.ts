@@ -34,7 +34,9 @@ export async function PATCH(
   try {
     const connection = await dbConnect(storeId);
     const StoreOrderModel = createStoreOrderModel(connection);
-    const order = await StoreOrderModel.findByIdAndUpdate(orderId, body);
+    const order = await StoreOrderModel.findByIdAndUpdate(orderId, body, {
+      new: true,
+    });
 
     return NextResponse.json({ json: order }, { status: StatusCodes.OK });
   } catch (error) {

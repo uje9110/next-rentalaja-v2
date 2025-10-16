@@ -1,4 +1,6 @@
 "use client";
+import { useAPIContext } from "@/app/lib/context/ApiContext";
+import { useCartContext } from "@/app/lib/context/CartContext";
 import {
   CartBookingConflictsType,
   CartBookingValidationLoadingType,
@@ -12,6 +14,7 @@ import {
 import { StoreProductBookingType } from "@/app/lib/types/store_product_booking_type";
 import axios from "axios";
 import { Dispatch, SetStateAction, useState } from "react";
+import { toast } from "sonner";
 
 type useCartProps = {
   checkout: ClientCheckoutType;
@@ -19,6 +22,8 @@ type useCartProps = {
 };
 
 export function useCart({ checkout, setCheckout }: useCartProps) {
+  const { APIEndpoint } = useAPIContext();
+  const { cart, setCart } = useCartContext();
   const [bookingConflicts, setBookingConflicts] =
     useState<CartBookingConflictsType>({});
   const [bookingValidationLoading, setBookingValidationLoading] =
@@ -51,7 +56,7 @@ export function useCart({ checkout, setCheckout }: useCartProps) {
       setBookingValidationLoading({ status: false, itemID: "" });
 
       const thisProductStockBookingDetails: StoreProductBookingType[] =
-        response.data.product[0].stockBookingDetails;
+        response.data.json.stockBookingDetails;
 
       const filteredStockBookingDetails = stockIdArray
         .map((stockId) =>
@@ -81,6 +86,24 @@ export function useCart({ checkout, setCheckout }: useCartProps) {
     }
   };
 
+  const validateBookings = async () => {
+    const conflicts: CartBookingConflictsType = {};
+    for (const cartItem of cart) {
+      const { items, store } = cartItem;
+      for (const item of items) {
+        const hasConflict = await checkItemCartBooking(
+          APIEndpoint,
+          item.itemID,
+          item.stockIds,
+          item.rentalDetails,
+          store.storeId,
+        );
+        conflicts[item.itemID] = hasConflict;
+      }
+    }
+    setBookingConflicts(conflicts);
+  };
+
   const checkIsItemAlreadyExistInCheckout = (
     orderItemData: StoreOrderItemType,
   ): boolean => {
@@ -90,6 +113,17 @@ export function useCart({ checkout, setCheckout }: useCartProps) {
         cartItem.items.some(
           (cartItem) => cartItem.itemID === orderItemData.itemID,
         ),
+    );
+  };
+
+  const checkIsItemAlreadyExistInCart = (
+    productId: string,
+    storeId: string,
+  ): boolean => {
+    return cart.some(
+      (cartItem) =>
+        cartItem.store.storeId === storeId &&
+        cartItem.items.some((cartItem) => cartItem.itemID === productId),
     );
   };
 
@@ -153,11 +187,33 @@ export function useCart({ checkout, setCheckout }: useCartProps) {
     }
   };
 
+  const removeItemFromCart = (
+    itemId: string,
+    isItemExistInCheckout: boolean,
+  ) => {
+    if (isItemExistInCheckout) {
+      toast.warning("hapus centang terlebih dahulu sebelum menghilangkan item");
+      return;
+    }
+    const formattedCart: ClientCartType[] = cart
+      .map(({ store, items, subtotal, total }) => {
+        const filteredItems = items.filter((item) => item.itemID !== itemId);
+        if (filteredItems.length === 0) return null;
+        return { store, items: filteredItems, subtotal, total };
+      })
+      .filter((storeCart): storeCart is ClientCartType => storeCart !== null);
+
+    setCart(formattedCart);
+  };
+
   return {
+    removeItemFromCart,
+    validateBookings,
     checkItemCartBooking,
     bookingConflicts,
     bookingValidationLoading,
     handleAddCartItemToCheckout,
     checkIsItemAlreadyExistInCheckout,
+    checkIsItemAlreadyExistInCart,
   };
 }

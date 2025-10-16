@@ -12,11 +12,13 @@ const GlobalProductSection: FC<GlobalProductSectionProps> = ({
   return (
     <div className="flex w-full flex-col gap-4 pt-4 lg:flex lg:w-[60%] lg:flex-row lg:gap-5">
       {/* ----- Gambar ----- */}
-      <FrontPagePictureSlider
-        showButton={false}
-        images={[globalProduct.primaryImage, ...globalProduct.images]}
-        height="h-120 lg:h-120 phone:h-100"
-      />
+      <div className="phone:w-full w-full lg:w-1/2">
+        <FrontPagePictureSlider
+          showButton={false}
+          images={[globalProduct.primaryImage, ...globalProduct.images]}
+          height="h-120 lg:h-120 phone:h-100"
+        />
+      </div>
 
       <div className="phone:flex phone:flex-col phone:gap-3 lg:w-1/2">
         {/* ----- Judul ----- */}

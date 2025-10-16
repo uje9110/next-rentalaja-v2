@@ -31,9 +31,9 @@ const SearchPage = async ({ searchParams }: SearchPageProps) => {
   });
 
   return (
-    <main className="bg-defaultBackground relative flex h-screen w-full flex-col items-center gap-4 pt-5 pb-4">
+    <main className="bg-defaultBackground relative flex h-fit w-full flex-col items-center gap-4 pt-5 pb-4">
       <h1 className="text-lg font-bold">Hasil Pencarian</h1>
-      <div className="flex w-full flex-col gap-4 px-4">
+      <div className="flex flex-col items-center justify-center gap-2 px-4 lg:w-[60%]">
         <SearchFilterInfo filters={filters} />
         <ProductSearchResult products={products} searchFilter={filters} />
       </div>

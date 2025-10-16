@@ -40,17 +40,17 @@ const SalesAnalyticGraphAndTableFilter = () => {
       filterName: "dateBy",
       filterTitle: "Filter Tanggal",
       filterValues: [{ label: "Tanggal Dibuat", value: "createdAt" }],
-      defaultValue: "createdAt",
+      // defaultValue: "createdAt",
     },
     {
       filterType: "dateTimePicker",
       filterIcon: CalendarIcon,
       filterName: "dateRange",
       filterTitle: "Tanggal Sales",
-      defaultValue: {
-        dateStart: moment(new Date()).format("YYYY-MM-DD:00:00:00"),
-        dateEnd: moment(new Date()).format("YYYY-MM-DD:23:59:00"),
-      },
+      // defaultValue: {
+      //   dateStart: moment(new Date()).format("YYYY-MM-DD:00:00:00"),
+      //   dateEnd: moment(new Date()).format("YYYY-MM-DD:23:59:00"),
+      // },
     },
     {
       filterType: "select",

@@ -10,7 +10,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ checkout }) => {
     <div className="w-full lg:flex lg:w-1/2 lg:flex-col lg:gap-4">
       {/* CHECKOUT SUMMARY */}
       <div className="border-accent-custom flex h-fit w-full flex-col gap-2 overflow-hidden rounded-md bg-white shadow-sm">
-        <h3 className="text-md bg-sky-100 px-4 py-2 font-semibold phone:text-sm">
+        <h3 className="text-md phone:text-sm bg-sky-100 px-4 py-2 font-semibold">
           Rangkuman Penyewaan
         </h3>
 
@@ -24,7 +24,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ checkout }) => {
                 item;
               return (
                 <div
-                  className="row-wrapper flex w-full flex-row justify-between text-sm"
+                  className="row-wrapper phone:text-xs lg:phone:sm flex w-full flex-row justify-between text-sm"
                   key={itemName}
                 >
                   <p className="flex w-[60%] flex-col">
@@ -47,7 +47,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ checkout }) => {
           })}
 
           {/* SUBTOTAL */}
-          <div className="row-wrapper flex w-full flex-row justify-between text-sm">
+          <div className="row-wrapper phone:text-xs lg:phone:sm flex w-full flex-row justify-between text-sm">
             <p className="text-gray-400">Subtotal</p>
             <p className="text-gray-400">
               {checkout.subtotal.toLocaleString("id-ID", {
@@ -61,13 +61,13 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ checkout }) => {
       </div>
 
       {/* CHECKOT BAR */}
-      <div className="fixed bottom-[64px] left-0 z-20 flex h-16 w-full flex-row items-center gap-2 rounded-t-xl border border-slate-400/50 bg-sky-100 px-2 text-sm shadow-sm lg:relative lg:bottom-0 lg:rounded-lg">
+      <div className="phone:text-xs lg:phone:sm fixed bottom-[32px] left-0 z-20 flex h-24 w-full flex-row items-center justify-between gap-2 rounded-t-xl border border-slate-400/50 bg-sky-100 px-2 pb-6 text-sm shadow-sm lg:relative lg:bottom-0 lg:rounded-lg">
         {checkout.checkoutCartItems.length < 1 ? (
           <span className="flex w-8/12 flex-col justify-center">
             Tidak ada item yang dipilih
           </span>
         ) : (
-          <div className="flex w-8/12 flex-col justify-center">
+          <div className="flex w-fit flex-col justify-center">
             <span>
               [
               {checkout.checkoutCartItems.reduce((totalItem, currItem) => {
@@ -84,7 +84,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ checkout }) => {
         )}
         <a
           href={"/checkout"}
-          className="bg-colorSecondary flex h-[32px] w-3/12 items-center justify-center rounded-full text-white"
+          className="bg-colorSecondary flex h-[32px] w-fit items-center justify-center rounded-full px-4 text-white"
         >
           Checkout
         </a>
