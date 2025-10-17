@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { ImageWithFallback } from "./ImageWithFallback";
 import imagePlaceholder from "@/app/assets/img/icon/image-placeholder.jpg";
 import { Input } from "@/components/ui/input";
+import { useParams } from "next/navigation";
 
 type ProductSearchResultProps = {
   products: ClientSearchProductResultType[];
@@ -22,6 +23,8 @@ const ProductSearchResult: React.FC<ProductSearchResultProps> = ({
   searchFilter,
   isUsingDashboard = false,
 }) => {
+  const params = useParams();
+
   const [filteredProduct, setFilteredProduct] =
     useState<ClientSearchProductResultType[]>(products);
 
@@ -41,7 +44,7 @@ const ProductSearchResult: React.FC<ProductSearchResultProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-2 w-full">
+    <div className="flex w-full flex-col gap-2">
       <Input
         className="border-accent-custom focus-visible:border-custom-accent focus:border-custom-accent border bg-white text-sm focus:ring-sky-100 focus-visible:ring-2 focus-visible:ring-sky-200"
         placeholder="Cari alat berdasarkan nama"
@@ -54,13 +57,13 @@ const ProductSearchResult: React.FC<ProductSearchResultProps> = ({
           if (!isUsingDashboard) {
             href = `/product/${product._id}?bookingStart=${searchFilter.bookingStart}&bookingEnd=${searchFilter.bookingEnd}&storeId=${searchFilter.storeId}`;
           } else {
-            href = `/dashboard/${product?.productDetail?.storeDetail?.storeId}/order/add?openItemModal=yes&productId=${product._id}&productName=${product?.productDetail?.title}&bookingStart=${searchFilter.bookingStart}&bookingEnd=${searchFilter.bookingEnd}`;
+            href = `/dashboard/${params.storeId}/order/add?openItemModal=yes&productId=${product._id}&productName=${product?.productDetail?.title}&bookingStart=${searchFilter.bookingStart}&bookingEnd=${searchFilter.bookingEnd}`;
           }
 
           return (
             <div
               key={product._id}
-              className="border-accent-custom flex phone:w-[49%] lg:w-[25%] flex-col gap-4 rounded-md bg-white p-2 shadow-sm transition hover:shadow-md"
+              className="border-accent-custom phone:w-[49%] flex flex-col gap-4 rounded-md bg-white p-2 shadow-sm transition hover:shadow-md lg:w-[25%]"
             >
               {/* Image */}
               <div className="w-full flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">

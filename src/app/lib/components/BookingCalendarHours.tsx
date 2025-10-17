@@ -39,11 +39,13 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
   checkHourAvaibilty,
   getSelectedDateValueInMs,
 }) => {
-  if (!storeProduct) return;
+  console.log(bookingHourAndMinute);
 
   const handleClose = () => {
     setIsBookingCalendarHourOpen(false);
   };
+
+  if (!storeProduct) return;
 
   return (
     <Dialog open={isBookingCalendarHourOpen} onOpenChange={handleClose}>
@@ -73,7 +75,9 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
                   const selectedBookingDateInMs = getSelectedDateValueInMs();
                   const currHourInMs =
                     selectedBookingDateInMs + item * 3600 * 1000;
-                  const formattedValue = item < 10 ? `0${item}` : item;
+                  const formattedValue = item < 10 ? `0${item}` : `${item}`;
+                  console.log("hour", formattedValue);
+
                   return (
                     <div
                       key={`bookingHour-${item}`}
@@ -118,7 +122,8 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
               </p>
               <div className="flex h-72 w-full flex-col gap-2 overflow-auto">
                 {minutesArr.map((item) => {
-                  const formattedValue = item < 10 ? `0${item}` : item;
+                  const formattedValue = item < 10 ? `0${item}` : `${item}`;
+                  console.log("minute", formattedValue);
                   return (
                     <div
                       key={`bookingMinute-${item}`}

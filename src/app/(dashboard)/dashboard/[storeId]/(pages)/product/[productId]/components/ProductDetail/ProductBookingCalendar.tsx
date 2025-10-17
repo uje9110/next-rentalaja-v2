@@ -334,7 +334,7 @@ const BookingDetailDialog = ({
             },
           },
         );
-        return data.order[0];
+        return data.json;
       } catch (error) {
         console.error("Error fetching order data:", error);
         return;

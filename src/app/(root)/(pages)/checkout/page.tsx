@@ -11,6 +11,7 @@ import CheckoutSubmit from "../../../lib/components/CheckoutSubmit";
 import { useCheckoutSubmit } from "../../../lib/hooks/useCheckoutSubmit";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 import { useSession } from "next-auth/react";
+import CheckoutCoupon from "@/app/lib/components/CheckoutCoupon";
 
 const Page = () => {
   const { APIEndpoint } = useAPIContext();
@@ -66,6 +67,8 @@ const Page = () => {
               handleCheckoutBillingChange={handleCheckoutBillingChange}
             />
           )}
+
+          {/* {session ? <CheckoutCoupon /> : null} */}
 
           {/* --- Detail --- */}
           <CheckoutDetail />
