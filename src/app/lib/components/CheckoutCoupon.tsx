@@ -35,7 +35,7 @@ const CheckoutCoupon = () => {
           <p>Tidak ada kupon yang tersedia</p>
         ) : (
           couponList?.map((coupon) => {
-            return <CouponItem couponData={coupon} />;
+            return <CouponItem key={coupon.couponName} couponData={coupon} />;
           })
         )}
       </div>
