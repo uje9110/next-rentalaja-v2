@@ -4,7 +4,7 @@ import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
 import { ColumnDef } from "@tanstack/react-table";
 import clsx from "clsx";
 import { Info } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
 import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
 
@@ -62,7 +62,7 @@ export const getColumns = (
         const value = row.original.createdAt;
         return (
           <span className="text-xs text-slate-400">
-            {moment(value).format("DD MMM YYYY, HH:mm")}
+            {moment(value).tz("Asia/Jakarta").format("DD MMM YYYY, HH:mm")}
           </span>
         );
       },

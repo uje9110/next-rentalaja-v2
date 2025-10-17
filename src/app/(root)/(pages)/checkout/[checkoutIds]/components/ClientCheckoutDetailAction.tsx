@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AlertCircle, CircleCheck } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
 import { StoreOrderType } from "@/app/lib/types/store_order_type";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
 
@@ -32,10 +32,10 @@ ${index + 1}.
 Nama Item: ${item.itemName}
 Paket Sewa: ${item.itemVariation.variationName}
 Harga Sewa: ${CurrencyHandlers.changeToLocaleCurrency(item.itemVariation.variationPrice)}
-Mulai Sewa: ${moment(item.rentalDetails.rentalStartInLocaleMs).format(
+Mulai Sewa: ${moment(item.rentalDetails.rentalStartInLocaleMs).tz("Asia/Jakarta").format(
             "DD MMMM YYYY, HH:mm",
           )}
-Berakhir Sewa: ${moment(item.rentalDetails.rentalEndInLocaleMs).format(
+Berakhir Sewa: ${moment(item.rentalDetails.rentalEndInLocaleMs).tz("Asia/Jakarta").format(
             "DD MMMM YYYY, HH:mm",
           )}
 Jumlah: ${item.itemAmount}\n`;

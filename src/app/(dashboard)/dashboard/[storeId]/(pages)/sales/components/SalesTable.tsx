@@ -19,7 +19,7 @@ import {
   CustomTableFilterProps,
 } from "@/app/lib/components/CustomTableFilters";
 import SalesSummaryTabs from "./SalesSummaryTab";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import SalesDetailDialog from "./SalesDetailDialog";
 
@@ -80,8 +80,8 @@ const SalesTable: FC<SalesTableProps> = ({ sales }) => {
       filterName: "dateRange",
       filterTitle: "Tanggal Sales",
       // defaultValue: {
-      //   dateStart: moment(new Date()).format("YYYY-MM-DD:00:00:00"),
-      //   dateEnd: moment(new Date()).format("YYYY-MM-DD:23:59:00"),
+      //   dateStart: moment(new Date()). .tz("Asia/Jakarta").format("YYYY-MM-DD:00:00:00"),
+      //   dateEnd: moment(new Date()). .tz("Asia/Jakarta").format("YYYY-MM-DD:23:59:00"),
       // },
     },
     {

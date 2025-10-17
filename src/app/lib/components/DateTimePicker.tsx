@@ -10,7 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Dispatch, SetStateAction, useState } from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import clsx from "clsx";
 
 type DateTimePickerProps = {
@@ -55,7 +55,7 @@ export function DateTimePicker({
                 textSize,
               )}
             >
-              {date ? moment(date).format("DD MMM YYYY") : "Pilih Tanggal"}
+              {date ? moment(date).tz("Asia/Jakarta").format("DD MMM YYYY") : "Pilih Tanggal"}
               <ChevronDownIcon />
             </Button>
           </PopoverTrigger>

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { CalendarIcon, ChevronDown } from "lucide-react";
 import { DateTimePicker } from "../components/DateTimePicker";
-import moment from "moment";
+import moment from "moment-timezone";
 
 export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
   const { searchParams, updateSearchParam, updateSearchParams } =
@@ -81,14 +81,14 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
   // // 🟢 Date effects
   useEffect(() => {
     if (dateStart) {
-      const isoStart = moment(dateStart).format("YYYY-MM-DDTHH:mm:ss");
+      const isoStart = moment(dateStart).tz("Asia/Jakarta").format("YYYY-MM-DDTHH:mm:ss");
       updateSearchParam("dateStart", isoStart);
     }
   }, [dateStart]);
 
   useEffect(() => {
     if (dateEnd) {
-      const isoEnd = moment(dateEnd).format("YYYY-MM-DDTHH:mm:ss");
+      const isoEnd = moment(dateEnd).tz("Asia/Jakarta").format("YYYY-MM-DDTHH:mm:ss");
       updateSearchParam("dateEnd", isoEnd);
     }
   }, [dateEnd]);
@@ -166,11 +166,11 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
                   {dateStart ? (
                     dateEnd ? (
                       <>
-                        {moment(dateStart).format("DD MMM YYYY")} -{" "}
-                        {moment(dateEnd).format("DD MMM YYYY")}
+                        {moment(dateStart).tz("Asia/Jakarta").format("DD MMM YYYY")} -{" "}
+                        {moment(dateEnd).tz("Asia/Jakarta").format("DD MMM YYYY")}
                       </>
                     ) : (
-                      moment(dateStart).format("DD MMM YYYY")
+                      moment(dateStart).tz("Asia/Jakarta").format("DD MMM YYYY")
                     )
                   ) : (
                     <span>Pilih Tanggal</span>

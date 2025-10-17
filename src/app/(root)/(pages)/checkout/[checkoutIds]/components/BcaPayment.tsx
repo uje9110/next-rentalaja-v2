@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { FC } from "react";
 import bcaLogo from "@/app/assets/img/logo/bca.png";
-import moment from "moment";
+import moment from "moment-timezone";
 import { ClientStoreOrderPaymentType } from "@/app/lib/types/store_order_payment_type";
 
 function getStatusColor(status: string): string {
@@ -38,7 +38,7 @@ export const BcaPayment: FC<{ payment: ClientStoreOrderPaymentType }> = ({
       <div className="flex flex-col items-start justify-center">
         <p className="text-xs">
           <span className="font-medium">Expire</span> :{" "}
-          {moment(payment.xenditPayment?.channel_properties.expires_at).format(
+          {moment(payment.xenditPayment?.channel_properties.expires_at).tz("Asia/Jakarta").format(
             "DD MMMM YYYY, HH:mm",
           )}
         </p>

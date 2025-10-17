@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { Dispatch, SetStateAction, useEffect } from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import axios from "axios";
 import { Session } from "next-auth";
 import { OrderByUserType } from "@/app/lib/types/store_order_type";
@@ -68,7 +68,7 @@ const UserOrder: React.FC<UserOrderType> = ({
                         <span className="text-[12px] font-light text-gray-500">
                           Tanggal Order
                         </span>
-                        <p className="text-sm text-gray-400">{`${moment(orderDate).format("DD MMMM YYYY, HH:mm")}`}</p>
+                        <p className="text-sm text-gray-400">{`${moment(orderDate).tz("Asia/Jakarta").format("DD MMMM YYYY, HH:mm")}`}</p>
                       </div>
                     </div>
                     <div className="flex w-full flex-row justify-between">

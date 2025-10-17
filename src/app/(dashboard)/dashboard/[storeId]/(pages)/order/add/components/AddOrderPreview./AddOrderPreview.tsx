@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 import React, { FC } from "react";
 import { UseMutationResult } from "@tanstack/react-query";
 import { Loader } from "lucide-react";
@@ -82,11 +82,11 @@ export const AddOrderPreview: FC<AddOrderPreviewProps> = ({
                       <div className="flex flex-row justify-between font-semibold">
                         <span>Waktu Rental:</span>
                         <span className="text-[10px] font-medium">
-                          {moment(rentalDetails.rentalStartInLocaleMs).format(
+                          {moment(rentalDetails.rentalStartInLocaleMs).tz("Asia/Jakarta").format(
                             "DD-MM-YYYY HH:mm",
                           )}
                           <br />
-                          {moment(rentalDetails.rentalEndInLocaleMs).format(
+                          {moment(rentalDetails.rentalEndInLocaleMs).tz("Asia/Jakarta").format(
                             "DD-MM-YYYY HH:mm",
                           )}
                         </span>

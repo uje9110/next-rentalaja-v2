@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 import { RescheduleDialogContentProps } from "./RescheduleDialogContent";
-import moment from "moment";
+import moment from "moment-timezone";
 import { useSession } from "next-auth/react";
 import { useAPIContext } from "@/app/lib/context/ApiContext";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
@@ -160,7 +160,7 @@ const RescheduleStepThree: FC<RescheduleStepThreeProps> = ({
                         <span>
                           {moment(
                             item.old.rentalDetails.rentalStartInLocaleMs,
-                          ).format("D MMMM YYYY, HH:mm")}
+                          ).tz("Asia/Jakarta").format("D MMMM YYYY, HH:mm")}
                         </span>
                       </p>
                       <p className="flex gap-1">
@@ -170,7 +170,7 @@ const RescheduleStepThree: FC<RescheduleStepThreeProps> = ({
                         <span>
                           {moment(
                             item.old.rentalDetails.rentalEndInLocaleMs,
-                          ).format("D MMMM YYYY, HH:mm")}
+                          ).tz("Asia/Jakarta").format("D MMMM YYYY, HH:mm")}
                         </span>
                       </p>
                     </div>
@@ -218,7 +218,7 @@ const RescheduleStepThree: FC<RescheduleStepThreeProps> = ({
                         >
                           {moment(
                             item.new.rentalDetails.rentalStartInLocaleMs,
-                          ).format("D MMMM YYYY, HH:mm")}
+                          ).tz("Asia/Jakarta").format("D MMMM YYYY, HH:mm")}
                         </span>
                       </p>
                       <p className="flex gap-1">
@@ -230,7 +230,7 @@ const RescheduleStepThree: FC<RescheduleStepThreeProps> = ({
                         >
                           {moment(
                             item.new.rentalDetails.rentalEndInLocaleMs,
-                          ).format("D MMMM YYYY, HH:mm")}
+                          ).tz("Asia/Jakarta").format("D MMMM YYYY, HH:mm")}
                         </span>
                       </p>
                     </div>

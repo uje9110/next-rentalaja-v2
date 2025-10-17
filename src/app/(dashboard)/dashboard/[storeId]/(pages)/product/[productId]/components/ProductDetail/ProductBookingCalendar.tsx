@@ -2,7 +2,7 @@ import "./ProductBookingCalendar.css";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
 import React, {
   MouseEvent,
   ReactNode,
@@ -394,7 +394,7 @@ const BookingDetailDialog = ({
             <p className="flex flex-row justify-between capitalize">
               <span className="text-slate-600">Tanggal Mulai Sewa</span>
               <span className={`text-right`}>
-                {moment(bookingDetailProps?.bookingData?.dateStart).format(
+                {moment(bookingDetailProps?.bookingData?.dateStart).tz("Asia/Jakarta").format(
                   "DD MMMM YYYY",
                 )}
               </span>
@@ -402,7 +402,7 @@ const BookingDetailDialog = ({
             <p className="flex flex-row justify-between capitalize">
               <span className="text-slate-600">Tanggal Berakhir Sewa</span>
               <span className={`text-right`}>
-                {moment(bookingDetailProps?.bookingData?.dateEnd).format(
+                {moment(bookingDetailProps?.bookingData?.dateEnd).tz("Asia/Jakarta").format(
                   "DD MMMM YYYY",
                 )}
               </span>

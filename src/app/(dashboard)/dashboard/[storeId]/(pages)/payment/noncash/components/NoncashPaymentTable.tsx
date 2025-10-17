@@ -9,7 +9,7 @@ import {
   CustomTableFilterProps,
 } from "@/app/lib/components/CustomTableFilters";
 import CustomDataTable from "@/app/lib/components/CustomDataTable";
-import moment from "moment";
+import moment from "moment-timezone";
 
 interface NoncashPaymentTableProps {
   payments: XenditTransaction[];
@@ -39,8 +39,8 @@ export const NoncashPaymentTable: FC<NoncashPaymentTableProps> = ({
       filterName: "dateRange",
       filterTitle: "Tanggal Sales",
       defaultValue: {
-        dateStart: moment(new Date()).format("YYYY-MM-DD:00:00:00"),
-        dateEnd: moment(new Date()).format("YYYY-MM-DD:23:59:00"),
+        dateStart: moment(new Date()).tz("Asia/Jakarta").format("YYYY-MM-DD:00:00:00"),
+        dateEnd: moment(new Date()).tz("Asia/Jakarta").format("YYYY-MM-DD:23:59:00"),
       },
     },
     {

@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import moment from "moment";
+import moment from "moment-timezone";
 import { BcaPayment } from "./BcaPayment";
 import { QrisPayment } from "./QrisPayment";
 import CashPayment from "./CashPayment";
@@ -169,7 +169,7 @@ export const CheckoutDetail: React.FC<{
                         className="border border-slate-400/70 p-2"
                         colSpan={2}
                       >
-                        {moment(rentalDetails.rentalStartInLocaleMs).format(
+                        {moment(rentalDetails.rentalStartInLocaleMs).tz("Asia/Jakarta").format(
                           "DD MMMM YYYY, HH:mm",
                         )}
                       </td>
@@ -182,7 +182,7 @@ export const CheckoutDetail: React.FC<{
                         className="border border-slate-400/70 p-2"
                         colSpan={2}
                       >
-                        {moment(rentalDetails.rentalEndInLocaleMs).format(
+                        {moment(rentalDetails.rentalEndInLocaleMs).tz("Asia/Jakarta").format(
                           "DD MMMM YYYY, HH:mm",
                         )}
                       </td>

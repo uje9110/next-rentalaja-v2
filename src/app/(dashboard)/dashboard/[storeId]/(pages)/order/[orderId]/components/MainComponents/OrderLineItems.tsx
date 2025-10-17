@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from "moment-timezone";
 import React, { FC } from "react";
 import lunasImage from "@/app/assets/img/Element/lunas.png";
 import Image from "next/image";
@@ -207,7 +207,7 @@ const OrderLineItems: FC<OrderLineItemsProps> = ({ orderData }) => {
                             Start :
                           </p>
                           <p>
-                            {moment(rentalStartInLocaleMs).format(
+                            {moment(rentalStartInLocaleMs).tz("Asia/Jakarta").format(
                               "DD MMMM YYYY, HH:mm",
                             )}
                           </p>
@@ -219,7 +219,7 @@ const OrderLineItems: FC<OrderLineItemsProps> = ({ orderData }) => {
                             End :
                           </span>
                           <p>
-                            {moment(rentalEndInLocaleMs).format(
+                            {moment(rentalEndInLocaleMs).tz("Asia/Jakarta").format(
                               "DD MMMM YYYY, HH:mm",
                             )}
                           </p>
@@ -251,7 +251,7 @@ const OrderLineItems: FC<OrderLineItemsProps> = ({ orderData }) => {
                             <p className="-mt-2 font-semibold text-slate-400">
                               {moment(
                                 pickupAndReturnDetails.pickupDateTimeInMs,
-                              ).format("DD MM YYYY, HH:mm")}
+                              ).tz("Asia/Jakarta").format("DD MM YYYY, HH:mm")}
                             </p>
                           </div>
                         )}
@@ -273,7 +273,7 @@ const OrderLineItems: FC<OrderLineItemsProps> = ({ orderData }) => {
                             <p className="-mt-2 font-semibold text-slate-400">
                               {moment(
                                 pickupAndReturnDetails.returnDateTimeInMs,
-                              ).format("DD MM YYYY, HH:mm")}
+                              ).tz("Asia/Jakarta").format("DD MM YYYY, HH:mm")}
                             </p>
                           </div>
                         )}

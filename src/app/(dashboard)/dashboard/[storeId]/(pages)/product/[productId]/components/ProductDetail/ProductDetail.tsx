@@ -23,7 +23,7 @@ import {
   Trash,
   X,
 } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
 import React, { FC, FormEvent, useState } from "react";
 import imagePlaceholder from "@/app/assets/img/icon/image-placeholder.jpg";
 import ProductBookingCalendar from "./ProductBookingCalendar";
@@ -172,7 +172,7 @@ const ProductDetail: FC<ProductDetailProps> = ({ product }) => {
               <div className="flex flex-col gap-0">
                 <p className="text-base font-medium">{product?._id}</p>
                 <p className="text-xs text-slate-600">
-                  Dibuat : {moment(product?.createdAt).format("D MMMM YYYY")}
+                  Dibuat : {moment(product?.createdAt).tz("Asia/Jakarta").format("D MMMM YYYY")}
                 </p>
               </div>
             </div>

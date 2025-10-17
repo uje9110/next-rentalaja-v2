@@ -8,7 +8,7 @@ import {
   SquareArrowDown,
   SquareArrowUp,
 } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Dispatch, SetStateAction } from "react";
 
 export const getColumns = (
@@ -37,7 +37,7 @@ export const getColumns = (
         const value = row.original.createdAt;
         return (
           <span className="text-xs">
-            {moment(value).format("DD MMM YYYY, HH:mm")}
+            {moment(value).tz("Asia/Jakarta").format("DD MMM YYYY, HH:mm")}
           </span>
         );
       },

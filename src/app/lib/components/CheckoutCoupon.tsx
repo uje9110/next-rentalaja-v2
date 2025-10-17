@@ -1,13 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useAPIContext } from "../context/ApiContext";
 import { useQuery } from "@tanstack/react-query";
 import { GlobalCouponType } from "../types/global_coupon_type";
 import axios from "axios";
 import { Ticket } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ClientCheckoutType } from "../types/client_checkout_type";
 
-const CheckoutCoupon = () => {
+const CheckoutCoupon = ({
+  checkout,
+  setCheckout,
+}: {
+  checkout: ClientCheckoutType;
+  setCheckout: Dispatch<SetStateAction<ClientCheckoutType>>;
+}) => {
   const { APIEndpoint } = useAPIContext();
 
   const { data: couponList = [] } = useQuery({
@@ -23,7 +31,26 @@ const CheckoutCoupon = () => {
     },
   });
 
-  console.log(couponList);
+  const handleAddCoupon = (couponData: GlobalCouponType) => {
+    const isCouponExist = checkout.discounts.some((coupon) => {
+      return coupon.couponName === couponData.couponName;
+    });
+    setCheckout((prevState) => {
+      if (isCouponExist) {
+        const filteredCoupons = checkout.discounts.filter((coupon) => {
+          return coupon.couponName !== couponData.couponName;
+        });
+        return {
+          ...prevState,
+          discounts: filteredCoupons,
+        };
+      }
+      return {
+        ...prevState,
+        discounts: [...prevState.discounts, couponData],
+      };
+    });
+  };
 
   return (
     <div className="border-accent-custom relative flex w-full flex-col overflow-hidden rounded-md bg-white shadow-sm">
@@ -35,7 +62,13 @@ const CheckoutCoupon = () => {
           <p>Tidak ada kupon yang tersedia</p>
         ) : (
           couponList?.map((coupon) => {
-            return <CouponItem key={coupon.couponName} couponData={coupon} />;
+            return (
+              <CouponItem
+                key={coupon.couponName}
+                couponData={coupon}
+                handleAddCoupon={handleAddCoupon}
+              />
+            );
           })
         )}
       </div>
@@ -45,7 +78,13 @@ const CheckoutCoupon = () => {
 
 export default CheckoutCoupon;
 
-const CouponItem = ({ couponData }: { couponData: GlobalCouponType }) => {
+const CouponItem = ({
+  couponData,
+  handleAddCoupon,
+}: {
+  couponData: GlobalCouponType;
+  handleAddCoupon: (couponData: GlobalCouponType) => void;
+}) => {
   const couponValueHelper = (couponValue: number, couponType: string) => {
     if (couponType === "fixed") {
       return `Diskon Rp. ${couponValue}`;
@@ -54,21 +93,29 @@ const CouponItem = ({ couponData }: { couponData: GlobalCouponType }) => {
     }
   };
   return (
-    <div className="border-accent-custom flex w-full gap-2 rounded-md border">
-      <div className="flex w-2/3 flex-col justify-center gap-0 px-2 py-1">
-        <p className="text-sm font-medium">{couponData.couponName}</p>
-        <p className="text-xs text-gray-500">{couponData.couponDesc}</p>
-        <p className="text-xs">
-          {couponValueHelper(couponData.couponValue, couponData.couponType)}
-        </p>
-      </div>
-      <div className="border-accent-custom flex w-1/3 flex-col items-center justify-center border-0 border-l">
-        <Ticket size={32} strokeWidth={1} />
-        <p className="flex flex-col text-[10px] text-gray-500">
-          <span>Berlaku s/d</span>{" "}
-          <span>{moment(couponData.couponExpire).format("DD MMM YYYY")}</span>
-        </p>
-      </div>
+    <div className="border-accent-custom flex w-full items-center gap-2 rounded-md border pl-2">
+      <Checkbox
+        id={`${couponData.couponName}`}
+        onCheckedChange={() => handleAddCoupon(couponData)}
+      />
+      <label htmlFor={`${couponData.couponName}`} className="flex w-full">
+        <div className="flex w-2/3 flex-col justify-center gap-2 px-2 py-1">
+          <div>
+            <p className="text-sm font-medium">{couponData.couponName}</p>
+            <p className="text-xs text-gray-500">{couponData.couponDesc}</p>
+          </div>
+          <p className="text-xs font-medium text-teal-500">
+            {couponValueHelper(couponData.couponValue, couponData.couponType)}
+          </p>
+        </div>
+        <div className="border-accent-custom flex w-1/3 flex-col items-center justify-center border-0 border-l">
+          <Ticket size={32} strokeWidth={1} />
+          <p className="flex flex-col text-[10px] text-gray-500">
+            <span>Berlaku s/d</span>{" "}
+            <span>{moment(couponData.couponExpire).tz("Asia/Jakarta").format("DD MMM YYYY")}</span>
+          </p>
+        </div>
+      </label>
     </div>
   );
 };

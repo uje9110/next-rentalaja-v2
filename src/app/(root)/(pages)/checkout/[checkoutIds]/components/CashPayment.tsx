@@ -1,6 +1,6 @@
 import { ClientStoreOrderPaymentType } from "@/app/lib/types/store_order_payment_type";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
-import moment from "moment";
+import moment from "moment-timezone";
 import React, { FC } from "react";
 
 const CashPayment: FC<{ payment: ClientStoreOrderPaymentType }> = ({
@@ -14,7 +14,7 @@ const CashPayment: FC<{ payment: ClientStoreOrderPaymentType }> = ({
       <div className="flex w-full flex-col items-start justify-start gap-2 p-2 text-xs">
         <p className="flex w-full justify-between">
           <span>Tanggal: </span>
-          <span>{moment(payment.createdAt).format("DD MMMM YYYY, HH:mm")}</span>
+          <span>{moment(payment.createdAt).tz("Asia/Jakarta").format("DD MMMM YYYY, HH:mm")}</span>
         </p>
         <p className="flex w-full justify-between">
           <span>Metode:</span>

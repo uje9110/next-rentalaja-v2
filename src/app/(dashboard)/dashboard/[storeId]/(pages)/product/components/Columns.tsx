@@ -1,7 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import imagePlaceholder from "@/app/assets/img/icon/image-placeholder.jpg";
-import moment from "moment";
+import moment from "moment-timezone";
 import clsx from "clsx";
 import Image from "next/image";
 import { useState } from "react";
@@ -116,7 +116,7 @@ export const getColumns = (
         return <p className="text-xs">Tgl Dibuat</p>;
       },
       cell: ({ row }) => {
-        const value = moment(row.getValue("createdAt")).format("DD MMM YYYY");
+        const value = moment(row.getValue("createdAt")).tz("Asia/Jakarta").format("DD MMM YYYY");
         return <p className="text-xs">{value}</p>;
       },
     },

@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
-import moment from "moment";
+import moment from "moment-timezone";
 import { usePathname, useRouter } from "next/navigation";
 
 type AddItemToCartButtonProps = {
@@ -77,11 +77,11 @@ const AddItemToCartButton: FC<AddItemToCartButtonProps> = ({
                 <span className="font-semibold">Rental Mulai:</span>{" "}
                 {moment(
                   orderItemData.rentalDetails.rentalStartInLocaleMs,
-                ).format("DD MMMM YYYY, HH:mm")}
+                ).tz("Asia/Jakarta").format("DD MMMM YYYY, HH:mm")}
               </p>
               <p>
                 <span className="font-semibold">Rental Berakhir:</span>{" "}
-                {moment(orderItemData.rentalDetails.rentalEndInLocaleMs).format(
+                {moment(orderItemData.rentalDetails.rentalEndInLocaleMs).tz("Asia/Jakarta").format(
                   "DD MMMM YYYY, HH:mm",
                 )}
               </p>

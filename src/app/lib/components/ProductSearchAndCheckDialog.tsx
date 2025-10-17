@@ -9,7 +9,7 @@ import { GlobalCategoryType } from "@/app/lib/types/global_category_types";
 import { useRouter } from "next/navigation";
 import { GlobalStoreHandler } from "@/app/lib/utils/api-call/GlobalStoreHandler";
 import { ByCityGlobalStoreType } from "@/app/lib/types/global_store_types";
-import moment from "moment";
+import moment from "moment-timezone";
 
 const SearchAndCheckDialog = ({
   isUsingDashboard = false,
@@ -43,14 +43,14 @@ const SearchAndCheckDialog = ({
 
     if (dateStart) {
       // dateStart is already "DD-MM-YYYY HH:mm:ss"
-      const isoStart = moment(dateStart, "DD-MM-YYYY HH:mm:ss").format(
+      const isoStart = moment(dateStart, "DD-MM-YYYY HH:mm:ss").tz("Asia/Jakarta").format(
         "YYYY-MM-DDTHH:mm:ss",
       );
       params.set("bookingStart", isoStart);
     }
 
     if (dateEnd) {
-      const isoEnd = moment(dateEnd, "DD-MM-YYYY HH:mm:ss").format(
+      const isoEnd = moment(dateEnd, "DD-MM-YYYY HH:mm:ss").tz("Asia/Jakarta").format(
         "YYYY-MM-DDTHH:mm:ss",
       );
       params.set("bookingEnd", isoEnd);
@@ -117,7 +117,7 @@ const SearchAndCheckDialog = ({
             <CalendarIcon className="text-primary h-4 w-4" />
             <p>
               <span className="text-foreground font-medium">Mulai:</span>{" "}
-              {moment(dateStart).format("DD MMM YYYY")}
+              {moment(dateStart).tz("Asia/Jakarta").format("DD MMM YYYY")}
             </p>
           </div>
         )}
@@ -126,7 +126,7 @@ const SearchAndCheckDialog = ({
             <CalendarIcon className="text-primary h-4 w-4" />
             <p>
               <span className="text-foreground font-medium">Akhir:</span>{" "}
-              {moment(dateEnd).format("DD MMM YYYY")}
+              {moment(dateEnd).tz("Asia/Jakarta").format("DD MMM YYYY")}
             </p>
           </div>
         )}

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { FC } from "react";
 import qrisLogo from "@/app/assets/img/logo/qris.png";
-import moment from "moment";
+import moment from "moment-timezone";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
 import { ClientStoreOrderPaymentType } from "@/app/lib/types/store_order_payment_type";
 import { ClientStoreOrderType } from "@/app/lib/types/store_order_type";
@@ -73,9 +73,9 @@ export const QrisPayment: FC<{
               <p className="text-sm text-slate-600">
                 Expire:{" "}
                 <span>
-                  {moment(
-                    payment.xenditPayment?.channel_properties?.expires_at,
-                  ).format("DD MMMM YYYY, HH:mm")}
+                  {moment(payment.xenditPayment?.channel_properties?.expires_at)
+                    .tz("Asia/Jakarta")
+                    .format("DD MMMM YYYY, HH:mm")}
                 </span>
               </p>
             )}
@@ -129,9 +129,9 @@ export const QrisPayment: FC<{
           <p className="flex w-full justify-between">
             <span>Tanggal: </span>
             <span>
-              {moment(payment.xenditPayment?.created).format(
-                "DD MMMM YYYY, HH:mm",
-              )}
+              {moment(payment.xenditPayment?.created)
+                .tz("Asia/Jakarta")
+                .format("DD MMMM YYYY, HH:mm")}
             </span>
           </p>
           <p className="flex w-full justify-between">

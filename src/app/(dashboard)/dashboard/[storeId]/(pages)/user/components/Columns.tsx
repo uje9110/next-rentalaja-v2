@@ -1,7 +1,7 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import customerPlaceholder from "@/app/assets/img/icon/customer-placeholder.webp";
-import moment from "moment";
+import moment from "moment-timezone";
 import Link from "next/link";
 import { ClientStoreUserType } from "@/app/lib/types/store_user_type";
 import { ImageWithFallback } from "@/app/lib/components/ImageWithFallback";
@@ -71,7 +71,7 @@ export const getColumns = (): ColumnDef<ClientStoreUserType>[] => {
               <p className="text-[10px] text-slate-600">
                 <span>Dibuat:</span>{" "}
                 <span className="italic">
-                  {moment(createdAt).format("DD MMMM YYYY")}
+                  {moment(createdAt).tz("Asia/Jakarta").format("DD MMMM YYYY")}
                 </span>
               </p>
             </div>

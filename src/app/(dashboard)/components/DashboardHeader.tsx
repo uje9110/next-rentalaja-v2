@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Clock, SearchCheck } from "lucide-react";
 import { useParams, usePathname } from "next/navigation";
-import moment from "moment";
+import moment from "moment-timezone";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import SelectStore from "./SelectStore";
 import SearchAndCheckDialog from "@/app/lib/components/ProductSearchAndCheckDialog";
@@ -21,7 +21,7 @@ const DashboardHeader = () => {
 
   const pageTitle = useRef<HTMLHeadingElement>(null);
 
-  const [time, setTime] = useState(moment().format("HH:mm:ss"));
+  const [time, setTime] = useState(moment().tz("Asia/Jakarta").format("HH:mm:ss"));
 
   // PAGE TITLE
   useEffect(() => {
@@ -43,7 +43,7 @@ const DashboardHeader = () => {
   // CLOCK
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(moment().format("HH:mm:ss"));
+      setTime(moment().tz("Asia/Jakarta").format("HH:mm:ss"));
     }, 1000);
 
     return () => clearInterval(interval);

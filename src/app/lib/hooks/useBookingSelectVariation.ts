@@ -1,6 +1,6 @@
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { StoreOrderItemType } from "../types/store_order_item_type";
-import moment from "moment";
+import moment from "moment-timezone";
 import { ClientStoreProductStockType } from "../types/store_product_stock_type";
 
 type useBookingSelectVariation = {
@@ -41,8 +41,8 @@ export function useBookingSelectVariation({
         rentalDetails: {
           ...prevState.rentalDetails,
           rentalEndInLocaleMs: rentalEndInMs,
-          rentalEndDate: moment(rentalEndInMs).format("YYYY-MM-DD"),
-          rentalEndTime: moment(rentalEndInMs).format("HH:mm"),
+          rentalEndDate: moment(rentalEndInMs).tz("Asia/Jakarta").format("YYYY-MM-DD"),
+          rentalEndTime: moment(rentalEndInMs).tz("Asia/Jakarta").format("HH:mm"),
         },
       };
     });

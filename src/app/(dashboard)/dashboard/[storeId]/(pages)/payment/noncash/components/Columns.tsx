@@ -7,7 +7,7 @@ import {
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
 import { ColumnDef } from "@tanstack/react-table";
 import { Rocket, Clock, CheckCircle, XCircle, Ban, Undo2 } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
 import Link from "next/link";
 import { JSX } from "react";
 
@@ -92,7 +92,7 @@ export const getColumns = (): ColumnDef<XenditTransaction>[] => {
         const value = row.original.created;
         return (
           <span className="text-xs">
-            {moment(value).format("DD MMM YYYY, HH:mm")}
+            {moment(value).tz("Asia/Jakarta").format("DD MMM YYYY, HH:mm")}
           </span>
         );
       },

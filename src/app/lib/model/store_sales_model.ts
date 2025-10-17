@@ -4,7 +4,7 @@ import {
   StoreSalesType,
 } from "../types/store_sales_types";
 import { QueryHandler, QueryValue } from "../utils/QueryHandler";
-import moment from "moment";
+import moment from "moment-timezone";
 import { StoreOrderType } from "../types/store_order_type";
 import { StoreOrderItemType } from "../types/store_order_item_type";
 import { CurrencyHandlers } from "../utils/CurrencyHandler";

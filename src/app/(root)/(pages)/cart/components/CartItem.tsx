@@ -6,7 +6,7 @@ import {
 } from "@/app/lib/types/client_cart_types";
 import { StoreOrderItemType } from "@/app/lib/types/store_order_item_type";
 import { Loader2, Pencil, Store, Trash } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -184,9 +184,9 @@ export const CartItem: React.FC<CartItemProps> = ({
                                     Mulai: &nbsp;
                                   </p>
                                   <div className="text-[8px] text-gray-400 lg:text-sm">
-                                    {moment(
-                                      rentalDetails.rentalStartInLocaleMs,
-                                    ).format("DD MMM YYYY HH:mm")}
+                                    {moment(rentalDetails.rentalStartInLocaleMs)
+                                      .tz("Asia/Jakarta")
+                                      .format("DD MMM YYYY HH:mm")}
                                   </div>
                                 </div>
 
@@ -195,9 +195,9 @@ export const CartItem: React.FC<CartItemProps> = ({
                                     Selesai: &nbsp;
                                   </p>
                                   <div className="text-[8px] text-gray-400 lg:text-sm">
-                                    {moment(
-                                      rentalDetails.rentalEndInLocaleMs,
-                                    ).format("DD MMM YYYY HH:mm")}
+                                    {moment(rentalDetails.rentalEndInLocaleMs)
+                                      .tz("Asia/Jakarta")
+                                      .format("DD MMM YYYY HH:mm")}
                                   </div>
                                 </div>
                               </div>

@@ -7,7 +7,7 @@ import {
   CalendarArrowDown,
 } from "lucide-react";
 import clsx from "clsx";
-import moment from "moment";
+import moment from "moment-timezone";
 import Link from "next/link";
 import { ClientStoreOrderType } from "@/app/lib/types/store_order_type";
 import { StoreOrderBillingType } from "@/app/lib/types/store_order_billing_type";
@@ -32,8 +32,8 @@ export const columns: ColumnDef<ClientStoreOrderType>[] = [
     },
     cell: ({ row }) => {
       const value = new Date(row.getValue("createdAt"));
-      const formattedDay = moment(value).format("DD MMM YYYY");
-      const formattedHour = moment(value).format("HH:mm");
+      const formattedDay = moment(value).tz("Asia/Jakarta").format("DD MMM YYYY");
+      const formattedHour = moment(value).tz("Asia/Jakarta").format("HH:mm");
       return (
         <p className="flex gap-1 text-xs">
           <span className="">{formattedDay},</span>
@@ -112,7 +112,7 @@ export const columns: ColumnDef<ClientStoreOrderType>[] = [
                 <div className="flex items-center gap-0 pl-3 text-xs">
                   <p className="flex w-[140px] items-center justify-center gap-1 rounded-sm bg-green-500 px-[6px] py-1 text-center font-semibold text-white">
                     <CalendarArrowUp size={14} />
-                    {moment(rentalDetails.rentalStartInLocaleMs).format(
+                    {moment(rentalDetails.rentalStartInLocaleMs).tz("Asia/Jakarta").format(
                       "DD-MM-YYYY, HH:mm",
                     )}
                   </p>
@@ -121,7 +121,7 @@ export const columns: ColumnDef<ClientStoreOrderType>[] = [
                   </span>
                   <p className="flex w-[140px] items-center justify-center gap-1 rounded-sm bg-red-500 px-[6px] py-1 text-center font-semibold text-white">
                     <CalendarArrowDown size={14} />
-                    {moment(rentalDetails.rentalEndInLocaleMs).format(
+                    {moment(rentalDetails.rentalEndInLocaleMs).tz("Asia/Jakarta").format(
                       "DD-MM-YYYY, HH:mm",
                     )}
                   </p>

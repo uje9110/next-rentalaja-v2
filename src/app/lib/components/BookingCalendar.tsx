@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import { daysArr, monthArr } from "../const/MonthAndDays";
 import { ClientStoreProductStockType } from "../types/store_product_stock_type";
 import { ClientStoreProductType } from "../types/store_product_type";
-import moment from "moment";
+import moment from "moment-timezone";
 
 type BookingCalendarProps = {
   selectedDate: string;
@@ -219,7 +219,7 @@ const BookingCalendar: FC<BookingCalendarProps> = ({
             <p className="flex items-center justify-center gap-2 text-sm font-medium text-teal-400">
               <span className="text-black">---</span>
               <span>
-                Waktu Mulai: {moment(selectedDate).format("DD MMMM YYYY")}
+                Waktu Mulai: {moment(selectedDate).tz("Asia/Jakarta").format("DD MMMM YYYY")}
               </span>
               <span className="text-black">---</span>
             </p>

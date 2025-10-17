@@ -6,7 +6,7 @@ import { ClientStoreOrderType } from "@/app/lib/types/store_order_type";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
 import axios from "axios";
 import { Eye, Send } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Session } from "next-auth";
 import Image from "next/image";
 import React, {
@@ -120,7 +120,7 @@ const PaymentsDetailDialog: FC<PaymentDetailsDialogType> = ({
             return (
               <tr key={_id}>
                 <td className="w-[calc(100%/8)] py-2 text-center">
-                  {moment(createdAt).format("DD MMM YYYY, HH:mm")}
+                  {moment(createdAt).tz("Asia/Jakarta").format("DD MMM YYYY, HH:mm")}
                 </td>
                 <td className="w-[calc(100%/8)] py-2 text-center">
                   {CurrencyHandlers.changeToLocaleCurrency(paymentAmount)}
@@ -167,7 +167,7 @@ const PaymentsDetailDialog: FC<PaymentDetailsDialogType> = ({
                   {isUsingXendit
                     ? moment(
                         xenditPayment?.channel_properties.expires_at,
-                      ).format("DD MMM YYYY, HH:mm")
+                      ).tz("Asia/Jakarta").format("DD MMM YYYY, HH:mm")
                     : "-"}
                 </td>
                 <td className="w-[calc(100%/8)] py-2 text-center">

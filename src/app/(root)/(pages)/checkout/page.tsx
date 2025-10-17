@@ -68,7 +68,9 @@ const Page = () => {
             />
           )}
 
-          {/* {session ? <CheckoutCoupon /> : null} */}
+          {/* {session ? (
+            <CheckoutCoupon checkout={checkout} setCheckout={setCheckout} />
+          ) : null} */}
 
           {/* --- Detail --- */}
           <CheckoutDetail />

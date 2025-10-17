@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import logoBlack from "@/app/assets/img/logo/logo-rental-aja-black.png";
 import { Session } from "next-auth";
 import { useReactToPrint } from "react-to-print";
@@ -66,7 +66,7 @@ const Invoice: React.FC<InvoiceInterface> = ({ order, session }) => {
           <h3 className="w-full text-center text-base font-semibold">
             Invoice Penyewaan
           </h3>
-          <p>{moment(Date.now()).format("DD-MM-YYYY, HH:mm")}</p>
+          <p>{moment(Date.now()).tz("Asia/Jakarta").format("DD-MM-YYYY, HH:mm")}</p>
           <p>
             Cashier: &nbsp; {session.user.firstName} {session.user.lastName}
           </p>
@@ -151,11 +151,11 @@ const Invoice: React.FC<InvoiceInterface> = ({ order, session }) => {
                     <div className="flex flex-col justify-between font-semibold">
                       <span>Waktu Rental:</span>
                       <span>
-                        {moment(rentalDetails.rentalStartInLocaleMs).format(
+                        {moment(rentalDetails.rentalStartInLocaleMs).tz("Asia/Jakarta").format(
                           "DD-MM-YYYYTHH:mm",
                         )}
                         {" - "}
-                        {moment(rentalDetails.rentalEndInLocaleMs).format(
+                        {moment(rentalDetails.rentalEndInLocaleMs).tz("Asia/Jakarta").format(
                           "DD-MM-YYYYTHH:mm",
                         )}
                       </span>

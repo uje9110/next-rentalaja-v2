@@ -92,7 +92,7 @@ const SalesAnalyticPerProductTable = ({
         </p>
         <div className="flex flex-col gap-0">
           <p className="text-sm font-semibold">Performa Produk Teratas</p>
-          {/* <p className="text-xs text-slate-500">{`Periode ${moment(date?.from).format("DD MMMM YYYY")} sampai ${moment(date?.to).format("DD MMMM YYYY")}`}</p> */}
+          {/* <p className="text-xs text-slate-500">{`Periode ${moment(date?.from). .tz("Asia/Jakarta").format("DD MMMM YYYY")} sampai ${moment(date?.to). .tz("Asia/Jakarta").format("DD MMMM YYYY")}`}</p> */}
         </div>
       </div>
       <div className="rounded-sm border border-slate-400/50">

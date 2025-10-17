@@ -1,6 +1,6 @@
 "use client";
 import { FC } from "react";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Session } from "next-auth";
 import { Banknote, Logs, Plus, ReceiptText, Send } from "lucide-react";
 import {
@@ -118,7 +118,7 @@ const SingleOrderSidebar: FC<SingleOrderSidebarProps> = ({ orderData }) => {
                       </div>
                     </div>
                     <p className="text-[10px] text-slate-700">
-                      {moment(createdAt).format("DD-MM-YYYY HH:mm")}
+                      {moment(createdAt).tz("Asia/Jakarta").format("DD-MM-YYYY HH:mm")}
                     </p>
                   </li>
                 );
@@ -205,7 +205,7 @@ const SingleOrderSidebar: FC<SingleOrderSidebarProps> = ({ orderData }) => {
                     </p>
                     <p className="">{note}</p>
                     <p className="text-[10px] text-slate-700">
-                      {moment(createdAt).format("DD-MM-YYYY HH:mm")}
+                      {moment(createdAt).tz("Asia/Jakarta").format("DD-MM-YYYY HH:mm")}
                     </p>
                   </li>
                 );
@@ -240,7 +240,7 @@ const SingleOrderSidebar: FC<SingleOrderSidebarProps> = ({ orderData }) => {
                     </p>
                     <p className="">{updateInfo}</p>
                     <p className="text-[10px] text-slate-700">
-                      {moment(updateTime).format("DD-MM-YYYY HH:mm")}
+                      {moment(updateTime).tz("Asia/Jakarta").format("DD-MM-YYYY HH:mm")}
                     </p>
                   </li>
                 );

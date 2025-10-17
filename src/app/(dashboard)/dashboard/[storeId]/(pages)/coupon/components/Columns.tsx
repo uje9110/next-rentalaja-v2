@@ -2,7 +2,7 @@ import { GlobalCouponType } from "@/app/lib/types/global_coupon_type";
 import { CurrencyHandlers } from "@/app/lib/utils/CurrencyHandler";
 import { ColumnDef } from "@tanstack/react-table";
 import { FileDigit, Percent } from "lucide-react";
-import moment from "moment";
+import moment from "moment-timezone";
 
 export const getColumn = (): ColumnDef<GlobalCouponType>[] => {
   return [
@@ -83,7 +83,7 @@ export const getColumn = (): ColumnDef<GlobalCouponType>[] => {
         const value = row.original.couponExpire;
         return (
           <span className="text-xs">
-            {moment(value).format("DD MMM YYYY, HH:mm")}
+            {moment(value).tz("Asia/Jakarta").format("DD MMM YYYY, HH:mm")}
           </span>
         );
       },
