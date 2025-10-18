@@ -13,6 +13,7 @@ import { ClientCartType } from "../types/client_cart_types";
 import { ClientCheckoutType } from "../types/client_checkout_type";
 import { CurrencyHandlers } from "../utils/CurrencyHandler";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 type CartContextProps = {
   cart: ClientCartType[];
@@ -28,6 +29,9 @@ const CartContext = createContext<CartContextProps | undefined>(undefined);
 
 export const CartContextProvider = ({ children }: { children: ReactNode }) => {
   const { data: session } = useSession();
+
+  const pathname = usePathname();
+
   const [cart, setCart] = useLocalStorageState<ClientCartType[]>("cart", []);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState<boolean>(false);
   const [checkout, setCheckout] = useLocalStorageState<ClientCheckoutType>(
@@ -55,6 +59,9 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
 
   // Assign Billing If Session Exist
   useEffect(() => {
+    // check wheter it's in dashboard or not
+    if (pathname.includes("dashboard")) return;
+
     setCheckout((prev) => {
       return {
         ...prev,

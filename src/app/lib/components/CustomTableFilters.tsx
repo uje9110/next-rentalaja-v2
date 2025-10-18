@@ -1,5 +1,5 @@
 "use client";
-import { Eye, Filter, LucideIcon } from "lucide-react";
+import { Eye, Filter, FilterX, LucideIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { Table } from "@tanstack/react-table";
 import {
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useCustomTableFilter } from "../hooks/useCustomTableFilter";
+import { usePathname, useRouter } from "next/navigation";
 
 // Shared
 interface BaseFilterProps {
@@ -44,9 +45,13 @@ interface dateTimePickerFilter extends BaseFilterProps {
   filterType: "dateTimePicker";
   dateFilterValues?: DateRange;
 }
+interface resetFilter extends BaseFilterProps {
+  filterType: "reset";
+}
 
 // Final union
 export type CustomTableFilterProps =
+  | resetFilter
   | SearchFilter
   | SelectFilter
   | dateTimePickerFilter;
@@ -60,6 +65,8 @@ export const CustomTableFilter = <TData,>({
   pageTitle: string;
   table?: Table<TData>;
 }) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const { filterBuilderHelper } = useCustomTableFilter(filterData);
 
   return (

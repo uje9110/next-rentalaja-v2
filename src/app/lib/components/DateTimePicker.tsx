@@ -24,8 +24,16 @@ export function DateTimePicker({
   setDate,
   textSize = "",
 }: DateTimePickerProps) {
+  const newDate = new Date(date ?? "");
   const [open, setOpen] = useState(false);
-  const [time, setTime] = useState("07:00");
+  const [time, setTime] = useState(() => {
+    const hours = String(newDate.getHours()).padStart(2, "0");
+    const minutes = String(newDate.getMinutes()).padStart(2, "0");
+    if (newDate) {
+      return `${hours}:${minutes}`;
+    }
+    return `07:00`;
+  });
 
   // Combine date + time → return string
   const combineDateTime = (
@@ -55,7 +63,9 @@ export function DateTimePicker({
                 textSize,
               )}
             >
-              {date ? moment(date).tz("Asia/Jakarta").format("DD MMM YYYY") : "Pilih Tanggal"}
+              {date
+                ? moment(date).tz("Asia/Jakarta").format("DD MMM YYYY")
+                : "Pilih Tanggal"}
               <ChevronDownIcon />
             </Button>
           </PopoverTrigger>

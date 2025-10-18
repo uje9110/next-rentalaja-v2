@@ -386,6 +386,8 @@ StoreOrderSchema.statics.getAllStoreOrder = async function (
     "customerID",
   ]);
 
+  const productId = filters.productId;
+
   const { limit, page, sortBy, sortOrder } = Query.getPaginationParams();
   const { dateBy, dateStart, dateEnd, dateStartInMs, dateEndInMs } =
     Query.getDateParams();
@@ -394,62 +396,100 @@ StoreOrderSchema.statics.getAllStoreOrder = async function (
     filters.customerID = new ObjectId(filters.customerID);
   }
 
-  if (dateBy) {
-    switch (dateBy) {
-      case "byRentalStartIs":
-        filters = {
-          ...filters,
-          "items.rentalDetails.rentalStartInLocaleMs": {
-            $gte: dateStartInMs,
-            $lte: dateEndInMs,
-          },
-        };
-        break;
-      case "byRentalEndIs":
-        filters = {
-          ...filters,
-          "items.rentalDetails.rentalEndInLocaleMs": {
-            $gte: dateStartInMs,
-            $lte: dateEndInMs,
-          },
-        };
-        break;
-      case "createdAt":
-        filters = {
-          ...filters,
-          createdAt: {
-            $gte: dateStart,
-            $lte: dateEnd,
-          },
-        };
-        break;
-      default:
-        filters = {
-          ...filters,
-        };
-        break;
-    }
-  }
+  let matchPipeline;
 
-  const matchPipeline = (filters.search && {
-    "billing.firstName": {
-      $regex: filters.search,
-      $options: "i",
-    },
-  }) || {
-    ...(filters && filters),
-  };
+  if (filters.search) {
+    matchPipeline = {
+      "billing.firstName": {
+        $regex: filters.search,
+        $options: "i",
+      },
+    };
+  } else if (productId) {
+    delete filters.productId
+    matchPipeline = {
+      ...filters,
+      "items.itemID": { $regex: productId, $options: "i" },
+    };
+  } else {
+    matchPipeline = filters;
+  }
 
   const pipeline: PipelineStage[] = [
     {
       $match: matchPipeline,
     },
+    { $unwind: "$items" },
+  ];
+
+  if (dateBy) {
+    switch (dateBy) {
+      case "byRentalStartIs":
+        pipeline.push({
+          $match: {
+            "items.rentalDetails.rentalStartInLocaleMs": {
+              $gte: dateStartInMs,
+              $lte: dateEndInMs,
+            },
+          },
+        });
+        break;
+      case "byRentalEndIs":
+        pipeline.push({
+          $match: {
+            "items.rentalDetails.rentalEndInLocaleMs": {
+              $gte: dateStartInMs,
+              $lte: dateEndInMs,
+            },
+          },
+        });
+        break;
+      case "createdAt":
+        pipeline.push({
+          $match: {
+            createdAt: {
+              $gte: dateStart,
+              $lte: dateEnd,
+            },
+          },
+        });
+        break;
+      default:
+        pipeline.push({
+          $match: {
+            ...filters,
+          },
+        });
+        break;
+    }
+  }
+
+  pipeline.push(
+    {
+      $group: {
+        _id: "$_id",
+        items: { $push: "$items" },
+        paymentIds: { $first: "$paymentIds" },
+        discountIds: { $first: "$discountIds" },
+        createdAt: { $first: "$createdAt" },
+        billing: { $first: "$billing" },
+        total: { $first: "$total" },
+        subtotal: { $first: "$subtotal" },
+        status: { $first: "$status" },
+        paymentStatus: { $first: "$paymentStatus" },
+        storeDetail: { $first: "$storeDetail" },
+      },
+    },
     { $sort: { [sortBy]: sortOrder } },
     { $skip: (page - 1) * limit },
     { $limit: limit },
-  ];
+  );
+
+  console.log(pipeline);
 
   const orders = await this.aggregate(pipeline);
+  // console.log(orders);
+  
 
   return orders;
 };
@@ -475,11 +515,8 @@ StoreOrderSchema.statics.addPaymentToStoreOrder = async function (
   });
 
   let newPaymentStatus;
-  console.log(payment.paymentMethod);
   if (payment.paymentMethod === "Cash") {
     const amount = payment.paymentAmount ?? 0;
-    console.log(amount);
-
     newPaymentStatus = CurrencyHandlers.getOrderPaymentStatus(
       orderTotal,
       amount,

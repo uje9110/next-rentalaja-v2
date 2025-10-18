@@ -1,3 +1,4 @@
+"use client";
 import { useUpdateSearchParam } from "@/app/(root)/hooks/useUpdateSearchParam";
 import { useEffect, useState } from "react";
 import { CustomTableFilterProps } from "../components/CustomTableFilters";
@@ -14,11 +15,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon, ChevronDown } from "lucide-react";
+import { CalendarIcon, ChevronDown, FilterX } from "lucide-react";
 import { DateTimePicker } from "../components/DateTimePicker";
 import moment from "moment-timezone";
+import { usePathname, useRouter } from "next/navigation";
 
 export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
+  const router = useRouter();
+  const pathname = usePathname();
   const { searchParams, updateSearchParam, updateSearchParams } =
     useUpdateSearchParam();
 
@@ -40,23 +44,32 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
     return undefined;
   });
 
+  //  default data initial
+  // useEffect(() => {
+  //   const defaultFilter: Record<string, string | Date> = {};
+  //   filterData.forEach((filter) => {
+  //     if (filter.defaultValue) {
+  //       if (filter.filterName === "dateRange") {
+  //         Object.entries(filter.defaultValue as object).forEach(
+  //           ([key, value]) => {
+  //             defaultFilter[key] = new Date(value);
+  //           },
+  //         );
+  //       } else {
+  //         defaultFilter[filter.filterName] = filter.defaultValue as string;
+  //       }
+  //     }
+  //   });
+  //   setFilters(defaultFilter);
+  // }, [filterData]);
+
   useEffect(() => {
-    const defaultFilter: Record<string, string | Date> = {};
-    filterData.forEach((filter) => {
-      if (filter.defaultValue) {
-        if (filter.filterName === "dateRange") {
-          Object.entries(filter.defaultValue as object).forEach(
-            ([key, value]) => {
-              defaultFilter[key] = new Date(value);
-            },
-          );
-        } else {
-          defaultFilter[filter.filterName] = filter.defaultValue as string;
-        }
-      }
+    searchParams.entries().forEach(([key, value]) => {
+      setFilters((prev) => {
+        return { ...prev, [key]: value };
+      });
     });
-    setFilters(defaultFilter);
-  }, [filterData]);
+  }, [pathname, searchParams]);
 
   // Initialize from searchParams on first mount
   useEffect(() => {
@@ -81,23 +94,44 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
   // // 🟢 Date effects
   useEffect(() => {
     if (dateStart) {
-      const isoStart = moment(dateStart).tz("Asia/Jakarta").format("YYYY-MM-DDTHH:mm:ss");
+      const isoStart = moment(dateStart)
+        .tz("Asia/Jakarta")
+        .format("YYYY-MM-DDTHH:mm:ss");
       updateSearchParam("dateStart", isoStart);
     }
   }, [dateStart]);
 
   useEffect(() => {
     if (dateEnd) {
-      const isoEnd = moment(dateEnd).tz("Asia/Jakarta").format("YYYY-MM-DDTHH:mm:ss");
+      const isoEnd = moment(dateEnd)
+        .tz("Asia/Jakarta")
+        .format("YYYY-MM-DDTHH:mm:ss");
       updateSearchParam("dateEnd", isoEnd);
     }
   }, [dateEnd]);
+
+  const resetFilter = () => {
+    setFilters({});
+    router.push(pathname);
+  };
 
   const filterBuilderHelper = (
     filter: CustomTableFilterProps,
     classname: string,
   ) => {
     switch (filter.filterType) {
+      case "reset":
+        return (
+          <button
+            key={filter.filterName}
+            className="flex w-10 cursor-pointer items-center justify-center rounded-md bg-red-500 text-white"
+            onClick={() => {
+              resetFilter();
+            }}
+          >
+            <FilterX />
+          </button>
+        );
       case "search":
         return (
           <div
@@ -112,7 +146,7 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
                   [filter.filterName]: e.target.value,
                 }))
               }
-              value={(filters.search as string) ?? ""}
+              value={filters.search as string}
               placeholder={filter.filterTitle}
               className="border-none px-1 text-xs shadow-none placeholder:text-xs focus-visible:ring-0"
             />
@@ -122,11 +156,7 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
         return (
           <Select
             key={filter.filterTitle}
-            value={
-              (filters[filter.filterName] as string) ??
-              filter.defaultValue ??
-              ""
-            }
+            value={filters[filter.filterName] as string}
             onValueChange={(value) =>
               setFilters((prev) => ({
                 ...prev,
@@ -166,8 +196,13 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
                   {dateStart ? (
                     dateEnd ? (
                       <>
-                        {moment(dateStart).tz("Asia/Jakarta").format("DD MMM YYYY")} -{" "}
-                        {moment(dateEnd).tz("Asia/Jakarta").format("DD MMM YYYY")}
+                        {moment(dateStart)
+                          .tz("Asia/Jakarta")
+                          .format("DD MMM YYYY")}{" "}
+                        -{" "}
+                        {moment(dateEnd)
+                          .tz("Asia/Jakarta")
+                          .format("DD MMM YYYY")}
                       </>
                     ) : (
                       moment(dateStart).tz("Asia/Jakarta").format("DD MMM YYYY")

@@ -6,9 +6,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
+  Box,
   CalendarCheck,
   CalendarIcon,
   FileDigit,
+  FilterX,
   ListCheck,
   Search,
 } from "lucide-react";
@@ -18,6 +20,7 @@ import {
   CustomTableFilterProps,
 } from "@/app/lib/components/CustomTableFilters";
 import CustomDataTable from "@/app/lib/components/CustomDataTable";
+import { ProductIds } from "@/app/lib/const/ProductIds";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,10 +39,25 @@ export const OrderTable = <TData, TValue>({
 
   const filterData = [
     {
+      filterType: "reset",
+      filterIcon: FilterX,
+      filterName: "reset",
+      filterTitle: "",
+    },
+    {
       filterType: "search",
       filterIcon: Search,
       filterName: "search",
       filterTitle: "Cari Nama Pelanggan",
+    },
+    {
+      filterType: "select",
+      filterIcon: Box,
+      filterName: "productId",
+      filterTitle: "Produk",
+      filterValues: ProductIds.map((id) => {
+        return { label: id.name, value: id.value };
+      }),
     },
     {
       filterType: "select",
@@ -91,7 +109,7 @@ export const OrderTable = <TData, TValue>({
   ] as const satisfies CustomTableFilterProps[];
 
   return (
-    <div className="phone:w-[calc(100vw-1.5rem)] lg:w-full flex flex-col gap-4 rounded-md border border-slate-400/50 bg-white p-4">
+    <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 rounded-md border border-slate-400/50 bg-white p-4 lg:w-full">
       {/* filter */}
       <CustomTableFilter
         filterData={filterData}
