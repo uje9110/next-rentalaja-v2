@@ -379,7 +379,7 @@ StoreOrderSchema.statics.getAllStoreOrder = async function (
 ) {
   const Query = new QueryHandler(searchParams.toString());
 
-  let filters: Record<string, QueryValue | ObjectId> = Query.getFilterParams([
+  const filters: Record<string, QueryValue | ObjectId> = Query.getFilterParams([
     "productId",
     "status",
     "search",
