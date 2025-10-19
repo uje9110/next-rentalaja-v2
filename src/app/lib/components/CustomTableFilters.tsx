@@ -65,8 +65,6 @@ export const CustomTableFilter = <TData,>({
   pageTitle: string;
   table?: Table<TData>;
 }) => {
-  const router = useRouter();
-  const pathname = usePathname();
   const { filterBuilderHelper } = useCustomTableFilter(filterData);
 
   return (

@@ -406,7 +406,7 @@ StoreOrderSchema.statics.getAllStoreOrder = async function (
       },
     };
   } else if (productId) {
-    delete filters.productId
+    delete filters.productId;
     matchPipeline = {
       ...filters,
       "items.itemID": { $regex: productId, $options: "i" },
@@ -485,11 +485,7 @@ StoreOrderSchema.statics.getAllStoreOrder = async function (
     { $limit: limit },
   );
 
-  console.log(pipeline);
-
   const orders = await this.aggregate(pipeline);
-  // console.log(orders);
-  
 
   return orders;
 };

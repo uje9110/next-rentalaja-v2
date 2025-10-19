@@ -1,6 +1,6 @@
 "use client";
 import { useUpdateSearchParam } from "@/app/(root)/hooks/useUpdateSearchParam";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CustomTableFilterProps } from "../components/CustomTableFilters";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,23 +26,38 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
   const { searchParams, updateSearchParam, updateSearchParams } =
     useUpdateSearchParam();
 
-  const [filters, setFilters] = useState<Record<string, string | Date>>({});
-
-  const [dateStart, setDateStart] = useState<Date | undefined>(() => {
-    const dateString = searchParams.get("dateStart");
-    if (dateString) {
-      return new Date(dateString);
-    }
-    return undefined;
+  const [filters, setFilters] = useState<
+    Record<string, string | Date | undefined>
+  >(() => {
+    if (typeof window === "undefined") return {};
+    const params = new URLSearchParams(window.location.search);
+    const obj: Record<string, string | Date> = {};
+    params.forEach((value, key) => {
+      const decoded = decodeURIComponent(value);
+      obj[key] = decoded;
+    });
+    return obj;
   });
+  
+  const updateQuery = useCallback(
+    (queryObj: Record<string, string | Date | undefined>) => {
+      const str = Object.entries(queryObj)
+        .filter(([_, value]) => value != null && value !== "")
+        .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
+        .join("&");
 
-  const [dateEnd, setDateEnd] = useState<Date | undefined>(() => {
-    const dateString = searchParams.get("dateEnd");
-    if (dateString) {
-      return new Date(dateString);
-    }
-    return undefined;
-  });
+      const newUrl = `${pathname}?${str}`;
+      const current = window.location.search
+        ? `${pathname}${window.location.search}`
+        : pathname;
+
+      // Avoid redundant navigation
+      if (newUrl === current) return;
+
+      router.replace(newUrl, { scroll: false });
+    },
+    [filters, pathname, router],
+  );
 
   //  default data initial
   // useEffect(() => {
@@ -64,55 +79,13 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
   // }, [filterData]);
 
   useEffect(() => {
-    searchParams.entries().forEach(([key, value]) => {
-      setFilters((prev) => {
-        return { ...prev, [key]: value };
-      });
-    });
-  }, [pathname, searchParams]);
+    updateQuery(filters);
+  }, [filters, updateQuery]);
 
-  // Initialize from searchParams on first mount
-  useEffect(() => {
-    const startString = searchParams.get("dateStart");
-    const endString = searchParams.get("dateEnd");
-
-    if (startString) {
-      setDateStart(new Date(startString));
-    }
-    if (endString) {
-      setDateEnd(new Date(endString));
-    }
-  }, [searchParams]);
-
-  // 🟢 Safe useEffect for filters
-  useEffect(() => {
-    if (Object.keys(filters).length > 0) {
-      updateSearchParams(filters);
-    }
-  }, [filters]);
-
-  // // 🟢 Date effects
-  useEffect(() => {
-    if (dateStart) {
-      const isoStart = moment(dateStart)
-        .tz("Asia/Jakarta")
-        .format("YYYY-MM-DDTHH:mm:ss");
-      updateSearchParam("dateStart", isoStart);
-    }
-  }, [dateStart]);
-
-  useEffect(() => {
-    if (dateEnd) {
-      const isoEnd = moment(dateEnd)
-        .tz("Asia/Jakarta")
-        .format("YYYY-MM-DDTHH:mm:ss");
-      updateSearchParam("dateEnd", isoEnd);
-    }
-  }, [dateEnd]);
+  console.log(filters);
 
   const resetFilter = () => {
     setFilters({});
-    router.push(pathname);
   };
 
   const filterBuilderHelper = (
@@ -146,7 +119,7 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
                   [filter.filterName]: e.target.value,
                 }))
               }
-              value={filters.search as string}
+              value={filters.search ? (filters.search as string) : ""}
               placeholder={filter.filterTitle}
               className="border-none px-1 text-xs shadow-none placeholder:text-xs focus-visible:ring-0"
             />
@@ -156,7 +129,11 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
         return (
           <Select
             key={filter.filterTitle}
-            value={filters[filter.filterName] as string}
+            value={
+              filters[filter.filterName]
+                ? (filters[filter.filterName] as string)
+                : ""
+            }
             onValueChange={(value) =>
               setFilters((prev) => ({
                 ...prev,
@@ -193,19 +170,21 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
               >
                 <CalendarIcon size={16} strokeWidth={1} />
                 <span className="text-xs">
-                  {dateStart ? (
-                    dateEnd ? (
+                  {filters.dateStart ? (
+                    filters.dateEnd ? (
                       <>
-                        {moment(dateStart)
+                        {moment(filters.dateStart)
                           .tz("Asia/Jakarta")
                           .format("DD MMM YYYY")}{" "}
                         -{" "}
-                        {moment(dateEnd)
+                        {moment(filters.dateEnd)
                           .tz("Asia/Jakarta")
                           .format("DD MMM YYYY")}
                       </>
                     ) : (
-                      moment(dateStart).tz("Asia/Jakarta").format("DD MMM YYYY")
+                      moment(filters.dateStart)
+                        .tz("Asia/Jakarta")
+                        .format("DD MMM YYYY")
                     )
                   ) : (
                     <span>Pilih Tanggal</span>
@@ -217,13 +196,15 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
             <PopoverContent className="w-auto p-0" align="start">
               <div className="flex flex-col gap-2 p-2">
                 <DateTimePicker
-                  date={dateStart}
-                  setDate={setDateStart}
+                  name="dateStart"
+                  date={filters.dateStart as Date}
+                  setDate={setFilters}
                   textSize="text-xs md:text-xs"
                 />
                 <DateTimePicker
-                  date={dateEnd}
-                  setDate={setDateEnd}
+                  name="dateEnd"
+                  date={filters.dateEnd as Date}
+                  setDate={setFilters}
                   textSize="text-xs md:text-xs"
                 />
               </div>

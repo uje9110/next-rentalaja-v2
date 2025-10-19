@@ -14,22 +14,24 @@ import moment from "moment-timezone";
 import clsx from "clsx";
 
 type DateTimePickerProps = {
+  name: string;
   date: Date | undefined; // now string instead of Date
-  setDate: Dispatch<SetStateAction<Date | undefined>>;
+  setDate: Dispatch<SetStateAction<Record<string, Date | string | undefined>>>;
   textSize?: string;
 };
 
 export function DateTimePicker({
+  name,
   date,
   setDate,
   textSize = "",
 }: DateTimePickerProps) {
-  const newDate = new Date(date ?? "");
+  const newDate = date ? new Date(date) : undefined;
   const [open, setOpen] = useState(false);
   const [time, setTime] = useState(() => {
-    const hours = String(newDate.getHours()).padStart(2, "0");
-    const minutes = String(newDate.getMinutes()).padStart(2, "0");
     if (newDate) {
+      const hours = String(newDate.getHours()).padStart(2, "0");
+      const minutes = String(newDate.getMinutes()).padStart(2, "0");
       return `${hours}:${minutes}`;
     }
     return `07:00`;
@@ -46,7 +48,7 @@ export function DateTimePicker({
     newDate.setHours(hours || 0, minutes || 0, seconds || 0, 0);
 
     // ✅ format as DD-MM-YYYY HH:mm:ss
-    return newDate;
+    return moment(newDate).tz("Asia/Jakarta").format("YYYY-MM-DDTHH:mm:ss");
   };
 
   return (
@@ -76,7 +78,12 @@ export function DateTimePicker({
               captionLayout="dropdown"
               onSelect={(selected) => {
                 const newDateTime = combineDateTime(selected, time);
-                setDate(newDateTime);
+                setDate((prev) => {
+                  return {
+                    ...prev,
+                    [name]: newDateTime,
+                  };
+                });
                 setOpen(false);
               }}
             />
@@ -97,11 +104,13 @@ export function DateTimePicker({
           onChange={(e) => {
             const newTime = e.target.value;
             setTime(newTime);
-            const parsedDate = date
-              ? moment(date, "DD-MM-YYYY HH:mm:ss").toDate()
-              : undefined;
-            const newDateTime = combineDateTime(parsedDate, newTime);
-            setDate(newDateTime);
+            const newDateTime = combineDateTime(date, newTime);
+            setDate((prev) => {
+              return {
+                ...prev,
+                [name]: newDateTime,
+              };
+            });
           }}
           className={clsx(
             "bg-background phone:text-xs lg:phone:sm appearance-none border border-slate-400/50",

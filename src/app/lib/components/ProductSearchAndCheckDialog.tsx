@@ -21,8 +21,9 @@ const SearchAndCheckDialog = ({
   const router = useRouter();
 
   // ✅ Use string instead of Date
-  const [dateStart, setDateStart] = useState<Date>();
-  const [dateEnd, setDateEnd] = useState<Date>();
+  const [dateFilters, setDateFilters] = useState<
+    Record<string, string | Date | undefined>
+  >({});
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedStore, setSelectedStore] = useState("");
 
@@ -41,19 +42,12 @@ const SearchAndCheckDialog = ({
   const handleSearch = () => {
     const params = new URLSearchParams();
 
-    if (dateStart) {
-      // dateStart is already "DD-MM-YYYY HH:mm:ss"
-      const isoStart = moment(dateStart, "DD-MM-YYYY HH:mm:ss").tz("Asia/Jakarta").format(
-        "YYYY-MM-DDTHH:mm:ss",
-      );
-      params.set("bookingStart", isoStart);
+    if (dateFilters.dateStart) {
+      params.set("bookingStart", dateFilters.dateStart as string);
     }
 
-    if (dateEnd) {
-      const isoEnd = moment(dateEnd, "DD-MM-YYYY HH:mm:ss").tz("Asia/Jakarta").format(
-        "YYYY-MM-DDTHH:mm:ss",
-      );
-      params.set("bookingEnd", isoEnd);
+    if (dateFilters.dateStart) {
+      params.set("bookingEnd", dateFilters.dateEnd as string);
     }
 
     if (selectedCategory) params.set("category", selectedCategory);
@@ -73,8 +67,16 @@ const SearchAndCheckDialog = ({
   return (
     <div className="flex flex-col gap-0">
       <div className="phone:gap-2 flex flex-col gap-4 lg:gap-4">
-        <DateTimePicker date={dateStart} setDate={setDateStart} />
-        <DateTimePicker date={dateEnd} setDate={setDateEnd} />
+        <DateTimePicker
+          name="dateStart"
+          date={dateFilters.dateStart as Date}
+          setDate={setDateFilters}
+        />
+        <DateTimePicker
+          name="dateEnd"
+          date={dateFilters.dateEnd as Date}
+          setDate={setDateFilters}
+        />
 
         <ProductFilterSelect
           value={selectedCategory}
@@ -107,26 +109,33 @@ const SearchAndCheckDialog = ({
       </div>
 
       <div className="bg-muted/30 text-muted-foreground mt-4 space-y-2 rounded-lg border border-dashed p-3 text-sm">
-        {!dateStart && !dateEnd && !selectedCategory && !selectedStore && (
-          <p className="phone:text-xs lg:phone:sm w-full text-center">
-            Isi filter terlebih dahulu
-          </p>
-        )}
-        {dateStart && (
+        {!dateFilters.dateStart &&
+          !dateFilters.dateEnd &&
+          !selectedCategory &&
+          !selectedStore && (
+            <p className="phone:text-xs lg:phone:sm w-full text-center">
+              Isi filter terlebih dahulu
+            </p>
+          )}
+        {dateFilters.dateStart && (
           <div className="flex items-center gap-2">
             <CalendarIcon className="text-primary h-4 w-4" />
             <p>
               <span className="text-foreground font-medium">Mulai:</span>{" "}
-              {moment(dateStart).tz("Asia/Jakarta").format("DD MMM YYYY")}
+              {moment(dateFilters.dateStart)
+                .tz("Asia/Jakarta")
+                .format("DD MMM YYYY")}
             </p>
           </div>
         )}
-        {dateEnd && (
+        {dateFilters.dateEnd && (
           <div className="flex items-center gap-2">
             <CalendarIcon className="text-primary h-4 w-4" />
             <p>
               <span className="text-foreground font-medium">Akhir:</span>{" "}
-              {moment(dateEnd).tz("Asia/Jakarta").format("DD MMM YYYY")}
+              {moment(dateFilters.dateEnd)
+                .tz("Asia/Jakarta")
+                .format("DD MMM YYYY")}
             </p>
           </div>
         )}
