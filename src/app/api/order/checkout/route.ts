@@ -48,13 +48,11 @@ export async function POST(req: NextRequest) {
         try {
           storeSession.startTransaction();
 
-          const StoreCounterModel = createStoreCounterModel(storeConnection);
+          // const StoreCounterModel = createStoreCounterModel(storeConnection);
           const StoreOrderModel = createStoreOrderModel(storeConnection);
           const StoreUserModel = createStoreUserModel(storeConnection);
 
-          const orderCount = await StoreCounterModel.getNextSequence("order", {
-            session: storeSession,
-          });
+          const orderCount = (await StoreOrderModel.find()).length + 1;
 
           // STORE USER CREATION AND CUSTOMER ID ASSIGNATION
           const storeUser = await StoreUserModel.findOrCreateStoreUser(
