@@ -6,10 +6,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { X } from "lucide-react";
+import { MessageCircleWarning, X } from "lucide-react";
 import React, { Dispatch, FC, SetStateAction } from "react";
 import { ClientStoreProductStockType } from "../types/store_product_stock_type";
 import { ClientStoreProductType } from "../types/store_product_type";
+import { cn } from "@/lib/utils";
 
 type BookingCalendarHoursProps = {
   bookingHourAndMinute: Record<string, string>;
@@ -39,8 +40,6 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
   checkHourAvaibilty,
   getSelectedDateValueInMs,
 }) => {
-  console.log(bookingHourAndMinute);
-
   const handleClose = () => {
     setIsBookingCalendarHourOpen(false);
   };
@@ -62,8 +61,12 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
           </button>
         </DialogHeader>
 
-        <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col gap-4 p-4 pt-0">
           {/* Hours & Minutes Section */}
+          <p className="flex items-center justify-center gap-2 rounded-md phone:text-xs border-2 border-dashed border-yellow-300 bg-yellow-100 py-2 text-center lg:text-sm">
+            <MessageCircleWarning className="lg:text-sm phone:text-xs"/>
+            <span>Minimal jam sewa 7.30 dan maksimal jam sewa 21.00</span>
+          </p>
           <div className="flex gap-6">
             {/* Hours */}
             <div className="flex w-1/2 flex-col items-center">
@@ -76,7 +79,6 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
                   const currHourInMs =
                     selectedBookingDateInMs + item * 3600 * 1000;
                   const formattedValue = item < 10 ? `0${item}` : `${item}`;
-                  console.log("hour", formattedValue);
 
                   return (
                     <div
@@ -122,14 +124,19 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
               </p>
               <div className="flex h-72 w-full flex-col gap-2 overflow-auto">
                 {minutesArr.map((item) => {
+                  const isLessThirty = item < 30;
+                  const isDisabled =
+                    bookingHourAndMinute.hour === "07" && isLessThirty
+                      ? true
+                      : false;
                   const formattedValue = item < 10 ? `0${item}` : `${item}`;
-                  console.log("minute", formattedValue);
                   return (
                     <div
                       key={`bookingMinute-${item}`}
-                      className="relative flex justify-center"
+                      className={"relative flex justify-center"}
                     >
                       <input
+                        disabled={isDisabled}
                         checked={bookingHourAndMinute.minute === formattedValue}
                         type="radio"
                         id={`bookingMinute-${item}`}
@@ -147,7 +154,12 @@ const BookingCalendarHours: FC<BookingCalendarHoursProps> = ({
                       />
                       <label
                         htmlFor={`bookingMinute-${item}`}
-                        className="peer-checked:border-accent-custom border-accent-custom flex h-10 w-4/5 cursor-pointer items-center justify-center rounded-full bg-white text-sm shadow-sm transition-all peer-checked:border-2 peer-checked:bg-sky-100 peer-checked:text-sky-800 hover:bg-sky-50"
+                        className={cn(
+                          "peer-checked:border-accent-custom border-accent-custom flex h-10 w-4/5 items-center justify-center rounded-full bg-white text-sm shadow-sm transition-all peer-checked:border-2 peer-checked:bg-sky-100 peer-checked:text-sky-800 hover:bg-sky-50 disabled:bg-gray-300",
+                          isDisabled
+                            ? "cursor-not-allowed bg-gray-300 hover:bg-gray-300"
+                            : "cursor-pointer bg-white",
+                        )}
                       >
                         {formattedValue}
                       </label>

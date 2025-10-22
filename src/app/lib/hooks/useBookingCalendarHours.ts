@@ -21,8 +21,8 @@ export const useBookingCalendarHours = ({
   const [bookingHourAndMinute, setBookingHourAndMinute] = useState<
     Record<string, string>
   >({
-    hour: defaultHour ?? "00",
-    minute: defaultMinute ?? "00",
+    hour: defaultHour ?? "",
+    minute: defaultMinute ?? "",
   });
 
   // CHECK HOUR FOR BOOKING AVAIBILITY
