@@ -82,4 +82,10 @@ export class CurrencyHandlers {
       return type;
     }
   };
+
+  static calculateTotalOrderPayments = (payments: StoreOrderPaymentType[]) => {
+    return payments.reduce((total, payment) => {
+      return payment.paymentAmount + total;
+    }, 0);
+  };
 }

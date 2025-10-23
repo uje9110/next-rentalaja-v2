@@ -502,6 +502,8 @@ StoreOrderSchema.statics.addPaymentToStoreOrder = async function (
 
   const StorePaymentModel = createStorePaymentModel(storeConnection);
 
+  const allOrderPayments = await StorePaymentModel.find({ orderID: orderId });
+
   const payment = await StorePaymentModel.createOneStorePayment({
     byAdmin,
     orderId: orderId,
@@ -510,9 +512,12 @@ StoreOrderSchema.statics.addPaymentToStoreOrder = async function (
     billing: billing,
   });
 
+  const totalPayment =
+    CurrencyHandlers.calculateTotalOrderPayments(allOrderPayments);
+
   let newPaymentStatus;
   if (payment.paymentMethod === "Cash") {
-    const amount = payment.paymentAmount ?? 0;
+    const amount = payment.paymentAmount + totalPayment;
     newPaymentStatus = CurrencyHandlers.getOrderPaymentStatus(
       orderTotal,
       amount,
