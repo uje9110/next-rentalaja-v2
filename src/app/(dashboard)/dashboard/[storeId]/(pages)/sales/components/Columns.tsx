@@ -74,9 +74,10 @@ export const getColumns = (
       },
       cell: ({ row }) => {
         const value = row.original._id;
+        const storeId = row.original.orderDetail.storeDetail.storeId;
         return (
           <Link
-            href={`/dashboard/order/${value}`}
+            href={`/dashboard/${storeId}/order/${value}`}
             target="__blank"
             className="border-b-2 border-blue-400 pb-0.5 text-xs font-bold text-blue-400"
           >

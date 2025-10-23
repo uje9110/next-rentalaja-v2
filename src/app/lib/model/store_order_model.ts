@@ -607,7 +607,7 @@ StoreOrderSchema.pre("save", async function (this: StoreOrderDoc) {
 
   let newPaymentStatus: "unpaid" | "partially-paid" | "fully-paid" = "unpaid";
 
-  if (payment.paymentMethod === "CASH") {
+  if (payment.paymentMethod === "Cash") {
     const amount = payment.paymentAmount ?? 0;
     newPaymentStatus = CurrencyHandlers.getOrderPaymentStatus(
       this.total,
