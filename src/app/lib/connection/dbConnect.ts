@@ -25,9 +25,9 @@ async function dbConnect(storeId?: string | null): Promise<Connection> {
 
     const conn = mongoose.createConnection(connectionString);
 
-    conn.on("connected", () =>
-      console.log(`✅ Connected to ${connectionString}`),
-    );
+    // conn.on("connected", () =>
+    //   console.log(`✅ Connected to ${connectionString}`),
+    // );
     conn.on("error", (err) => console.error(`❌ Connection error:`, err));
 
     connections[connectionString] = conn;

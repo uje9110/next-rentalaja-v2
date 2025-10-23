@@ -27,7 +27,7 @@ export function useAddItemToCartButton({
 
       let updatedStoreCart: ClientCartType;
       if (itemExists) {
-        // Item already exists → update if you want quantity, or just leave it
+        // Item already exists, update it
         updatedStoreCart = {
           ...storeCart,
           items: storeCart.items.map((item) =>
@@ -37,7 +37,7 @@ export function useAddItemToCartButton({
           ),
         };
       } else {
-        // Add new item to store
+        // Add new item to store, add it
         updatedStoreCart = {
           ...storeCart,
           items: [...storeCart.items, orderItemData],

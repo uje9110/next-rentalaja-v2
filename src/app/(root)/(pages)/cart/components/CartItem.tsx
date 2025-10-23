@@ -112,12 +112,12 @@ export const CartItem: React.FC<CartItemProps> = ({
                         <div className="flex w-2/3 flex-col gap-1">
                           {/* Item Name */}
                           <div className="flex w-full items-center justify-between">
-                            <h3 className="font-uppercase phone:text-xs truncate text-lg font-semibold">
+                            <h3 className="font-uppercase phone:text-xs truncate font-semibold lg:text-sm">
                               {itemName}
                             </h3>
                             <div className="flex flex-row gap-2">
                               <button
-                                className="rounded-sm bg-red-500 px-1 text-[10px] font-semibold text-white"
+                                className="h-6 cursor-pointer rounded-sm bg-red-500 px-1 text-[10px] font-semibold text-white"
                                 onClick={() =>
                                   removeItemFromCart(
                                     itemID,
@@ -125,15 +125,21 @@ export const CartItem: React.FC<CartItemProps> = ({
                                   )
                                 }
                               >
-                                <Trash className="phone:w-4 lg:w-6" />
+                                <Trash
+                                  size={15}
+                                  className="phone:w-4 phone:text-xs lg:w-6 lg:text-xs"
+                                />
                               </button>
                               <button
-                                className="rounded-sm bg-green-500 px-1 text-[10px] font-semibold text-white"
+                                className="h-6 cursor-pointer rounded-sm bg-green-500 px-1 text-[10px] font-semibold text-white"
                                 onClick={() =>
                                   router.push(`/product/${itemID}`)
                                 }
                               >
-                                <Pencil className="phone:w-4 lg:w-6" />
+                                <Pencil
+                                  size={15}
+                                  className="phone:w-4 phone:text-xs lg:w-6 lg:text-xs"
+                                />
                               </button>
                             </div>
                           </div>

@@ -13,7 +13,10 @@ import { usePathname, useRouter } from "next/navigation";
 
 type AddItemToCartButtonProps = {
   isUsingDashboard?: boolean;
-  handleAddCartItemToCheckout?: (orderItemData: StoreOrderItemType) => void;
+  handleAddCartItemToCheckout?: (
+    orderItemData: StoreOrderItemType,
+    isUsingDashboard: boolean,
+  ) => void;
   orderItemData: StoreOrderItemType;
   handleAddItemToCart: (orderItemData: StoreOrderItemType) => void;
 };
@@ -34,10 +37,12 @@ const AddItemToCartButton: FC<AddItemToCartButtonProps> = ({
     !!orderItemData.rentalDetails?.rentalEndDate;
 
   const handleConfirm = () => {
-    if (isUsingDashboard && handleAddCartItemToCheckout) {
-      handleAddCartItemToCheckout(orderItemData);
+    // if using dashboard
+    if (isUsingDashboard && handleAddCartItemToCheckout && isUsingDashboard) {
+      handleAddCartItemToCheckout(orderItemData, true);
       router.replace(pathname);
     }
+    // if front page
     handleAddItemToCart(orderItemData);
     setOpen(false);
   };
@@ -75,15 +80,15 @@ const AddItemToCartButton: FC<AddItemToCartButtonProps> = ({
               </p>
               <p>
                 <span className="font-semibold">Rental Mulai:</span>{" "}
-                {moment(
-                  orderItemData.rentalDetails.rentalStartInLocaleMs,
-                ).tz("Asia/Jakarta").format("DD MMMM YYYY, HH:mm")}
+                {moment(orderItemData.rentalDetails.rentalStartInLocaleMs)
+                  .tz("Asia/Jakarta")
+                  .format("DD MMMM YYYY, HH:mm")}
               </p>
               <p>
                 <span className="font-semibold">Rental Berakhir:</span>{" "}
-                {moment(orderItemData.rentalDetails.rentalEndInLocaleMs).tz("Asia/Jakarta").format(
-                  "DD MMMM YYYY, HH:mm",
-                )}
+                {moment(orderItemData.rentalDetails.rentalEndInLocaleMs)
+                  .tz("Asia/Jakarta")
+                  .format("DD MMMM YYYY, HH:mm")}
               </p>
               <p>
                 <span className="font-semibold">Jumlah Item:</span>{" "}

@@ -127,7 +127,10 @@ export function useCart({ checkout, setCheckout }: useCartProps) {
     );
   };
 
-  const handleAddCartItemToCheckout = (orderItemData: StoreOrderItemType) => {
+  const handleAddCartItemToCheckout = (
+    orderItemData: StoreOrderItemType,
+    isUsingDashboard?: boolean,
+  ) => {
     const existedCartItemInCheckoutIndex = checkout.checkoutCartItems.findIndex(
       (cartItem) =>
         cartItem.store.storeId === orderItemData.storeDetail.storeId,
@@ -164,13 +167,25 @@ export function useCart({ checkout, setCheckout }: useCartProps) {
           items: [...existedCartItemInCheckout.items, orderItemData],
         };
       } else {
-        // Item already exists → remove it
-        updatedCartItem = {
-          ...existedCartItemInCheckout,
-          items: existedCartItemInCheckout.items.filter(
-            (item) => item.itemID !== orderItemData.itemID,
-          ),
-        };
+        // Through dashboard, update instead remove it
+        if (isUsingDashboard) {
+          updatedCartItem = {
+            ...existedCartItemInCheckout,
+            items: existedCartItemInCheckout.items.map((item) =>
+              item.itemID === orderItemData.itemID
+                ? { ...item, ...orderItemData }
+                : item,
+            ),
+          };
+        } else {
+          // Through front app, Item already exists → remove it
+          updatedCartItem = {
+            ...existedCartItemInCheckout,
+            items: existedCartItemInCheckout.items.filter(
+              (item) => item.itemID !== orderItemData.itemID,
+            ),
+          };
+        }
       }
 
       setCheckout((prevState) => {

@@ -66,10 +66,6 @@ const Page = () => {
 
   // step state
   const [step, setStep] = useState<1 | 2>(1);
-
-  console.log(checkout);
-  
-
   return (
     <main className="phone:h-full phone:w-full phone:flex-col phone:p-2 flex h-[calc(100vh-2.5rem)] w-full flex-1 flex-row gap-4 px-2 lg:flex lg:flex-row lg:p-0">
       {/* Left Section (Steps) */}
@@ -150,7 +146,7 @@ const Page = () => {
           <CheckoutBillingPreview checkout={checkout} />
         </div>
         <div className="h-fit w-full">
-          <CheckoutItemList />
+          <CheckoutItemList isUsingDashboard={true} />
         </div>
         <CheckoutDetail />
         <CheckoutSubmit
