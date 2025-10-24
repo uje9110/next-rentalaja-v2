@@ -65,6 +65,39 @@ const SalesTable: FC<SalesTableProps> = ({ sales }) => {
     queryFn: getCategories,
   });
 
+  const now = new Date();
+
+  // Start of today: 00:00:00.000
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+
+  // End of today: 23:59:59.999
+  const endOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    23,
+    59,
+  );
+
+  const defaultDateStart = moment(startOfToday)
+    .tz("Asia/Jakarta")
+    .format("YYYY-MM-DDTHH:mm:ss");
+
+  const defaultDateEnd = moment(endOfToday)
+    .tz("Asia/Jakarta")
+    .format("YYYY-MM-DDTHH:mm:ss");
+
+  const defaultFilters: Record<string, string | Date> = {
+    dateBy: "createdAt",
+    dateStart: defaultDateStart,
+    dateEnd: defaultDateEnd,
+    limit: "25",
+  };
+
   const filterData = [
     {
       filterType: "select",
@@ -115,7 +148,7 @@ const SalesTable: FC<SalesTableProps> = ({ sales }) => {
   ] as const satisfies CustomTableFilterProps[];
 
   return (
-    <div className="phone:w-[calc(100vw-1.5rem)] m-2 phone:m-2 lg:m-0 flex flex-col gap-2 lg:w-full">
+    <div className="phone:w-[calc(100vw-1.5rem)] phone:m-2 m-2 flex flex-col gap-2 lg:m-0 lg:w-full">
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <SalesDetailDialog salesData={salesData as ClientStoreSalesType} />
@@ -124,6 +157,7 @@ const SalesTable: FC<SalesTableProps> = ({ sales }) => {
       <SalesSummaryTabs sales={sales} setFilteredSales={setFilteredSales} />
       <div className="flex flex-col gap-4 rounded-md border border-slate-400/50 bg-white p-4">
         <CustomTableFilter
+          defaultFilters={defaultFilters}
           filterData={filterData}
           pageTitle="Order"
           table={table}

@@ -60,12 +60,14 @@ export const CustomTableFilter = <TData,>({
   filterData,
   pageTitle,
   table,
+  defaultFilters,
 }: {
   filterData: CustomTableFilterProps[];
   pageTitle: string;
+  defaultFilters: Record<string, string | Date>;
   table?: Table<TData>;
 }) => {
-  const { filterBuilderHelper } = useCustomTableFilter(filterData);
+  const { filterBuilderHelper } = useCustomTableFilter({ defaultFilters });
 
   return (
     <div className="flex w-full flex-row justify-between">

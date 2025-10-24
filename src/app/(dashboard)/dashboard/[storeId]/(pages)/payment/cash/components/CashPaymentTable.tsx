@@ -36,6 +36,39 @@ const CashPaymentTable: FC<PaymentTableProps> = ({ payments }) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const now = new Date();
+
+  // Start of today: 00:00:00.000
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+
+  // End of today: 23:59:59.999
+  const endOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    23,
+    59,
+  );
+
+  const defaultDateStart = moment(startOfToday)
+    .tz("Asia/Jakarta")
+    .format("YYYY-MM-DDTHH:mm:ss");
+
+  const defaultDateEnd = moment(endOfToday)
+    .tz("Asia/Jakarta")
+    .format("YYYY-MM-DDTHH:mm:ss");
+
+  const defaultFilters: Record<string, string | Date> = {
+    dateBy: "createdAt",
+    dateStart: defaultDateStart,
+    dateEnd: defaultDateEnd,
+    limit: "25",
+  };
+
   const filterData = [
     {
       filterType: "select",
@@ -51,8 +84,12 @@ const CashPaymentTable: FC<PaymentTableProps> = ({ payments }) => {
       filterName: "dateRange",
       filterTitle: "Tanggal Sales",
       defaultValue: {
-        dateStart: moment(new Date()).tz("Asia/Jakarta").format("YYYY-MM-DD:00:00:00"),
-        dateEnd: moment(new Date()).tz("Asia/Jakarta").format("YYYY-MM-DD:23:59:00"),
+        dateStart: moment(new Date())
+          .tz("Asia/Jakarta")
+          .format("YYYY-MM-DD:00:00:00"),
+        dateEnd: moment(new Date())
+          .tz("Asia/Jakarta")
+          .format("YYYY-MM-DD:23:59:00"),
       },
     },
     {
@@ -94,9 +131,10 @@ const CashPaymentTable: FC<PaymentTableProps> = ({ payments }) => {
   ] as const satisfies CustomTableFilterProps[];
 
   return (
-    <div className="phone:w-[calc(100vw-1.5rem)] lg:w-full flex flex-col gap-4">
+    <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 lg:w-full">
       <CustomTableFilter
         filterData={filterData}
+        defaultFilters={defaultFilters}
         pageTitle="Filter Payment"
         table={table}
       />

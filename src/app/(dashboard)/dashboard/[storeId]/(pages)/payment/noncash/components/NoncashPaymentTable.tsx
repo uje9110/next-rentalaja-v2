@@ -24,6 +24,11 @@ export const NoncashPaymentTable: FC<NoncashPaymentTableProps> = ({
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const defaultFilters: Record<string, string | Date> = {
+    limit: "25",
+  };
+
   const filterData = [
     {
       filterType: "select",
@@ -39,8 +44,12 @@ export const NoncashPaymentTable: FC<NoncashPaymentTableProps> = ({
       filterName: "dateRange",
       filterTitle: "Tanggal Sales",
       defaultValue: {
-        dateStart: moment(new Date()).tz("Asia/Jakarta").format("YYYY-MM-DD:00:00:00"),
-        dateEnd: moment(new Date()).tz("Asia/Jakarta").format("YYYY-MM-DD:23:59:00"),
+        dateStart: moment(new Date())
+          .tz("Asia/Jakarta")
+          .format("YYYY-MM-DD:00:00:00"),
+        dateEnd: moment(new Date())
+          .tz("Asia/Jakarta")
+          .format("YYYY-MM-DD:23:59:00"),
       },
     },
     {
@@ -65,6 +74,7 @@ export const NoncashPaymentTable: FC<NoncashPaymentTableProps> = ({
     <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 lg:w-full">
       <CustomTableFilter
         filterData={filterData}
+        defaultFilters={defaultFilters}
         pageTitle="Filter Payment"
         table={table}
       />

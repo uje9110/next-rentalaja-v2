@@ -45,6 +45,10 @@ const ProductTable = ({
     queryFn: getCategories,
   });
 
+  const defaultFilters: Record<string, string | Date> = {
+    limit: "25",
+  };
+
   const filterData = [
     {
       filterType: "search",
@@ -97,6 +101,7 @@ const ProductTable = ({
     <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 rounded-md border border-slate-400/50 bg-white p-4 lg:w-full">
       {/* filter */}
       <CustomTableFilter
+        defaultFilters={defaultFilters}
         pageTitle="Product"
         filterData={filterData}
         table={table}

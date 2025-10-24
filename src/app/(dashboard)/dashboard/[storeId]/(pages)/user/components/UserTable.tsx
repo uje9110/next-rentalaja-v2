@@ -22,6 +22,10 @@ const UserTable = ({ users }: DataTableProps) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const defaultFilters: Record<string, string | Date> = {
+    limit: "25",
+  };
+
   const filterData = [
     {
       filterType: "search",
@@ -61,6 +65,7 @@ const UserTable = ({ users }: DataTableProps) => {
   return (
     <div className="phone:w-[calc(100vw-1.5rem)] flex flex-col gap-4 rounded-md border border-slate-400/50 bg-white p-4 lg:w-full">
       <CustomTableFilter
+        defaultFilters={defaultFilters}
         pageTitle="User"
         table={table}
         filterData={filterData}

@@ -33,6 +33,39 @@ const SalesAnalyticGraphAndTableFilter = () => {
     queryFn: getCategories,
   });
 
+  const now = new Date();
+
+  // Start of today: 00:00:00.000
+  const startOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+
+  // End of today: 23:59:59.999
+  const endOfToday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    23,
+    59,
+  );
+
+  const defaultDateStart = moment(startOfToday)
+    .tz("Asia/Jakarta")
+    .format("YYYY-MM-DDTHH:mm:ss");
+
+  const defaultDateEnd = moment(endOfToday)
+    .tz("Asia/Jakarta")
+    .format("YYYY-MM-DDTHH:mm:ss");
+
+  const defaultFilters: Record<string, string | Date> = {
+    dateBy: "createdAt",
+    dateStart: defaultDateStart,
+    dateEnd: defaultDateEnd,
+    limit: "25",
+  };
+
   const filterData = [
     {
       filterType: "select",
@@ -40,17 +73,12 @@ const SalesAnalyticGraphAndTableFilter = () => {
       filterName: "dateBy",
       filterTitle: "Filter Tanggal",
       filterValues: [{ label: "Tanggal Dibuat", value: "createdAt" }],
-      // defaultValue: "createdAt",
     },
     {
       filterType: "dateTimePicker",
       filterIcon: CalendarIcon,
       filterName: "dateRange",
       filterTitle: "Tanggal Sales",
-      // defaultValue: {
-      //   dateStart: moment(new Date()). .tz("Asia/Jakarta").format("YYYY-MM-DD:00:00:00"),
-      //   dateEnd: moment(new Date()). .tz("Asia/Jakarta").format("YYYY-MM-DD:23:59:00"),
-      // },
     },
     {
       filterType: "select",
@@ -84,7 +112,11 @@ const SalesAnalyticGraphAndTableFilter = () => {
 
   return (
     <div className="flex flex-row gap-4">
-      <CustomTableFilter filterData={filterData} pageTitle="analytic" />
+      <CustomTableFilter
+        filterData={filterData}
+        defaultFilters={defaultFilters}
+        pageTitle="analytic"
+      />
     </div>
   );
 };

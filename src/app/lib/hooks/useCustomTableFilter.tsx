@@ -20,25 +20,30 @@ import { DateTimePicker } from "../components/DateTimePicker";
 import moment from "moment-timezone";
 import { usePathname, useRouter } from "next/navigation";
 
-export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
+export function useCustomTableFilter({
+  defaultFilters,
+}: {
+  defaultFilters: Record<string, string | Date>;
+}) {
   const router = useRouter();
   const pathname = usePathname();
-  const { searchParams, updateSearchParam, updateSearchParams } =
-    useUpdateSearchParam();
 
   const [filters, setFilters] = useState<
     Record<string, string | Date | undefined>
   >(() => {
     if (typeof window === "undefined") return {};
+    // Load existing URL params
     const params = new URLSearchParams(window.location.search);
     const obj: Record<string, string | Date> = {};
     params.forEach((value, key) => {
       const decoded = decodeURIComponent(value);
       obj[key] = decoded;
     });
-    return obj;
+
+    // Merge defaults → query params override defaults
+    return { ...defaultFilters, ...obj };
   });
-  
+
   const updateQuery = useCallback(
     (queryObj: Record<string, string | Date | undefined>) => {
       const str = Object.entries(queryObj)
@@ -59,30 +64,9 @@ export function useCustomTableFilter(filterData: CustomTableFilterProps[]) {
     [filters, pathname, router],
   );
 
-  //  default data initial
-  // useEffect(() => {
-  //   const defaultFilter: Record<string, string | Date> = {};
-  //   filterData.forEach((filter) => {
-  //     if (filter.defaultValue) {
-  //       if (filter.filterName === "dateRange") {
-  //         Object.entries(filter.defaultValue as object).forEach(
-  //           ([key, value]) => {
-  //             defaultFilter[key] = new Date(value);
-  //           },
-  //         );
-  //       } else {
-  //         defaultFilter[filter.filterName] = filter.defaultValue as string;
-  //       }
-  //     }
-  //   });
-  //   setFilters(defaultFilter);
-  // }, [filterData]);
-
   useEffect(() => {
     updateQuery(filters);
   }, [filters, updateQuery]);
-
-  console.log(filters);
 
   const resetFilter = () => {
     setFilters({});
